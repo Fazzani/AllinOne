@@ -40,34 +40,29 @@ import urlresolver
 from allocine.Allocine import Allocine
 
 class Core:
-    __plugin__ = sys.modules[ "__main__"].__plugin__
-    __settings__ = sys.modules[ "__main__" ].__settings__
+    __plugin__ = sys.modules["__main__"].__plugin__
+    __settings__ = sys.modules["__main__"].__settings__
     plugin_handle = int(sys.argv[1])
     _pluginName = (sys.argv[0])
-    ROOT = sys.modules[ "__main__"].__root__#.encode(sys.getfilesystemencoding())
+    ROOT = sys.modules["__main__"].__root__#.encode(sys.getfilesystemencoding())
     userStorageDirectory = __settings__.getSetting("storage")
     USERAGENT = "Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0"
     URL = 'http://torrenter.host.org'
     torrentFilesDirectory = 'torrents'
     api = Allocine()
 
-    htmlCodes = (
-        ('&', '&amp;'),
+    htmlCodes = (('&', '&amp;'),
         ('<', '&lt;'),
         ('>', '&gt;'),
         ('"', '&quot;'),
-        ("'", '&#39;'),
-    )
-    stripPairs = (
-        ('<p>', '\n'),
+        ("'", '&#39;'),)
+    stripPairs = (('<p>', '\n'),
         ('<li>', '\n'),
         ('<br>', '\n'),
         ('<.+?>', ' '),
         ('</.+?>', ' '),
-        ('&nbsp;', ' '),
-    )
-    skinOptimizations = (
-        {#Confluence
+        ('&nbsp;', ' '),)
+    skinOptimizations = ({#Confluence
             'list': 50,
             'info': 50,
             'wide': 51,
@@ -78,8 +73,7 @@ class Core:
             'info': 51,
             'wide': 52,
             'icons': 53,
-        }
-    )
+        })
 
     def __init__(self):
         self.api.configure('100043982026','29d185d98c984a359e6e6f26a0474269')
@@ -88,7 +82,7 @@ class Core:
         else:
             self.userStorageDirectory = self.userStorageDirectory + 'Torrenter'
 
-    def drawItem(self, title, action, link = '', image='', isFolder = True, contextMenu=None, infoMedia=None):
+    def drawItem(self, title, action, link='', image='', isFolder=True, contextMenu=None, infoMedia=None):
         listitem = xbmcgui.ListItem(title, iconImage=image, thumbnailImage=image)
         url = '%s?action=%s&url=%s' % (sys.argv[0], action, urllib.quote_plus(link))
         if contextMenu:
@@ -104,7 +98,7 @@ class Core:
 
         xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=url, listitem=listitem, isFolder=isFolder)
 
-    def fetchData(self, url, referer = None):
+    def fetchData(self, url, referer=None):
         request = urllib2.Request(url)
         if referer != None:
             request.add_header('Referer', referer)
@@ -132,7 +126,7 @@ class Core:
 
     def getParameters(self, parameterString):
         commands = {}
-        splitCommands = parameterString[parameterString.find('?')+1:].split('&')
+        splitCommands = parameterString[parameterString.find('?') + 1:].split('&')
         for command in splitCommands:
             if (len(command) > 0):
                 splitCommand = command.split('=')
@@ -152,14 +146,14 @@ class Core:
             string = re.sub(html, replacement, string)
         return string
 
-    def executeAction(self, params = {}):
+    def executeAction(self, params={}):
         get = params.get
         if hasattr(self, get("action")):
             getattr(self, get("action"))(params)
         else:
             self.sectionMenu()
 
-    def clearStorage(self, params = {}):
+    def clearStorage(self, params={}):
         #if os.path.exists(self.userStorageDirectory):
         if xbmcvfs.exists(self.userStorageDirectory):
             import shutil
@@ -178,7 +172,7 @@ class Core:
         else:#>4000Mb
             return current * 100 / (50 * 1024 * 1024)# 50Mb file size = 100% of progress
 
-    def playTorrent(self, params = {}):
+    def playTorrent(self, params={}):
         torrentUrl = self.__settings__.getSetting("lastTorrent")
         if 0 != len(torrentUrl):
             get = params.get
@@ -203,7 +197,7 @@ class Core:
                 iterator = self.calculateIterator(downloadedSize, fullSize)
                 dialogText = Localization.localize('Preloaded: ') + str(downloadedSize / 1024 / 1024) + ' MB / ' + str(fullSize / 1024 / 1024) + ' MB'
                 peersText = ' [%s: %s; %s: %s]' % (Localization.localize('Seeds'), str(torrent.getSeeds()), Localization.localize('Peers'), str(torrent.getPeers()))
-                speedsText = '%s: %s Mbit/s; %s: %s Mbit/s' % (Localization.localize('Downloading'), str(torrent.getDownloadRate() * 8/ 1000000), Localization.localize('Uploading'), str(torrent.getUploadRate() * 8 / 1000000))
+                speedsText = '%s: %s Mbit/s; %s: %s Mbit/s' % (Localization.localize('Downloading'), str(torrent.getDownloadRate() * 8 / 1000000), Localization.localize('Uploading'), str(torrent.getUploadRate() * 8 / 1000000))
                 progressBar.update(iterator, Localization.localize('Seeds searching.') + peersText, dialogText, speedsText)
                 if progressBar.iscanceled():
                     progressBar.update(0)
@@ -216,7 +210,8 @@ class Core:
             from Proxier import Proxier
             import thread
             proxier = Proxier()
-            #thread.start_new_thread(proxier.server, (torrent.getFilePath(contentId), ))
+            #thread.start_new_thread(proxier.server,
+            #(torrent.getFilePath(contentId), ))
             #xbmc.Player().play('http://127.0.0.1:51515/play.avi')
             #return
 
@@ -224,7 +219,8 @@ class Core:
             playlist.clear()
             listitem = xbmcgui.ListItem(torrent.getContentList()[contentId].path)
             playlist.add('file:///' + torrent.getFilePath(contentId), listitem)
-            #playlist.add('http://127.0.0.1:51515/%s.avi' % torrent.md5(torrent.getFilePath(contentId)), listitem)
+            #playlist.add('http://127.0.0.1:51515/%s.avi' %
+            #torrent.md5(torrent.getFilePath(contentId)), listitem)
             xbmc.Player().play(playlist)
             #self.addHistory(torrent.getContentList()[contentId].path)
             #bufferingBar = xbmcgui.DialogProgress()
@@ -255,25 +251,23 @@ class Core:
                 self.clearStorage()
             else:
                 dialog = xbmcgui.Dialog()
-                if dialog.yesno(
-                    Localization.localize('Torrent Downloading'),
+                if dialog.yesno(Localization.localize('Torrent Downloading'),
                     Localization.localize('Do you want to STOP torrent downloading and seeding?'),
-                    Localization.localize('Preloaded: ') + str(downloadedSize / 1024 / 1024) + ' MB / ' + str(fullSize / 1024 / 1024) + ' MB'
-                ):
+                    Localization.localize('Preloaded: ') + str(downloadedSize / 1024 / 1024) + ' MB / ' + str(fullSize / 1024 / 1024) + ' MB'):
                     xbmc.executebuiltin("Notification(%s, %s)" % (Localization.localize('Information'), Localization.localize('Torrent downloading is stopped.')))
                     torrent.threadComplete = True
             #self.addRate(torrent.getContentList()[contentId].path)
         else:
             print self.__plugin__ + " Unexpected access to method playTorrent() without torrent content"
 
-    def openTorrent(self, params = {}):
+    def openTorrent(self, params={}):
         get = params.get
         url = urllib.unquote_plus(get("url"))
         self.__settings__.setSetting("lastTorrentUrl", url)
         classMatch = re.search('(\w+)::(.+)', url)
         if classMatch:
             searcher = classMatch.group(1)
-            print "openTorrent............................"+classMatch.group(2)
+            print "openTorrent............................" + classMatch.group(2)
             if self.ROOT + os.sep + 'resources' + os.sep + 'searchers' not in sys.path:
                 sys.path.insert(0, self.ROOT + os.sep + 'resources' + os.sep + 'searchers')
             try:
@@ -285,10 +279,15 @@ class Core:
         torrent = Downloader.Torrent(self.userStorageDirectory, torrentFilesDirectory = self.torrentFilesDirectory)
         self.__settings__.setSetting("lastTorrent", torrent.saveTorrent(url))
         contentId = 0
-        #listitem = xbmcgui.ListItem('<' + Localization.localize('Add To Bookmarks') + ' >')
-        #itemUrl = '%s?action=%s&url=%s&name=%s&seeds=%s&image=%s' % (sys.argv[0], 'addBookmark', urllib.quote_plus(url), urllib.quote_plus(torrent.getContentList()[0].path), 0, '')
-        #listitem.setInfo(type = 'Video', infoLabels = {"Title":'<' + Localization.localize('Add To Bookmarks') + ' >'})
-        #xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=itemUrl, listitem=listitem)
+        #listitem = xbmcgui.ListItem('<' + Localization.localize('Add To
+        #Bookmarks') + ' >')
+        #itemUrl = '%s?action=%s&url=%s&name=%s&seeds=%s&image=%s' %
+        #(sys.argv[0], 'addBookmark', urllib.quote_plus(url),
+        #urllib.quote_plus(torrent.getContentList()[0].path), 0, '')
+        #listitem.setInfo(type = 'Video', infoLabels = {"Title":'<' +
+        #Localization.localize('Add To Bookmarks') + ' >'})
+        #xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=itemUrl,
+        #listitem=listitem)
         contentList = []
         for contentId, contentFile in enumerate(torrent.getContentList()):
             fileTitle = "%s [%s MB]" % (contentFile.path, contentFile.size / 1024 / 1024)#In MB
@@ -299,11 +298,14 @@ class Core:
         self.lockView('info')
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
 
+    '''
+    '''
     def sectionMenu(self):
         self.drawItem(Localization.localize('< Search >'), 'search', image=self.ROOT + '/icons/search.png')
         self.drawItem('Search Streaming', 'searchStreaming', image=self.ROOT + '/icons/search.png')
         self.drawItem('Last vidéos on regarder-film-gratuit', 'regarder_film_gratuit', image=self.ROOT + '/icons/RFS.png')
-        #self.drawItem('Test Youtube url', 'testStreaming', image=self.ROOT + '/icons/search.png')
+        #self.drawItem('Test Youtube url', 'testStreaming', image=self.ROOT +
+        #'/icons/search.png')
         self.drawItem('urlresolver Settings', 'display_settings', image=self.ROOT + '/icons/Settings.png')
 
         '''self.drawItem(Localization.localize('< Popular >'), 'getPopular', image=self.ROOT + '/icons/video.png')
@@ -321,17 +323,17 @@ class Core:
         self.lockView('list')
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
 
-    def regarder_film_gratuit(self, params = {}):
+    def regarder_film_gratuit(self, params={}):
         url = "http://www.regarder-film-gratuit.com/"
         tabRes = Utils.GetContentPage(url)
         for media  in tabRes:
-            #xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=stream_url, listitem=listitem, isFolder = True)
+            #xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=stream_url,
+            #listitem=listitem, isFolder = True)
             self.drawItem(media.Title, 'open_regarder_film_gratuit_Item', media.Link, media.PictureLink, infoMedia = media)
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
 
-
-    def open_regarder_film_gratuit_Item(self, params = {}):
-        url=urllib.unquote_plus(params.get("url"))
+    def open_regarder_film_gratuit_Item(self, params={}):
+        url = urllib.unquote_plus(params.get("url"))
         #print 'url_____________________________________________'
         #print url
         #url='http://www.regarder-film-gratuit.com/person-of-interest-saison-1-episode-1/'
@@ -348,7 +350,10 @@ class Core:
                     listitem = xbmcgui.ListItem(title)
                     listitem.setInfo(type = 'Video', infoLabels = {"Title": title})
                     search = self.api.search(title, "tvseries")
-                    #print "Search result Count [{0}] Code [{1}] Title [{2}]".format(search['feed']['totalResults'], search['feed']['tvseries'][0]['code'], search['feed']['tvseries'][0]['originalTitle'])
+                    #print "Search result Count [{0}] Code [{1}] Title
+                    #[{2}]".format(search['feed']['totalResults'],
+                    #search['feed']['tvseries'][0]['code'],
+                    #search['feed']['tvseries'][0]['originalTitle'])
                     if int(search['feed']['totalResults']) > 0 :
                         infoMedia = Utils.GetMediaInfoFromJson(self.api.tvseries(search['feed']['tvseries'][0]['code'],"small"))
                         listitem.setInfo(type = 'Video', infoLabels = {"Title": infoMedia.Title, "Year": infoMedia.Year, "Genre" : infoMedia.Genre , "Country" : infoMedia.Country,"Plot": infoMedia.Plot,"Director": infoMedia.Director,"Duration":infoMedia.Duration,"Cast": infoMedia.Cast})
@@ -362,7 +367,7 @@ class Core:
                 print e
                 continue
 
-    def searchStreaming(self, params = {}):
+    def searchStreaming(self, params={}):
         defaultKeyword = params.get('url')
         if not defaultKeyword:
             defaultKeyword = ''
@@ -375,14 +380,14 @@ class Core:
             params["url"] = urllib.quote_plus(query)
             self.openSectionStreaming(params)
 
-    def openSectionStreaming(self, params = {}):
-        url= urllib.unquote_plus(params.get("url"))
+    def openSectionStreaming(self, params={}):
+        url = urllib.unquote_plus(params.get("url"))
 
         if "http://" not in url :
-            url= urllib.unquote_plus("http://www.regarder-film-gratuit.com/page/1/?s=%s" % url)
+            url = urllib.unquote_plus("http://www.regarder-film-gratuit.com/page/1/?s=%s" % url)
         filesList = []
         res = Utils.GetContentSearchPage(url)
-        if len(res[0])>0 :
+        if len(res[0]) > 0 :
             search = self.api.search(params.get("url"), "tvseries")
             if int(search['feed']['totalResults']) > 0 :
                 infoMedia = Utils.GetMediaInfoFromJson(self.api.tvseries(search['feed']['tvseries'][0]['code'],"small"))
@@ -401,7 +406,7 @@ class Core:
 
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
 
-    def openSection(self, params = {}):
+    def openSection(self, params={}):
         get = params.get
         url = urllib.unquote_plus(get("url"))
         filesList = []
@@ -431,11 +436,11 @@ class Core:
         filesList = sorted(filesList, key=lambda x: x[0], reverse=True)
         self.showFilesList(filesList)
 
-    def display_settings(self, params = {}):
+    def display_settings(self, params={}):
         urlresolver.display_settings()
 
-    def testStreaming(self, params = {}):
-        web_url="http://youwatch.org/embed-dy6wflwwgve2-800x460.html"
+    def testStreaming(self, params={}):
+        web_url = "http://youwatch.org/embed-dy6wflwwgve2-800x460.html"
         web_url = "http://www.nowvideo.sx/video/p9c6yo3gsm9lc"
         #web_url="http://www.youtube.com/watch?v=IymhUwnFaPo"
         #web_url = "www.video.tt/video/8b1tclAzt"
@@ -444,7 +449,7 @@ class Core:
         if stream_url:
             listitem = xbmcgui.ListItem(label="Armin", path=str(stream_url))
             listitem.setProperty('mimetype', 'video/x-msvideo')
-            listitem.setInfo( type="Video", infoLabels={ "Title": "Armin", "Plot": "Armin Only", "Genre": "Music", "Year": "20/10/2012" } )
+            listitem.setInfo(type="Video", infoLabels={ "Title": "Armin", "Plot": "Armin Only", "Genre": "Music", "Year": "20/10/2012" })
             listitem.setProperty('IsPlayable', 'true')
             xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=stream_url, listitem=listitem, isFolder = False)
             xbmcplugin.setResolvedUrl(handle=int(sys.argv[1]), succeeded=True, listitem=listitem)
@@ -471,14 +476,14 @@ class Core:
                 Localization.localize('Add To Bookmarks'),
                 'XBMC.RunPlugin(%s)' % ('%s?action=%s&url=%s&name=%s&seeds=%s&image=%s') % (sys.argv[0], 'addBookmark', urllib.quote_plus(link), urllib.quote_plus(title), seeds, urllib.quote_plus(image))
             )]'''
-            mediaInfo=func(medialink)
+            mediaInfo = func(medialink)
             #print mediaInfo.Title
             if mediaInfo is not None:
                 self.drawItem(mediaInfo.Title, 'openTorrent', link, mediaInfo.PictureLink, infoMedia = mediaInfo)
         #self.lockView('wide')
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
 
-    def getPopular(self, params = {}):
+    def getPopular(self, params={}):
         filesList = []
         response = json.loads(self.fetchData(self.URL + '/popular').encode('utf-8'))
         for record in response:
@@ -491,7 +496,7 @@ class Core:
             if not self.checkForAuth(response):
                 return
 
-    def getHistory(self, params = {}):
+    def getHistory(self, params={}):
         filesList = []
         response = json.loads(self.fetchData(self.URL + '/history').encode('utf-8'))
         if not self.checkForAuth(response):
@@ -500,20 +505,18 @@ class Core:
             filesList.append((0, 0, str(record['name'].encode('utf-8', 'replace')), record['link'], ''))
         self.showFilesList(filesList)
 
-    def getBookmarks(self, params = {}):
+    def getBookmarks(self, params={}):
         response = json.loads(self.fetchData(self.URL + '/bookmarks').encode('utf-8'))
         if not self.checkForAuth(response):
             return
         for record in response:
-            contextMenu = [(
-                Localization.localize('Remove From Bookmarks'),
-                'XBMC.RunPlugin(%s)' % ('%s?action=%s&id=%s') % (sys.argv[0], 'removeBookmark', record['id'])
-            )]
+            contextMenu = [(Localization.localize('Remove From Bookmarks'),
+                'XBMC.RunPlugin(%s)' % ('%s?action=%s&id=%s') % (sys.argv[0], 'removeBookmark', record['id']))]
             self.drawItem(str(record['name'].encode('utf-8', 'replace')), 'openTorrent', record['link'], record['image'], contextMenu=contextMenu)
         self.lockView('wide')
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
 
-    def removeBookmark(self, params = {}):
+    def removeBookmark(self, params={}):
         get = params.get
         if 0 < len(self.__settings__.getSetting("auth")):
             response = json.loads(self.fetchData(self.URL + '/bookmarks/remove?id=%s' % (get("id"))).encode('utf-8'))
@@ -525,7 +528,7 @@ class Core:
             else:
                 xbmc.executebuiltin("Notification(%s, %s, 2500)" % (Localization.localize('Bookmark'), Localization.localize('Bookmark not removed')))
 
-    def addBookmark(self, params = {}):
+    def addBookmark(self, params={}):
         get = params.get
         if 0 < len(self.__settings__.getSetting("auth")):
             response = json.loads(self.fetchData(self.URL + '/bookmarks/add?link=%s&name=%s&seeds=%s&image=%s' % (get("url"), get('name'), get('seeds'), get('image'))).encode('utf-8'))
@@ -536,7 +539,7 @@ class Core:
             else:
                 xbmc.executebuiltin("Notification(%s, %s, 2500)" % (Localization.localize('Bookmark'), Localization.localize('Bookmark not added')))
 
-    def getRatings(self, params = {}):
+    def getRatings(self, params={}):
         filesList = []
         response = json.loads(self.fetchData(self.URL + '/rated').encode('utf-8'))
         for record in response:
@@ -550,13 +553,14 @@ class Core:
         rating.doModal()
         result = rating.rate
         del rating
-        #xbmc.executebuiltin("Notification(%s, %s, 2500)" % ('Rating', str(rating.rate)))
+        #xbmc.executebuiltin("Notification(%s, %s, 2500)" % ('Rating',
+        #str(rating.rate)))
         if 0 < len(self.__settings__.getSetting("auth")):
             response = json.loads(self.fetchData(self.URL + '/rating/add?link=%s&name=%s&rating=%s' % (urllib.quote_plus(self.__settings__.getSetting("lastTorrentUrl")), urllib.quote_plus(name), str(result))).encode('utf-8'))
             if not self.checkForAuth(response):
                 return
 
-    def search(self, params = {}):
+    def search(self, params={}):
         defaultKeyword = params.get('url')
         if not defaultKeyword:
             defaultKeyword = ''
@@ -569,7 +573,7 @@ class Core:
             params["url"] = urllib.quote_plus(query)
             self.openSection(params)
 
-    def loginUser(self, params = {}):
+    def loginUser(self, params={}):
         if self.__settings__.getSetting("auth"):
             xbmc.executebuiltin("Notification(%s, %s, 2500)" % (Localization.localize('Auth'), Localization.localize('Already logged in')))
             return
@@ -604,7 +608,7 @@ class Core:
             print self.__plugin__ + " loginUser() exception: " + str(e)
         xbmc.executebuiltin("Container.Refresh()")
 
-    def registerUser(self, params = {}):
+    def registerUser(self, params={}):
         if self.__settings__.getSetting("auth"):
             xbmc.executebuiltin("Notification(%s, %s, 2500)" % (Localization.localize('Auth'), Localization.localize('Already logged in')))
             return
@@ -639,7 +643,7 @@ class Core:
             print self.__plugin__ + " registerUser() exception: " + str(e)
         xbmc.executebuiltin("Container.Refresh()")
 
-    def logoutUser(self, params = {}):
+    def logoutUser(self, params={}):
         if not self.__settings__.getSetting("auth"):
             xbmc.executebuiltin("Notification(%s, %s, 2500)" % (Localization.localize('Auth'), Localization.localize('User not logged in')))
             return
@@ -658,7 +662,7 @@ class Core:
             return False
         return True
 
-    def recentPlaybleRu(self, params = {}):
+    def recentPlaybleRu(self, params={}):
         address = 'http://playble.ru/search/video/~rss'
         document = xml.dom.minidom.parse(urllib.urlopen(address))
         for item in document.getElementsByTagName('item'):
@@ -672,7 +676,7 @@ class Core:
         self.lockView('info')
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
 
-    def recentRuTorOrg(self, params = {}):
+    def recentRuTorOrg(self, params={}):
         categories = [1, 5, 12, 4, 6, 7, 10, 13, 15]
         for category in  categories:
             address = 'http://rutor.org/rss.php?category=' + str(category)
@@ -689,7 +693,7 @@ class Core:
         self.lockView('wide')
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
 
-    def recentOpenSharingOrg(self, params = {}):
+    def recentOpenSharingOrg(self, params={}):
         categories = [1, 4, 6, 7]
         for category in  categories:
             address = 'http://opensharing.org/rss.php?category=' + str(category)
@@ -706,7 +710,7 @@ class Core:
         self.lockView('wide')
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
 
-    def recentRuTrackerOrg(self, params = {}):
+    def recentRuTrackerOrg(self, params={}):
         address = 'http://xpoft.ru/torrents.ru/rss.xml?352;93;101;905;100;2198;313;2199;312;33;124;149;7;187;2459;212;2221;2091;2092;2093;2090;921;4;2365;930;208;1900;539;822;22;941;789;772'
         try:
             document = xml.dom.minidom.parse(urllib.urlopen(address))
@@ -727,7 +731,7 @@ class Core:
         self.lockView('info')
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
 
-    def recentKinopoiskRuBluRay(self, params = {}):
+    def recentKinopoiskRuBluRay(self, params={}):
         address = 'http://st.kinopoisk.ru/rss/bluray.rss'
         document = xml.dom.minidom.parse(urllib.urlopen(address))
         for item in document.getElementsByTagName('item'):
@@ -743,7 +747,7 @@ class Core:
         self.lockView('info')
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
 
-    def recentKinopoiskRuDvd(self, params = {}):
+    def recentKinopoiskRuDvd(self, params={}):
         address = 'http://st.kinopoisk.ru/rss/dvd.rss'
         document = xml.dom.minidom.parse(urllib.urlopen(address))
         for item in document.getElementsByTagName('item'):
@@ -759,20 +763,20 @@ class Core:
         self.lockView('info')
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
 
-    def recentKinopoiskRu(self, params = {}):
+    def recentKinopoiskRu(self, params={}):
         address = 'http://st.kinopoisk.ru/rss/premiere.rss'
         document = xml.dom.minidom.parse(urllib.urlopen(address))
         for item in document.getElementsByTagName('item'):
             try:
                 title = item.getElementsByTagName('title')[0].firstChild.data.encode('utf-8', 'replace')
-                image =  item.getElementsByTagName('enclosure')[0].attributes.get('url').nodeValue
+                image = item.getElementsByTagName('enclosure')[0].attributes.get('url').nodeValue
                 self.drawItem(title, 'openSection', title, image)
             except:
                 pass
         self.lockView('info')
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
 
-    def recentNNMClubRu(self, params = {}):
+    def recentNNMClubRu(self, params={}):
         address = 'http://nnm-club.ru/forum/rss2.php?r&s&f=220,224,229,918,216,318,254,256,768,769,713,576,603,610'
         document = xml.dom.minidom.parse(urllib.urlopen(address))
         for item in document.getElementsByTagName('item'):
@@ -785,7 +789,7 @@ class Core:
         self.lockView('wide')
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
 
-    def recentMaterilas(self, params = {}):
+    def recentMaterilas(self, params={}):
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
         import Filters
         filters = Filters.Filters()
