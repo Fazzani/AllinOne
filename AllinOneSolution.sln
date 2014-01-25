@@ -10,8 +10,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Addons", "Addons", "{596F59
 		AllinOne.zip = AllinOne.zip
 	EndProjectSection
 EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "PythonApplication1", "PythonApplication1\PythonApplication1.pyproj", "{EEB486EC-D433-41D6-9D2A-4A2A9B2BCA9F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,10 +20,6 @@ Global
 		{F5F6177E-B110-488D-A7E0-A1F7FBF4B113}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5F6177E-B110-488D-A7E0-A1F7FBF4B113}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5F6177E-B110-488D-A7E0-A1F7FBF4B113}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EEB486EC-D433-41D6-9D2A-4A2A9B2BCA9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EEB486EC-D433-41D6-9D2A-4A2A9B2BCA9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EEB486EC-D433-41D6-9D2A-4A2A9B2BCA9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EEB486EC-D433-41D6-9D2A-4A2A9B2BCA9F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
