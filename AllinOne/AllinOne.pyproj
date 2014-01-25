@@ -202,10 +202,10 @@
     <Content Include="Addons\addons.xml" />
     <Content Include="Addons\addons.xml.md5" />
     <Content Include="Addons\All\addon.xml" />
-    <Content Include="Addons\All\AllinOne.zip" />
     <Content Include="Addons\All\changelog.txt" />
     <Content Include="Addons\All\fanart.jpg" />
     <Content Include="Addons\All\icon.png" />
+    <Content Include="Addons\All\plugin.video.AllinOne.zip" />
     <Content Include="Addons\Thumbs.db" />
     <Content Include="bs4\builder\_html5lib.pyo" />
     <Content Include="bs4\builder\_htmlparser.pyo" />
