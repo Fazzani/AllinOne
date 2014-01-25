@@ -248,6 +248,7 @@
     <Content Include="Repo\addon.xml" />
     <Content Include="Repo\fanart.jpg" />
     <Content Include="Repo\icon.png" />
+    <Content Include="Repo\repository.video.allinone.zip" />
     <Content Include="resources\language\English\strings.xml" />
     <Content Include="resources\language\Russian\strings.xml" />
     <Content Include="resources\searchers\icons\kino-zal.tv.png" />
