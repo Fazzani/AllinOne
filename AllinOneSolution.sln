@@ -3,13 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "AllinOne", "AllinOne\AllinOne.pyproj", "{F5F6177E-B110-488D-A7E0-A1F7FBF4B113}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Addons", "Addons", "{596F5928-180C-40EF-8A3C-5EF7F69597C2}"
-	ProjectSection(SolutionItems) = preProject
-		addons.xml = addons.xml
-		addons.xml.md5 = addons.xml.md5
-		AllinOne.zip = AllinOne.zip
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
