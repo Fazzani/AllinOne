@@ -180,8 +180,6 @@
     <Folder Include="python_libtorrent\linux_x86\" />
     <Folder Include="python_libtorrent\linux_x86_64\" />
     <Folder Include="python_libtorrent\windows\" />
-    <Folder Include="Repo\" />
-    <Folder Include="Repo\AllinOne\" />
     <Folder Include="resources\" />
     <Folder Include="resources\language\" />
     <Folder Include="resources\language\English\" />
@@ -246,10 +244,6 @@
     <Content Include="python_libtorrent\windows\libtorrent.pyd" />
     <Content Include="python_libtorrent\windows\__init__.pyo" />
     <Content Include="README.txt" />
-    <Content Include="Repo\AllinOne\addon.xml" />
-    <Content Include="Repo\AllinOne\fanart.jpg" />
-    <Content Include="Repo\AllinOne\icon.png" />
-    <Content Include="Repo\AllinOne\repository.video.allinone.zip" />
     <Content Include="resources\language\English\strings.xml" />
     <Content Include="resources\language\Russian\strings.xml" />
     <Content Include="resources\searchers\icons\kino-zal.tv.png" />
