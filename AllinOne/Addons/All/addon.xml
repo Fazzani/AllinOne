@@ -9,9 +9,9 @@
     </extension>
   <extension point="allinone.addon.repository"
               name="Official AllinOne Add-on Repository">
-    <info compressed="false">http://github.com/Fazzani/AllinOne/blob/VA/addons.xml</info>
-    <checksum>http://github.com/Fazzani/AllinOne/blob/VA/addons.xml.md5</checksum>
-    <datadir zip="true">http://github.com/Fazzani/AllinOne/blob/VA/Addons</datadir>
+    <info compressed="false">http://github.com/Fazzani/AllinOne/blob/VA/Addons/addons.xml</info>
+    <checksum>http://github.com/Fazzani/AllinOne/blob/VA/Addons/addons.xml.md5</checksum>
+    <datadir zip="true">http://github.com/Fazzani/AllinOne/blob/VA/Addons/All</datadir>
   </extension>
     <extension point="xbmc.addon.metadata">
         <platform>all</platform>

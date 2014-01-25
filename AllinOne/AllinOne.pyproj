@@ -199,7 +199,6 @@
     <Folder Include="resources\searchers\tmpSearchers\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="addon.xml" />
     <Content Include="Addons\addons.xml" />
     <Content Include="Addons\addons.xml.md5" />
     <Content Include="Addons\All\addon.xml" />
