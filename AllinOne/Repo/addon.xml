@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="Repo.video.AllinOne" name="RepoAllinOne" version="1.0.0" provider-name="tunisienheni@gmail.com">
+  <extension point="xbmc.addon.repository"
+              name="Official AllinOne Add-on Repository">
+    <info compressed="false">http://github.com/Fazzani/AllinOne/blob/VA/AllinOne/Addons/addons.xml</info>
+    <checksum>http://github.com/Fazzani/AllinOne/blob/VA/AllinOne/Addons/addons.xml.md5</checksum>
+    <datadir zip="true">http://github.com/Fazzani/AllinOne/blob/VA/AllinOne/Addons/All/</datadir>
+  </extension>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <summary lang='en'>Plugin helps you to watch videos from p2p torrent-networks, without full predownload and to watch Streaming from www.regarder-film-gratuit.com</summary>
+		<description lang='en'>Plugin helps you to watch videos from p2p torrent-networks, without full predownload. Requires installed 'python-libtorrent' library (read README.TXT) and helps you to watch streaming froms www.regarder-film-gratuit.com.</description>
+        <disclaimer lang='en'>GNU GPLv3 http://www.gnu.org/licenses/</disclaimer>
+		<summary lang='fr'>Un plugin qui vous aide à streamer des séries depuis [COLOR red][B][I]des sites de streaming[/B][/I][/COLOR] et de streamer également des [COLOR red][B][I]torrents[/B][/I][/COLOR]</summary>
+        <description lang='fr'>Un plugin qui vous aide à streamer des séries depuis [COLOR red][B][I]des sites de streaming[/B][/I][/COLOR] et de streamer également des [COLOR red][B][I]torrents[/B][/I][/COLOR]</description>
+        <disclaimer lang='fr'>GNU GPLv3 http://www.gnu.org/licenses/</disclaimer>
+    </extension>
+</addon>
