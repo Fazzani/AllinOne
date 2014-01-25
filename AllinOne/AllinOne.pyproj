@@ -210,7 +210,7 @@
     <Content Include="Addons\plugin.video.allinone2\fanart.jpg" />
     <Content Include="Addons\plugin.video.allinone2\icon.png" />
     <Content Include="Addons\plugin.video.allinone2\LICENSE.txt" />
-    <Content Include="Addons\plugin.video.allinone2\plugin.video.allinone2-1.0.0.zip" />
+    <Content Include="Addons\plugin.video.allinone2\plugin.video.allinone2.zip" />
     <Content Include="Addons\plugin.video.allinone\addon.xml" />
     <Content Include="Addons\plugin.video.allinone\changelog-1.0.0.txt" />
     <Content Include="Addons\plugin.video.allinone\fanart.jpg" />
