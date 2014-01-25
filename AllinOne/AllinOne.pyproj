@@ -5,7 +5,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>f5f6177e-b110-488d-a7e0-a1f7fbf4b113</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>AllinOne.py</StartupFile>
+    <StartupFile>
+    </StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -23,7 +24,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Addons\gen.py" />
-    <Compile Include="AllinOne.py" />
     <Compile Include="allocine\Allocine.py" />
     <Compile Include="allocine\AllocineObject.py" />
     <Compile Include="allocine\Movie.py" />

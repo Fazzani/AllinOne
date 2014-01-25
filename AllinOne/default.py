@@ -22,7 +22,7 @@ import sys
 import xbmc
 import xbmcaddon
 
-__settings__ = xbmcaddon.Addon(id='plugin.video.AllinOne')
+__settings__ = xbmcaddon.Addon(id='plugin.video.allinone')
 __version__ = __settings__.getAddonInfo('version')
 __plugin__ = __settings__.getAddonInfo('name') + " v." + __version__
 __root__ = __settings__.getAddonInfo('path')
