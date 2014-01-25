@@ -236,6 +236,7 @@
     <Content Include="icons\search.png" />
     <Content Include="icons\Settings.png" />
     <Content Include="icons\video.png" />
+    <Content Include="Addons\plugin.video.AllinOne.zip" />
     <Content Include="python_libtorrent\linux_x86\libtorrent.so" />
     <Content Include="python_libtorrent\linux_x86\__init__.pyo" />
     <Content Include="python_libtorrent\linux_x86_64\libtorrent.so" />
