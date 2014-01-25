@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
+<extension>
+	<info compressed="false">http://github.com/Fazzani/AllinOne/blob/VA/addons.xml</info>
+	<checksum>http://github.com/Fazzani/AllinOne/blob/VA/addons.xml.md5</checksum>
+	<datadir zip="true">http://github.com/Fazzani/AllinOne/blob/VA/Addons</datadir>
+</extension>
 <addon id="plugin.video.AllinOne" name="AllinOne" version="1.0.0" provider-name="tunisienheni@gmail.com">
     <requires>
         <import addon="xbmc.python" version="2.0"/>
