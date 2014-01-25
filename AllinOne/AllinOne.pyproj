@@ -205,9 +205,6 @@
     <Content Include="Addons\All\changelog.txt" />
     <Content Include="Addons\All\fanart.jpg" />
     <Content Include="Addons\All\icon.png" />
-    <Content Include="Addons\All\plugin.video.AllinOne.zip">
-      <Publish>True</Publish>
-    </Content>
     <Content Include="Addons\Thumbs.db" />
     <Content Include="bs4\builder\_html5lib.pyo" />
     <Content Include="bs4\builder\_htmlparser.pyo" />
@@ -236,7 +233,7 @@
     <Content Include="icons\search.png" />
     <Content Include="icons\Settings.png" />
     <Content Include="icons\video.png" />
-    <Content Include="Addons\plugin.video.AllinOne.zip" />
+    <Content Include="Addons\All\plugin.video.AllinOne.zip" />
     <Content Include="python_libtorrent\linux_x86\libtorrent.so" />
     <Content Include="python_libtorrent\linux_x86\__init__.pyo" />
     <Content Include="python_libtorrent\linux_x86_64\libtorrent.so" />
