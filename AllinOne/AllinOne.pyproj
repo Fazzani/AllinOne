@@ -209,7 +209,7 @@
     <Content Include="Addons\plugin.video.allinone\fanart.jpg" />
     <Content Include="Addons\plugin.video.allinone\icon.png" />
     <Content Include="Addons\plugin.video.allinone\LICENSE.txt" />
-    <Content Include="Addons\plugin.video.allinone\plugin.video.allinone.zip" />
+    <Content Include="Addons\plugin.video.allinone\plugin.video.allinone-1.0.0.zip" />
     <Content Include="bs4\builder\_html5lib.pyo" />
     <Content Include="bs4\builder\_htmlparser.pyo" />
     <Content Include="bs4\builder\_lxml.pyo" />
