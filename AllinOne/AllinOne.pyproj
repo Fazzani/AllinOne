@@ -203,7 +203,7 @@
     <Content Include="Addons\addons.xml" />
     <Content Include="Addons\addons.xml.md5" />
     <Content Include="Addons\All\addon.xml" />
-    <Content Include="Addons\All\changelog.txt" />
+    <Content Include="Addons\All\changelog-1.0.0.txt" />
     <Content Include="Addons\All\fanart.jpg" />
     <Content Include="Addons\All\icon.png" />
     <Content Include="Addons\All\plugin.video.allinone-1.0.0.zip" />
@@ -245,7 +245,6 @@
     <Content Include="Repo\addon.xml" />
     <Content Include="Repo\fanart.jpg" />
     <Content Include="Repo\icon.png" />
-    <Content Include="Repo\README.txt" />
     <Content Include="resources\language\English\strings.xml" />
     <Content Include="resources\language\Russian\strings.xml" />
     <Content Include="resources\searchers\icons\kino-zal.tv.png" />
