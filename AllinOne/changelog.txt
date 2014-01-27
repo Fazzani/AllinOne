@@ -1,4 +1,5 @@
-﻿[B]Version 1.2.7[/B]
+﻿
+[B]Version 1.2.7[/B]
 - Fixed searchers by https://bitbucket.org/DiMartino
 
 [B]Version 1.2.6[/B]
