@@ -337,7 +337,7 @@ class Core:
         #print 'url_____________________________________________'
         #print url
         #url='http://www.regarder-film-gratuit.com/person-of-interest-saison-1-episode-1/'
-        print Utils.GetContentPage(url, "details")
+        #print Utils.GetContentPage(url, "details")
         for title, linkStrm  in Utils.GetContentPage(url, "details"):
             try:
 ##                linkStrm="http://embed.nowvideo.sx/embed.php?v=p9c6yo3gsm9lc"
@@ -381,29 +381,47 @@ class Core:
             self.openSectionStreaming(params)
 
     def openSectionStreaming(self, params={}):
-        url = urllib.unquote_plus(params.get("url"))
-
-        if "http://" not in url :
-            url = urllib.unquote_plus("http://www.regarder-film-gratuit.com/page/1/?s=%s" % url)
+        get = params.get
+        url = urllib.unquote_plus(get("url"))
         filesList = []
-        res = Utils.GetContentSearchPage(url)
-        if len(res[0]) > 0 :
-            search = self.api.search(params.get("url"), "tvseries")
-            if int(search['feed']['totalResults']) > 0 :
-                infoMedia = Utils.GetMediaInfoFromJson(self.api.tvseries(search['feed']['tvseries'][0]['code'],"small"))
+        if None == get('isApi'):
+            progressBar = xbmcgui.DialogProgress()
+            progressBar.create(Localization.localize('Please Wait'), Localization.localize('Materials are loading now.'))
+            iterator = 0
+        searchersList = []
+        dirList = os.listdir(self.ROOT + os.sep + 'resources' + os.sep + 'searchersStreaming')
+        for searcherFile in dirList:
+            if re.match('^(\w+)\.py$', searcherFile):
+                searchersList.append(searcherFile)
+        for searcherFile in searchersList:
+            searcher = re.search('^(\w+)\.py$', searcherFile).group(1)
+            print repr(searcher)
+            if searcher:
+                if None == get('isApi'):
+                    progressBar.update(int(iterator), searcher)
+                    iterator += 100 / len(searchersList)
+                filesList += self.searchWithSearcherStreaming(url, searcher)
+            if None == get('isApi') and progressBar.iscanceled():
+                progressBar.update(0)
+                progressBar.close()
+                return
+        if None == get('isApi'):
+            progressBar.update(0)
+            progressBar.close()
+        filesList = sorted(filesList, key=lambda x: x[0], reverse=True)
+        self.showFilesStreamingList(filesList)
 
-        for (title, link) in res[0]:
-            #print title
-            search = self.api.search(params.get("url"), "tvseries")
+    def showFilesStreamingList(self, filesList):
+        for (title, link, infoMedia) in filesList:
+            print title
+            #print mediaInfo.Title
             if infoMedia :
                 self.drawItem(title, 'open_regarder_film_gratuit_Item', link, infoMedia.PictureLink, infoMedia = infoMedia)
             else:
                 self.drawItem(title, 'open_regarder_film_gratuit_Item', link)
-
         #self.lockView('wide')
-        if res[1] != None:
-            self.drawItem("Next Page >>", 'openSectionStreaming', res[1])
-
+        #if res[1] != None:
+        #    self.drawItem("Next Page >>", 'openSectionStreaming', res[1])
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
 
     def openSection(self, params={}):
@@ -460,6 +478,19 @@ class Core:
         filesList = []
         if self.ROOT + os.sep + 'resources' + os.sep + 'searchers' not in sys.path:
             sys.path.insert(0, self.ROOT + os.sep + 'resources' + os.sep + 'searchers')
+        try:
+            searcherObject = getattr(__import__(searcher), searcher)()
+            if searcherObject.isMagnetLinkSource and 'false' == self.__settings__.getSetting("use_magnet_links"):
+                return filesList
+            filesList = searcherObject.search(keyword)
+        except Exception, e:
+            print 'Unable to use searcher: ' + searcher + ' at ' + self.__plugin__ + ' searchWithSearcher(). Exception: ' + str(e)
+        return filesList
+
+    def searchWithSearcherStreaming(self, keyword, searcher):
+        filesList = []
+        if self.ROOT + os.sep + 'resources' + os.sep + 'searchersStreaming' not in sys.path:
+            sys.path.insert(0, self.ROOT + os.sep + 'resources' + os.sep + 'searchersStreaming')
         try:
             searcherObject = getattr(__import__(searcher), searcher)()
             if searcherObject.isMagnetLinkSource and 'false' == self.__settings__.getSetting("use_magnet_links"):

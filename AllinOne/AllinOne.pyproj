@@ -95,6 +95,7 @@
     <Compile Include="python_libtorrent\windows\__init__.py" />
     <Compile Include="python_libtorrent\__init__.py" />
     <Compile Include="Rates.py" />
+    <Compile Include="resources\searchersStreaming\RegarderGratuit.py" />
     <Compile Include="resources\searchers\bs4\builder\_html5lib.py" />
     <Compile Include="resources\searchers\bs4\builder\_htmlparser.py" />
     <Compile Include="resources\searchers\bs4\builder\_lxml.py" />
@@ -185,6 +186,7 @@
     <Folder Include="resources\language\" />
     <Folder Include="resources\language\English\" />
     <Folder Include="resources\language\Russian\" />
+    <Folder Include="resources\searchersStreaming\" />
     <Folder Include="resources\searchers\" />
     <Folder Include="resources\searchers\bs4\" />
     <Folder Include="resources\searchers\bs4\builder\" />

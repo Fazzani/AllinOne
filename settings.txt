@@ -1,0 +1,5 @@
+file_ignore=.exe;.pyo;.pyproj;.zip
+dir_ignore=Addons;
+dir_dist_name=AllinOne
+zip_name=\AllinOne\Addons\plugin.video.allinonetest2\plugin.video.allinonetest2.zip
+gen_dir=\AllinOne\Addons\gen.py
