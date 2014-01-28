@@ -30,12 +30,12 @@ from allocine.Allocine import Allocine
 
 from Utils import timed, tryGetValue
 
-class RegarderGratuit(SearcherABC.SearcherABC):
+class Streamay(SearcherABC.SearcherABC):
 
-    tab =["(Date de sortie)(.*?)$", "(Année de production)(.*?)$","(Nom du film)(.*?)$", "(Réalisé par)(.*?)$","(Avec)(.*?)$","(Genre)(.*?)$","(Durée)(.*?)$","(Nationalité)(.*?)$"]
+    tab = ["(Date de sortie)(.*?)$", "(Année de production)(.*?)$","(Nom du film)(.*?)$", "(Réalisé par)(.*?)$","(Avec)(.*?)$","(Genre)(.*?)$","(Durée)(.*?)$","(Nationalité)(.*?)$"]
     api = Allocine()
 
-    BASE_URL = "http://www.regarder-film-gratuit.com"
+    BASE_URL = "http://streamay.com"
 
     '''
     Weight of source with this searcher provided.
@@ -48,7 +48,7 @@ class RegarderGratuit(SearcherABC.SearcherABC):
     Relative (from root directory of plugin) path to image
     will shown as source image at result listing
     '''
-    searchIcon = '/resources/searchers/icons/logoOmg.png'
+    searchIcon = '/resources/icons/logoStreamy.png'
 
     '''
     Flag indicates is this source - magnet links source or not.
@@ -62,44 +62,42 @@ class RegarderGratuit(SearcherABC.SearcherABC):
     '''
     Main method should be implemented for search process.
     Receives keyword and have to return dictionary of proper tuples:
-    filesList.append((
-        int(weight),# Calculated global weight of sources
-        int(seeds),# Seeds count
-        str(title),# Title will be shown
-        str(link),# Link to the torrent/magnet
-        str(image),# Path/URL to image shown at the list
-    ))
     '''
     @timed()
     def search(self, keyword):
         print '________________________'
         print self.__class__.__name__
         self.api.configure('100043982026','29d185d98c984a359e6e6f26a0474269')
-
+        ## do=search&subaction=search&search_start=2&full_search=0&result_from=0&story=evasion
+        page = 1
         filesList = []
-        url = "%s/page/1/?s=%s" % (self.BASE_URL, (urllib.quote_plus(keyword)))
-        res = self.GetContentSearchPage(url)
-        if len(res[0]) > 0 :
-            search = self.api.search(keyword, "tvseries")
-            if int(search['feed']['totalResults']) > 0 :
-                infoMedia = Utils.GetMediaInfoFromJson(self.api.tvseries(search['feed']['tvseries'][0]['code'],"small"))
+        data = {'do':'search',
+                'subaction':'search',
+                'search_start':str(page),
+                'full_search':'0',
+                'result_from':'0',
+                'story':keyword }
+        res = self.GetContentSearchPage(self.BASE_URL, data)
+            
 
-        for (title, link) in res[0]:
-            search = self.api.search(keyword, "tvseries")
+        for (title, link, imageLink) in res[0]:
+            search = self.api.search(title,"movie")
+            infoMedia = Media()
+            if int(search['feed']['totalResults']) > 0 :
+                infoMedia = Utils.GetMediaInfoFromJson(self.api.movie(search['feed']['movie'][0]['code'],"small"), typeMedia="movie")
+            infoMedia.PictureLink = self.BASE_URL + imageLink
             if infoMedia :
-                 filesList.append((
-                    title,
+                 filesList.append((title,
                     link,
                     infoMedia,
                     self.__class__.__name__,
-                ))
+                    ))
             else:
-                filesList.append((
-                    title,
+                filesList.append((title,
                     link,
                     None,
                     self.__class__.__name__,
-                ))
+                    ))
                
         return filesList
 
@@ -107,7 +105,7 @@ class RegarderGratuit(SearcherABC.SearcherABC):
     Get Info Media from Url
     '''
     def getInfoMediaFromUrl(self, medialink):
-        if((re.search(r"/films/", medialink, re.M|re.I)==None) and (re.search(r"/series/", medialink, re.M|re.I)==None)):
+        if((re.search(r"/films/", medialink, re.M | re.I) == None) and (re.search(r"/series/", medialink, re.M | re.I) == None)):
             return None
 
         return self.extractInfosMedia(self.makeRequest(medialink))
@@ -148,27 +146,26 @@ class RegarderGratuit(SearcherABC.SearcherABC):
         else:
             return media
 
-    def GetContentSearchPage(self, url):
-        response = Utils.getContentOfUrl(url)
-        response= response.replace("</sc'+'ript>",'</script>')
+    def GetContentSearchPage(self, url, data):
+        response = Utils.getContentOfUrl(url, data)
 
-        tab=[]
+        tab = []
         if None != response and 0 < len(response):
             soup = BeautifulSoup(response)
-            nextPage = soup.find("a", "nextpostslink")
+            nextPage = soup.find("a", "nextlink")
             if nextPage != None :
                 nextPage = nextPage["href"]
-            nodes = soup.findAll("div", "post")
+            nodes = soup.findAll("div", "column")
             for node in nodes:
-                #returns title, link
-                tab.append((node.h2.a.text.encode('utf-8').strip(), node.h2.a["href"].encode('utf-8').strip()))
+                '''
+                @returns title, link, image
+                '''
+                tab.append((node.h3.a.text.encode('utf-8').strip(), node.h3.a["href"].encode('utf-8').strip(), node.div.a.img['src'].encode('utf-8').strip()))
         return (tab, nextPage)
 
     def GetPageDetails(self, url, page="acceuil"):
         url = urllib.unquote_plus(url)
         response = Utils.getContentOfUrl(url)
-        response = response.replace("<sc'+'ript",'<script>')
-        response= response.replace("</sc'+'ript>",'</script>')
 
         tab=[]
         if None != response and 0 < len(response):
@@ -180,11 +177,13 @@ class RegarderGratuit(SearcherABC.SearcherABC):
     ##                if "http://www" not in link and  "http://embed" not in link:
     ##                    link = link.replace("http://","http://www.")
                     tab.append((node.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
-                for node in soup.findAll("iframe", width="600"):
+                for node in soup.findAll("iframe", width="650"):
                     link = node["src"]
     ##                if "http://www" not in link and  "http://embed" not in link:
     ##                    link = link.replace("http://","http://www.")
-                    tab.append((node.parent.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
+                    print '__________________________________'
+                    print node.parent.parent.parent.parent.find('div','describe-box').div.div.img['src'].encode('utf-8').strip().replace('/image.php?url=','')
+                    tab.append((node.parent.parent.parent.parent.find('div','describe-box').div.div.img['src'].encode('utf-8').strip().split('?')[1], link))
             else:
                 nodes = soup.findAll("div", "post")
                 for node in nodes:

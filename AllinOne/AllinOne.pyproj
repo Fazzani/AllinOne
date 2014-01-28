@@ -95,6 +95,7 @@
     <Compile Include="python_libtorrent\windows\__init__.py" />
     <Compile Include="python_libtorrent\__init__.py" />
     <Compile Include="Rates.py" />
+    <Compile Include="resources\searchersStreaming\Streamay.py" />
     <Compile Include="resources\searchersStreaming\RegarderGratuit.py" />
     <Compile Include="resources\searchers\bs4\builder\_html5lib.py" />
     <Compile Include="resources\searchers\bs4\builder\_htmlparser.py" />
@@ -183,6 +184,7 @@
     <Folder Include="python_libtorrent\linux_x86_64\" />
     <Folder Include="python_libtorrent\windows\" />
     <Folder Include="resources\" />
+    <Folder Include="resources\icons\" />
     <Folder Include="resources\language\" />
     <Folder Include="resources\language\English\" />
     <Folder Include="resources\language\Russian\" />
@@ -198,7 +200,6 @@
     <Folder Include="resources\searchers\html5lib\treebuilders\" />
     <Folder Include="resources\searchers\html5lib\treewalkers\" />
     <Folder Include="resources\searchers\html5lib\trie\" />
-    <Folder Include="resources\searchers\icons\" />
     <Folder Include="resources\searchers\tmpSearchers\" />
   </ItemGroup>
   <ItemGroup>
@@ -242,7 +243,7 @@
     <Content Include="icons\login.png" />
     <Content Include="icons\logout.png" />
     <Content Include="icons\register.png" />
-    <Content Include="icons\RFS.png" />
+    <Content Include="resources\icons\RFS.png" />
     <Content Include="icons\search.png" />
     <Content Include="icons\Settings.png" />
     <Content Include="icons\video.png" />
@@ -255,15 +256,15 @@
     <Content Include="README.txt" />
     <Content Include="resources\language\English\strings.xml" />
     <Content Include="resources\language\Russian\strings.xml" />
-    <Content Include="resources\searchers\icons\kino-zal.tv.png" />
-    <Content Include="resources\searchers\icons\krasfs.ru.png" />
-    <Content Include="resources\searchers\icons\logoOmg.png" />
-    <Content Include="resources\searchers\icons\logoSmartTorrent.png" />
-    <Content Include="resources\searchers\icons\nnm-club.ru.png" />
-    <Content Include="resources\searchers\icons\omg.png" />
-    <Content Include="resources\searchers\icons\rutor.org.png" />
-    <Content Include="resources\searchers\icons\rutracker.org.png" />
-    <Content Include="resources\searchers\icons\thepiratebay.se.png" />
+    <Content Include="resources\icons\kino-zal.tv.png" />
+    <Content Include="resources\icons\krasfs.ru.png" />
+    <Content Include="resources\icons\logoOmg.png" />
+    <Content Include="resources\icons\logoSmartTorrent.png" />
+    <Content Include="resources\icons\nnm-club.ru.png" />
+    <Content Include="resources\icons\omg.png" />
+    <Content Include="resources\icons\rutor.org.png" />
+    <Content Include="resources\icons\rutracker.org.png" />
+    <Content Include="resources\icons\thepiratebay.se.png" />
     <Content Include="resources\searchers\__init__.pyc" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />

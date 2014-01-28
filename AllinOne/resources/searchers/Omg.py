@@ -43,7 +43,7 @@ class Omg(SearcherABC.SearcherABC):
     Relative (from root directory of plugin) path to image
     will shown as source image at result listing
     '''
-    searchIcon = '/resources/searchers/icons/logoOmg.png'
+    searchIcon = '/resources/icons/logoOmg.png'
 
     '''
     Flag indicates is this source - magnet links source or not.
