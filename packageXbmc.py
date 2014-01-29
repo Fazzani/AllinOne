@@ -31,7 +31,7 @@ def main():
 
     settings = getSettings(__SettingsFilePath__)
     zipFileName= __current_dir__ + settings[3][1]
-    zipFileName=r"d:\tmp.zip"
+    zipFileName=r"C:\Users\Heni\Documents\GitHub\AllinOne\AllinOne\Addons\plugin.video.allinonetest\plugin.video.allinonetest-1.0.0.zip"
     zipf = zipfile.ZipFile(zipFileName, 'w')
     zipdir(settings[2][1], zipf, settings)
     zipf.close()
