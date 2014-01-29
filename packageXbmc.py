@@ -17,7 +17,6 @@ def getSettings(path):
     file=open(path, 'r')
     for ligne in file:
          tab.append(ligne.rstrip('\n').split('='))
-    print tab
     return tab
 
 def zipdir(path, zip, settings):
@@ -35,7 +34,7 @@ def main():
     zipf = zipfile.ZipFile(zipFileName, 'w')
     zipdir(settings[2][1], zipf, settings)
     zipf.close()
-    execfile(__current_dir__+ settings[4][1])
+    exec(open(__current_dir__+ settings[4][1],'r').read())
     pass
 
 __SettingsFilePath__='settings.txt'

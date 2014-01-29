@@ -51,7 +51,7 @@ class Generator:
         # addon list
         addons = os.listdir( "." )
         # final addons text
-        addons_xml = u("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<addons>\n")
+        addons_xml = ("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<addons>\n")
         # loop thru and add each addons addon.xml file
         for addon in addons:
             try:
@@ -78,7 +78,7 @@ class Generator:
                 # missing or poorly formatted addon.xml
                 print("Excluding %s for %s" % ( _path, e ))
         # clean and add closing tag
-        addons_xml = addons_xml.strip() + u("\n</addons>\n")
+        addons_xml = addons_xml.strip() + ("\n</addons>\n")
         # save file
         self._save_file( addons_xml.encode( "UTF-8" ), file="addons.xml" )
     
