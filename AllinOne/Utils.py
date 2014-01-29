@@ -179,15 +179,15 @@ def GetDomain(url):
 
 def GetMediaInfoFromJson(json, typeMedia="tvseries"):
     serie = json[typeMedia]
-    print repr(serie)
-    media = Media(tryGetValueFromArray(serie,"title"), "", tryGetValueFromArray(serie,"synopsisShort"), tryGetValueFromArray(serie,"poster")["href"])
-    media.Genre= tryGetValueFromArray(serie, "genre")[0]['$']
+    print repr(tryGetValueFromArray(serie,"synopsisShort"))
+    media = Media(tryGetValueFromArray(serie,"title"), "", tryGetValueFromArray(serie,"synopsisShort"), tryGetValueFromArray(tryGetValueFromArray(serie,"poster"),"href"))
+    media.Genre= tryGetValueFromArray(tryGetValueFromArray(tryGetValueFromArray(serie, "genre"),0),'$')
     if typeMedia=="tvseries":
         media.Year= tryGetValueFromArray(serie, "yearStart")
     else:
         media.Year= tryGetValueFromArray(serie, "productionYear")
 
-    media.Country= tryGetValueFromArray(serie, "nationality")[0]['$']
+    media.Country= tryGetValueFromArray(tryGetValueFromArray(tryGetValueFromArray(serie, "nationality"),0),'$')
     media.Cast= tryGetValueFromArray(tryGetValueFromArray(serie, "castingShort"), 'actors')
     media.Director= tryGetValueFromArray(tryGetValueFromArray(serie, "castingShort"),'directors')
     return media

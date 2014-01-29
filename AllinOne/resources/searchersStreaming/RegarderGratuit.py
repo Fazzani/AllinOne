@@ -79,6 +79,7 @@ class RegarderGratuit(SearcherABC.SearcherABC):
         filesList = []
         url = "%s/page/1/?s=%s" % (self.BASE_URL, (urllib.quote_plus(keyword)))
         res = self.GetContentSearchPage(url)
+        infoMedia = Media()
         if len(res[0]) > 0 :
             search = self.api.search(keyword, "tvseries")
             if int(search['feed']['totalResults']) > 0 :
@@ -164,8 +165,12 @@ class RegarderGratuit(SearcherABC.SearcherABC):
                 tab.append((node.h2.a.text.encode('utf-8').strip(), node.h2.a["href"].encode('utf-8').strip()))
         return (tab, nextPage)
 
-    def GetPageDetails(self, url, page="acceuil"):
-        url = urllib.unquote_plus(url)
+    def GetPageDetails(self, url="", page="acceuil"):
+        if url is not None:
+            url = urllib.unquote_plus(self.BASE_URL)
+        else:
+            url = urllib.unquote_plus(url)
+
         response = Utils.getContentOfUrl(url)
         response = response.replace("<sc'+'ript",'<script>')
         response= response.replace("</sc'+'ript>",'</script>')
@@ -190,5 +195,5 @@ class RegarderGratuit(SearcherABC.SearcherABC):
                 for node in nodes:
                     listp = node.find("div","content").findAll("p")
                     #returns title, link, img, synopsis
-                    tab.append(Media(node.h2.a.text.encode('utf-8').strip(), node.h2.a["href"].encode('utf-8').strip(), listp[1].text.encode('utf-8').strip(), listp[0].img["src"]))
+                    tab.append(Media(node.h2.a.text, node.h2.a["href"].encode('utf-8').strip(), listp[1].text.encode('utf-8').strip(), listp[0].img["src"]))
         return tab

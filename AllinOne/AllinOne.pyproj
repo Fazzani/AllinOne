@@ -243,6 +243,7 @@
     <Content Include="icons\login.png" />
     <Content Include="icons\logout.png" />
     <Content Include="icons\register.png" />
+    <Content Include="resources\icons\logoStreamy.png" />
     <Content Include="resources\icons\RFS.png" />
     <Content Include="icons\search.png" />
     <Content Include="icons\Settings.png" />

@@ -38,6 +38,9 @@ from Utils import timed
 import Utils
 import urlresolver
 from allocine.Allocine import Allocine
+sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/resources/searchersStreaming/'))
+from Streamay import Streamay
+from RegarderGratuit import RegarderGratuit
 
 class Core:
     __plugin__ = sys.modules["__main__"].__plugin__
@@ -301,8 +304,9 @@ class Core:
     '''
     def sectionMenu(self):
         self.drawItem(Localization.localize('< Search >'), 'search', image=self.ROOT + '/icons/search.png')
-        self.drawItem('Search Streaming', 'searchStreaming', image=self.ROOT + '/icons/search.png')
-        self.drawItem('Last vidéos on regarder-film-gratuit', 'regarder_film_gratuit', image=self.ROOT + '/icons/RFS.png')
+        self.drawItem('Chercher un streaming', 'searchStreaming', image=self.ROOT + '/icons/search.png')
+        self.drawItem('Les dernières Séries', 'Last_TvSeries', image=self.ROOT + '/resources/icons/RFS.png')
+        self.drawItem('Les dernièrs Films', 'Last_Movies', image=self.ROOT + '/resources/icons/logoStreamy.png')
         #self.drawItem('Test Youtube url', 'testStreaming', image=self.ROOT +
         #'/icons/search.png')
         self.drawItem('urlresolver Settings', 'display_settings', image=self.ROOT + '/icons/Settings.png')
@@ -322,12 +326,17 @@ class Core:
         self.lockView('list')
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
 
-    def regarder_film_gratuit(self, params={}):
-        url = "http://www.regarder-film-gratuit.com/"
-        tabRes = Utils.GetContentPage(url)
+    def Last_TvSeries(self, params={}):
+        tabRes = RegarderGratuit().GetPageDetails()
         for media  in tabRes:
             #xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=stream_url,
             #listitem=listitem, isFolder = True)
+            self.drawItem(media.Title, 'open_regarder_film_gratuit_Item', media.Link, media.PictureLink, infoMedia = media)
+        xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
+
+    def Last_Movies(self, params={}):
+        tabRes = Streamay().GetPageDetails()
+        for media  in tabRes:
             self.drawItem(media.Title, 'open_regarder_film_gratuit_Item', media.Link, media.PictureLink, infoMedia = media)
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
 
@@ -377,7 +386,6 @@ class Core:
             print 'Unable to use searcher: ' + searcher + ' at ' + self.__plugin__ + ' searchWithSearcherStreaming(). Exception: ' + str(e)
             return None
         
-
     def searchStreaming(self, params={}):
         defaultKeyword = params.get('url')
         if not defaultKeyword:

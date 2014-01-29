@@ -18,16 +18,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 from bs4 import BeautifulSoup
+from bs4.dammit import (
+    EntitySubstitution,
+    UnicodeDammit,
+)
 import SearcherABC
 from SearcherABC import Media
 import urllib
-import re
-import sys
-import os
+import re, sys, os
 sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/' + '../..'))
 import Utils
 from allocine.Allocine import Allocine
-
 from Utils import timed, tryGetValue
 
 class Streamay(SearcherABC.SearcherABC):
@@ -65,8 +66,7 @@ class Streamay(SearcherABC.SearcherABC):
     '''
     @timed()
     def search(self, keyword):
-        print '________________________'
-        print self.__class__.__name__
+        print 'In search' + self.__class__.__name__
         self.api.configure('100043982026','29d185d98c984a359e6e6f26a0474269')
         ## do=search&subaction=search&search_start=2&full_search=0&result_from=0&story=evasion
         page = 1
@@ -78,14 +78,19 @@ class Streamay(SearcherABC.SearcherABC):
                 'result_from':'0',
                 'story':keyword }
         res = self.GetContentSearchPage(self.BASE_URL, data)
-            
 
         for (title, link, imageLink) in res[0]:
             search = self.api.search(title,"movie")
             infoMedia = Media()
+            #print "***** : "+repr(search)
             if int(search['feed']['totalResults']) > 0 :
                 infoMedia = Utils.GetMediaInfoFromJson(self.api.movie(search['feed']['movie'][0]['code'],"small"), typeMedia="movie")
-            infoMedia.PictureLink = self.BASE_URL + imageLink
+
+            if "http://" not in imageLink:
+                infoMedia.PictureLink = self.BASE_URL + imageLink
+            else:
+                infoMedia.PictureLink =  imageLink
+
             if infoMedia :
                  filesList.append((title,
                     link,
@@ -152,19 +157,24 @@ class Streamay(SearcherABC.SearcherABC):
         tab = []
         if None != response and 0 < len(response):
             soup = BeautifulSoup(response)
+          
             nextPage = soup.find("a", "nextlink")
-            if nextPage != None :
+            if nextPage :
                 nextPage = nextPage["href"]
             nodes = soup.findAll("div", "column")
             for node in nodes:
                 '''
                 @returns title, link, image
                 '''
-                tab.append((node.h3.a.text.encode('utf-8').strip(), node.h3.a["href"].encode('utf-8').strip(), node.div.a.img['src'].encode('utf-8').strip()))
+                tab.append((node.h3.a.text.replace('ĂŠ','é').replace('Ă´','ô').replace('Ă¨','è').replace('Ă','à'), node.h3.a["href"].encode('utf-8').strip(), node.div.a.img['src'].encode('utf-8').strip()))
         return (tab, nextPage)
 
-    def GetPageDetails(self, url, page="acceuil"):
-        url = urllib.unquote_plus(url)
+    def GetPageDetails(self, url="", page="acceuil"):
+        if url is None:
+            url = urllib.unquote_plus(url)
+        else:
+            url = urllib.unquote_plus(self.BASE_URL)
+
         response = Utils.getContentOfUrl(url)
 
         tab=[]
@@ -181,8 +191,6 @@ class Streamay(SearcherABC.SearcherABC):
                     link = node["src"]
     ##                if "http://www" not in link and  "http://embed" not in link:
     ##                    link = link.replace("http://","http://www.")
-                    print '__________________________________'
-                    print node.parent.parent.parent.parent.find('div','describe-box').div.div.img['src'].encode('utf-8').strip().replace('/image.php?url=','')
                     tab.append((node.parent.parent.parent.parent.find('div','describe-box').div.div.img['src'].encode('utf-8').strip().split('?')[1], link))
             else:
                 nodes = soup.findAll("div", "post")
