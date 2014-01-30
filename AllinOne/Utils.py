@@ -14,7 +14,7 @@ import time
 from bs4 import BeautifulSoup
 import urllib, urllib2
 import re
-import sys
+import sys, cookielib
 from SearcherABC import Media
 
 #-------------------------------------------------------------------------------
@@ -192,4 +192,23 @@ def GetMediaInfoFromJson(json, typeMedia="tvseries"):
     media.Director= tryGetValueFromArray(tryGetValueFromArray(serie, "castingShort"),'directors')
     return media
 
+def ClearTitle(title):
+    return title.encode('utf-8').replace('?Š','é').replace('?´','ô').replace('?¨','è').replace('?','à')
 
+def VK_ResolveUrl(url):
+    print 'TODO make this a generic function in appManager'
+    proc = urllib2.HTTPCookieProcessor()
+    proc.cookiejar.set_cookie(cookielib.Cookie(0, 'remixsid', '265634296',
+                                   '80', False, 'vk.com', True, False, '/',
+                                   True, False, None, False, None, None, None))
+    opener = urllib2.build_opener(urllib2.HTTPHandler(), proc)
+    html = opener.open(url).read()    
+
+    players = re.findall("url([0-8]{3})=(http://(?:[0-9a-z]{1,10})\.vk\.me/u(?:[\d]+)/videos/(?:[0-9a-z]{1,10})\.[0-8]{3}\.(mp4|flv))", html)
+    maxResol = 240
+    streamUrl = ""
+    for resol, url, ext in players:
+        if resol >= maxResol:
+            streamUrl = url
+    return streamUrl
+    

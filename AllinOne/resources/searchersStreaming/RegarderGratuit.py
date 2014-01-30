@@ -194,6 +194,6 @@ class RegarderGratuit(SearcherABC.SearcherABC):
                 nodes = soup.findAll("div", "post")
                 for node in nodes:
                     listp = node.find("div","content").findAll("p")
-                    #returns title, link, img, synopsis
+                    #returns title, link, synopsis, img
                     tab.append(Media(node.h2.a.text, node.h2.a["href"].encode('utf-8').strip(), listp[1].text.encode('utf-8').strip(), listp[0].img["src"]))
         return tab

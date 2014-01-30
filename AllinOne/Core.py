@@ -305,8 +305,8 @@ class Core:
     def sectionMenu(self):
         self.drawItem(Localization.localize('< Search >'), 'search', image=self.ROOT + '/icons/search.png')
         self.drawItem('Chercher un streaming', 'searchStreaming', image=self.ROOT + '/icons/search.png')
-        self.drawItem('Les dernières Séries', 'Last_TvSeries', image=self.ROOT + '/resources/icons/RFS.png')
-        self.drawItem('Les dernièrs Films', 'Last_Movies', image=self.ROOT + '/resources/icons/logoStreamy.png')
+        self.drawItem('Les dernières séries', 'Last_TvSeries', image=self.ROOT + '/resources/icons/RFS.png')
+        self.drawItem('Les derniers films', 'Last_Movies', image=self.ROOT + '/resources/icons/logoStreamy.png')
         #self.drawItem('Test Youtube url', 'testStreaming', image=self.ROOT +
         #'/icons/search.png')
         self.drawItem('urlresolver Settings', 'display_settings', image=self.ROOT + '/icons/Settings.png')
@@ -336,8 +336,9 @@ class Core:
 
     def Last_Movies(self, params={}):
         tabRes = Streamay().GetPageDetails()
+        print repr(tabRes)
         for media  in tabRes:
-            self.drawItem(media.Title, 'open_regarder_film_gratuit_Item', media.Link, media.PictureLink, infoMedia = media)
+            self.drawItem(media.Title, 'open_regarder_film_gratuit_Item', media.Link, media.PictureLink, infoMedia = media, searcherName=media.Source)
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
 
     def open_regarder_film_gratuit_Item(self, params={}):
@@ -346,6 +347,7 @@ class Core:
         searcherObject = self.getSearcherStreaming(searcherName)
         if searcherObject is None :
             return
+        ##url='http://streamay.com/5386-eyjafjallajgkull-le-volcan.html'
         res = searcherObject.GetPageDetails(url,'details')
         #url='http://www.regarder-film-gratuit.com/person-of-interest-saison-1-episode-1/'
         #print Utils.GetContentPage(url, "details")
@@ -354,10 +356,12 @@ class Core:
             try:
 ##                linkStrm="http://embed.nowvideo.sx/embed.php?v=p9c6yo3gsm9lc"
 ##                linkStrm="http://www.nowvideo.sx/video/p9c6yo3gsm9lc"
-                stream_url = urlresolver.resolve(linkStrm)
-
+                if re.match('http://(.*)vk\.(com|me)/(.*)', linkStrm):
+                    stream_url = Utils.VK_ResolveUrl(linkStrm)
+                else:
+                    stream_url = urlresolver.resolve(linkStrm)
+                
                 if stream_url:
-                    print linkStrm
                     print "Source : %s" % Utils.GetDomain(linkStrm)
                     listitem = xbmcgui.ListItem(title)
                     listitem.setInfo(type = 'Video', infoLabels = {"Title": title})
@@ -381,6 +385,7 @@ class Core:
         if self.ROOT + os.sep + 'resources' + os.sep + '\searchersStreaming' not in sys.path:
             sys.path.insert(0, self.ROOT + os.sep + 'resources' + os.sep + '\searchersStreaming')
         try:
+            print searcherName
             return getattr(__import__(searcherName), searcherName)()
         except Exception, e:
             print 'Unable to use searcher: ' + searcher + ' at ' + self.__plugin__ + ' searchWithSearcherStreaming(). Exception: ' + str(e)
@@ -400,7 +405,6 @@ class Core:
             self.openSectionStreaming(params)
 
     def openSectionStreaming(self, params={}):
-        print '___________________________ openSectionStreaming'
         get = params.get
         url = urllib.unquote_plus(get("url"))
         filesList = []

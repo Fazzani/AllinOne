@@ -2,7 +2,7 @@
 '''
     Torrenter plugin for XBMC
     Copyright (C) 2012 Vadim Skorba
-    vadim.skorba@gmail.com
+    tunisienheni@gmail.com
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,18 +18,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 from bs4 import BeautifulSoup
-from bs4.dammit import (
-    EntitySubstitution,
-    UnicodeDammit,
-)
 import SearcherABC
 from SearcherABC import Media
 import urllib
-import re, sys, os
+import re
+import sys
+import os
 sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/' + '../..'))
 import Utils
-from allocine.Allocine import Allocine
 from Utils import timed, tryGetValue
+from allocine.Allocine import Allocine
 
 class Streamay(SearcherABC.SearcherABC):
 
@@ -66,7 +64,6 @@ class Streamay(SearcherABC.SearcherABC):
     '''
     @timed()
     def search(self, keyword):
-        print 'In search' + self.__class__.__name__
         self.api.configure('100043982026','29d185d98c984a359e6e6f26a0474269')
         ## do=search&subaction=search&search_start=2&full_search=0&result_from=0&story=evasion
         page = 1
@@ -89,20 +86,18 @@ class Streamay(SearcherABC.SearcherABC):
             if "http://" not in imageLink:
                 infoMedia.PictureLink = self.BASE_URL + imageLink
             else:
-                infoMedia.PictureLink =  imageLink
+                infoMedia.PictureLink = imageLink
 
             if infoMedia :
                  filesList.append((title,
                     link,
                     infoMedia,
-                    self.__class__.__name__,
-                    ))
+                    self.__class__.__name__,))
             else:
                 filesList.append((title,
                     link,
                     None,
-                    self.__class__.__name__,
-                    ))
+                    self.__class__.__name__,))
                
         return filesList
 
@@ -166,36 +161,46 @@ class Streamay(SearcherABC.SearcherABC):
                 '''
                 @returns title, link, image
                 '''
-                tab.append((node.h3.a.text.replace('ĂŠ','é').replace('Ă´','ô').replace('Ă¨','è').replace('Ă','à'), node.h3.a["href"].encode('utf-8').strip(), node.div.a.img['src'].encode('utf-8').strip()))
+                tab.append((Utils.ClearTitle(node.h3.a.text), node.h3.a["href"].encode('utf-8').strip(), node.div.a.img['src'].encode('utf-8').strip()))
         return (tab, nextPage)
 
-    def GetPageDetails(self, url="", page="acceuil"):
-        if url is None:
+    def GetPageDetails(self, url="", page="accueil"):
+        if url and url is not None:
             url = urllib.unquote_plus(url)
         else:
             url = urllib.unquote_plus(self.BASE_URL)
-
-        response = Utils.getContentOfUrl(url)
-
-        tab=[]
+        if page == 'details':
+            response = Utils.getContentOfUrl(url)
+        else:
+            data = {'dlenewssortby':'date','dledirection':'asc'}
+            response = Utils.getContentOfUrl(url, data)
+        tab = []
         if None != response and 0 < len(response):
             soup = BeautifulSoup(response)
-            if page =='details':
+            if page == 'details':
                 for node in soup.findAll("object"):
                     link = node.param["value"]
-                    #print 'node.param["value"] : ' + node.param["value"]
-    ##                if "http://www" not in link and  "http://embed" not in link:
-    ##                    link = link.replace("http://","http://www.")
                     tab.append((node.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
-                for node in soup.findAll("iframe", width="650"):
-                    link = node["src"]
-    ##                if "http://www" not in link and  "http://embed" not in link:
-    ##                    link = link.replace("http://","http://www.")
-                    tab.append((node.parent.parent.parent.parent.find('div','describe-box').div.div.img['src'].encode('utf-8').strip().split('?')[1], link))
+                for node in soup.findAll("iframe"):
+                    if node.has_key("allowfullscreen"):
+                        link = node["src"]
+                        if 'http://' not in link:
+                            link = self.BASE_URL + link
+                        #print soup.find('div','describe-box').div.div.img['src'].encode('utf-8')
+                        if 'youtube' not in link:
+                            tab.append((soup.find('div','describe-box').div.div.img['src'].encode('utf-8').strip(), link))
+                        '''
+                        print ('in boucle**********************')
+                        link = node["src"]
+                        tab.append((node.parent.parent.parent.parent.find('div','describe-box').div.div.img['src'].encode('utf-8').strip().split('?')[1], link))
+                        '''
             else:
-                nodes = soup.findAll("div", "post")
+                '''
+                Récupération des films depuis la page d'accueil du Site
+                '''
+                nodes = soup.find("div", {'id':'dle-content'}).findAll('div','column')
                 for node in nodes:
-                    listp = node.find("div","content").findAll("p")
-                    #returns title, link, img, synopsis
-                    tab.append(Media(node.h2.a.text.encode('utf-8').strip(), node.h2.a["href"].encode('utf-8').strip(), listp[1].text.encode('utf-8').strip(), listp[0].img["src"]))
+                    pic = self.BASE_URL + node.find('div','image-holder').a.img["src"]
+                    #returns title, link, synopsis, img, SearcherName
+                    tab.append(Media(Utils.ClearTitle(node.h3.a.text), node.h3.a["href"].encode('utf-8').strip(), '', pic, self.__class__.__name__))
         return tab
