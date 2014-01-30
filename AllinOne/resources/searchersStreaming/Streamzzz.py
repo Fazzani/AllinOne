@@ -30,7 +30,7 @@ from allocine.Allocine import Allocine
 
 from Utils import timed, tryGetValue
 
-class RegarderGratuit(SearcherABC.SearcherABC):
+class Streamzzz(SearcherABC.SearcherABC):
 
     tab =["(Date de sortie)(.*?)$", "(Année de production)(.*?)$","(Nom du film)(.*?)$", "(Réalisé par)(.*?)$","(Avec)(.*?)$","(Genre)(.*?)$","(Durée)(.*?)$","(Nationalité)(.*?)$"]
     api = Allocine()
@@ -38,7 +38,7 @@ class RegarderGratuit(SearcherABC.SearcherABC):
     def __init__(self):
         self.api.configure('100043982026','29d185d98c984a359e6e6f26a0474269')
 
-    BASE_URL = "http://www.regarder-film-gratuit.com"
+    BASE_URL = "http://streamzzz.com/"
 
     '''
     Weight of source with this searcher provided.

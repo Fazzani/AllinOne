@@ -95,6 +95,7 @@
     <Compile Include="python_libtorrent\windows\__init__.py" />
     <Compile Include="python_libtorrent\__init__.py" />
     <Compile Include="Rates.py" />
+    <Compile Include="resources\searchersStreaming\Streamzzz.py" />
     <Compile Include="resources\searchersStreaming\Streamay.py" />
     <Compile Include="resources\searchersStreaming\RegarderGratuit.py" />
     <Compile Include="resources\searchers\bs4\builder\_html5lib.py" />
