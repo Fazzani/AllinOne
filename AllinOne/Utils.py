@@ -196,7 +196,6 @@ def ClearTitle(title):
     return title.encode('utf-8').replace('?Š','é').replace('?´','ô').replace('?¨','è').replace('?','à')
 
 def VK_ResolveUrl(url):
-    print 'TODO make this a generic function in appManager'
     proc = urllib2.HTTPCookieProcessor()
     proc.cookiejar.set_cookie(cookielib.Cookie(0, 'remixsid', '265634296',
                                    '80', False, 'vk.com', True, False, '/',
@@ -209,6 +208,7 @@ def VK_ResolveUrl(url):
     streamUrl = ""
     for resol, url, ext in players:
         if resol >= maxResol:
+            maxResol=resol
             streamUrl = url
     return streamUrl
     
