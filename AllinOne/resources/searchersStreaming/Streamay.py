@@ -32,7 +32,14 @@ from allocine.Allocine import Allocine
 class Streamay(SearcherABC.SearcherABC):
 
     tab = ["(Date de sortie)(.*?)$", "(Année de production)(.*?)$","(Nom du film)(.*?)$", "(Réalisé par)(.*?)$","(Avec)(.*?)$","(Genre)(.*?)$","(Durée)(.*?)$","(Nationalité)(.*?)$"]
+
+    '''
+    Api du Scraper(Allociné)
+    '''
     api = Allocine()
+
+    def __init__(self):
+        self.api.configure('100043982026','29d185d98c984a359e6e6f26a0474269')
 
     BASE_URL = "http://streamay.com"
 
@@ -48,7 +55,7 @@ class Streamay(SearcherABC.SearcherABC):
     will shown as source image at result listing
     '''
     searchIcon = '/resources/icons/logoStreamy.png'
-
+    nextPage=""
     '''
     Flag indicates is this source - magnet links source or not.
     Used for filtration of sources in case of old library (setting selected).
@@ -74,12 +81,12 @@ class Streamay(SearcherABC.SearcherABC):
                 'full_search':'0',
                 'result_from':'0',
                 'story':keyword }
+
         res = self.GetContentSearchPage(self.BASE_URL, data)
 
         for (title, link, imageLink) in res[0]:
             search = self.api.search(title,"movie")
             infoMedia = Media()
-            #print "***** : "+repr(search)
             if int(search['feed']['totalResults']) > 0 :
                 infoMedia = Utils.GetMediaInfoFromJson(self.api.movie(search['feed']['movie'][0]['code'],"small"), typeMedia="movie")
 
@@ -165,15 +172,20 @@ class Streamay(SearcherABC.SearcherABC):
         return (tab, nextPage)
 
     def GetPageDetails(self, url="", page="accueil"):
+
         if url and url is not None:
             url = urllib.unquote_plus(url)
         else:
             url = urllib.unquote_plus(self.BASE_URL)
+
         if page == 'details':
+            #Requête en GET
             response = Utils.getContentOfUrl(url)
         else:
-            data = {'dlenewssortby':'date','dledirection':'asc'}
+            #Requête en POST
+            data = {'dlenewssortby':'date','dledirection':'desc'}
             response = Utils.getContentOfUrl(url, data)
+
         tab = []
         if None != response and 0 < len(response):
             soup = BeautifulSoup(response)
@@ -186,21 +198,28 @@ class Streamay(SearcherABC.SearcherABC):
                         link = node["src"]
                         if 'http://' not in link:
                             link = self.BASE_URL + link
-                        #print soup.find('div','describe-box').div.div.img['src'].encode('utf-8')
                         if 'youtube' not in link:
                             tab.append((soup.find('div','describe-box').div.div.img['src'].encode('utf-8').strip(), link))
-                        '''
-                        print ('in boucle**********************')
-                        link = node["src"]
-                        tab.append((node.parent.parent.parent.parent.find('div','describe-box').div.div.img['src'].encode('utf-8').strip().split('?')[1], link))
-                        '''
             else:
                 '''
                 Récupération des films depuis la page d'accueil du Site
                 '''
-                nodes = soup.find("div", {'id':'dle-content'}).findAll('div','column')
+                content= soup.find("div", {'id':'dle-content'})
+                nodes = content.findAll('div','column')
+                self.nextPage = content.find('div','navigation').a['href']
                 for node in nodes:
-                    pic = self.BASE_URL + node.find('div','image-holder').a.img["src"]
-                    #returns title, link, synopsis, img, SearcherName
-                    tab.append(Media(Utils.ClearTitle(node.h3.a.text), node.h3.a["href"].encode('utf-8').strip(), '', pic, self.__class__.__name__))
+                    title = Utils.ClearTitle(node.h3.a.text)
+                    try:
+                       search = self.api.search(title,"movie")
+                       infoMedia = Utils.GetMediaInfoFromJson(self.api.movie(search['feed']['movie'][0]['code'],"small"), typeMedia="movie")
+                       infoMedia.PictureLink = self.BASE_URL + node.find('div','image-holder').a.img["src"]
+                       infoMedia.Link=node.h3.a["href"].encode('utf-8').strip()
+                       infoMedia.Source = self.__class__.__name__
+                       tab.append(infoMedia)
+                    except:
+                       #returns title, link, synopsis, img, SearcherName
+                       pic = self.BASE_URL + node.find('div','image-holder').a.img["src"]
+                       #returns title, link, synopsis, img, SearcherName
+                       tab.append(Media(title, node.h3.a["href"].encode('utf-8').strip(), '', pic, self.__class__.__name__))
+                       continue
         return tab

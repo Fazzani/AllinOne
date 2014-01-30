@@ -2,7 +2,7 @@
 '''
     Torrenter plugin for XBMC
     Copyright (C) 2012 Vadim Skorba
-    vadim.skorba@gmail.com
+    tunisienheni@gmail.com
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -82,21 +82,17 @@ class SearcherABC:
         else:
             return captchaText
 
-    htmlCodes = (
-        ('&', '&amp;'),
+    htmlCodes = (('&', '&amp;'),
         ('<', '&lt;'),
         ('>', '&gt;'),
         ('"', '&quot;'),
-        ("'", '&#39;'),
-    )
-    stripPairs = (
-        ('<p>', '\n'),
+        ("'", '&#39;'),)
+    stripPairs = (('<p>', '\n'),
         ('<li>', '\n'),
         ('<br>', '\n'),
         ('<.+?>', ' '),
         ('</.+?>', ' '),
-        ('&nbsp;', ' '),
-    )
+        ('&nbsp;', ' '),)
 
     def unescape(self, string):
         for (symbol, code) in self.htmlCodes:
@@ -115,23 +111,23 @@ class SearcherABC:
 
 
 class Media:
-    def __init__(self, title="", link="", plot="" , pic= '/resources/searchers/icons/krasfs.ru.png', source=""):
-        self.Link=link
-        self.Title= title
-        self.Year=""
-        self.Country=""
-        self.Genre=""
-        self.ReleaseDate=""
-        self.Plot= plot
-        self.Director=""
-        self.Duration=""
-        self.Cast=""
+    def __init__(self, title="", link="", plot="" , pic='/resources/searchers/icons/krasfs.ru.png', source=""):
+        self.Link = link
+        self.Title = title
+        self.Year = ""
+        self.Country = ""
+        self.Genre = ""
+        self.ReleaseDate = ""
+        self.Plot = plot
+        self.Director = ""
+        self.Duration = ""
+        self.Cast = ""
         self.PictureLink = pic
         '''Le site Source de cette media'''
-        self.Source=source 
+        self.Source = source 
         if pic == '/resources/searchers/icons/krasfs.ru.png' :
-            self.PictureLink=sys.modules[ "__main__"].__root__ + pic
-        self.tab=[("Title",self.Title),("Year",self.Year),("Country",self.Country),("Genre",self.Genre),("ReleaseDate",self.ReleaseDate),("Plot",self.Plot),("Director",self.Director),("Duration",self.Duration),("Cast",self.Cast),("Link",self.Link)]
+            self.PictureLink = sys.modules["__main__"].__root__ + pic
+        self.tab = [("Title",self.Title),("Year",self.Year),("Country",self.Country),("Genre",self.Genre),("ReleaseDate",self.ReleaseDate),("Plot",self.Plot),("Director",self.Director),("Duration",self.Duration),("Cast",self.Cast),("Link",self.Link)]
 
     def __getitem__(self, item):
         return self.tab[item]

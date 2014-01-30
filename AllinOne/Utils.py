@@ -193,7 +193,7 @@ def GetMediaInfoFromJson(json, typeMedia="tvseries"):
     return media
 
 def ClearTitle(title):
-    return title.encode('utf-8').replace('?Š','é').replace('?´','ô').replace('?¨','è').replace('?','à')
+    return title.encode('utf-8').replace('??','é').replace('?´','ô').replace('?¨','è').replace('?','à')
 
 def VK_ResolveUrl(url):
     proc = urllib2.HTTPCookieProcessor()

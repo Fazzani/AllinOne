@@ -85,9 +85,9 @@ class Core:
         else:
             self.userStorageDirectory = self.userStorageDirectory + 'Torrenter'
 
-    def drawItem(self, title, action, link='', image='', isFolder=True, contextMenu=None, infoMedia=None, searcherName=''):
+    def drawItem(self, title, action, link='', image='', isFolder=True, contextMenu=None, infoMedia=None, searcherName='', page=1):
         listitem = xbmcgui.ListItem(title, iconImage=image, thumbnailImage=image)
-        url = '%s?action=%s&url=%s&searcherName=%s' % (sys.argv[0], action, urllib.quote_plus(link), searcherName)
+        url = '%s?action=%s&url=%s&searcherName=%s&page=%s' % (sys.argv[0], action, urllib.quote_plus(link), searcherName, str(page))
         if contextMenu:
             listitem.addContextMenuItems(contextMenu, replaceItems=True)
         if isFolder:
@@ -327,18 +327,20 @@ class Core:
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
 
     def Last_TvSeries(self, params={}):
-        tabRes = RegarderGratuit().GetPageDetails()
+        url = params.get("url")
+        tabRes = RegarderGratuit().GetPageDetails(page = page)
         for media  in tabRes:
-            #xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=stream_url,
-            #listitem=listitem, isFolder = True)
             self.drawItem(media.Title, 'open_regarder_film_gratuit_Item', media.Link, media.PictureLink, infoMedia = media)
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
 
     def Last_Movies(self, params={}):
-        tabRes = Streamay().GetPageDetails()
-        print repr(tabRes)
-        for media  in tabRes:
+        url = params.get("url")
+        streamay = Streamay()
+        for media  in streamay.GetPageDetails(url):
             self.drawItem(media.Title, 'open_regarder_film_gratuit_Item', media.Link, media.PictureLink, infoMedia = media, searcherName=media.Source)
+        if streamay.nextPage != None and streamay != '':
+            self.drawItem("Next Page >>", 'Last_Movies', streamay.nextPage)
+
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
 
     def open_regarder_film_gratuit_Item(self, params={}):
