@@ -165,7 +165,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Addons\" />
-    <Folder Include="Addons\plugin.video.allinonetest\" />
     <Folder Include="Addons\plugin.video.allinone\" />
     <Folder Include="allocine\" />
     <Folder Include="bs4\" />
@@ -208,12 +207,6 @@
     <Content Include="Addons\addons.xml.md5" />
     <Content Include="Addons\fanart.jpg" />
     <Content Include="Addons\icon.png" />
-    <Content Include="Addons\plugin.video.allinonetest\addon.xml" />
-    <Content Include="Addons\plugin.video.allinonetest\changelog-1.0.0.txt" />
-    <Content Include="Addons\plugin.video.allinonetest\fanart.jpg" />
-    <Content Include="Addons\plugin.video.allinonetest\icon.png" />
-    <Content Include="Addons\plugin.video.allinonetest\LICENSE.txt" />
-    <Content Include="Addons\plugin.video.allinonetest\plugin.video.allinonetest-1.0.0.zip" />
     <Content Include="Addons\plugin.video.allinone\addon.xml" />
     <Content Include="Addons\plugin.video.allinone\changelog-1.0.0.txt" />
     <Content Include="Addons\plugin.video.allinone\fanart.jpg" />
