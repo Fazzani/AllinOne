@@ -356,15 +356,14 @@ class Core:
         
         for title, linkStrm  in res:
             try:
-##                linkStrm="http://embed.nowvideo.sx/embed.php?v=p9c6yo3gsm9lc"
-##                linkStrm="http://www.nowvideo.sx/video/p9c6yo3gsm9lc"
                 if re.match('http://(.*)vk\.(com|me)/(.*)', linkStrm):
                     stream_url = Utils.VK_ResolveUrl(linkStrm)
                 else:
                     stream_url = urlresolver.resolve(linkStrm)
                 
                 if stream_url:
-                    print "Source : %s" % Utils.GetDomain(linkStrm)
+                    print(stream_url)
+                    print("Source : %s" % Utils.GetDomain(linkStrm))
                     listitem = xbmcgui.ListItem(title)
                     listitem.setInfo(type = 'Video', infoLabels = {"Title": title})
                     search = self.api.search(title, "tvseries")
@@ -377,8 +376,8 @@ class Core:
                 else:
                     continue
 
-            except Exception, e:
-                print e
+            except Exception,e:
+                print(e)
                 continue
     '''
     Crée un objet Searcher's Streaming
@@ -440,7 +439,7 @@ class Core:
     def showFilesStreamingList(self, filesList):
         for (title, link, infoMedia, searcherName) in filesList:
             if infoMedia :
-                self.drawItem(title, 'open_regarder_film_gratuit_Item', link, infoMedia.PictureLink, infoMedia = infoMedia, searcherName= searcherName)
+                self.drawItem("%s (%s)" % (title, searcherName), 'open_regarder_film_gratuit_Item', link, infoMedia.PictureLink, infoMedia = infoMedia, searcherName= searcherName)
             else:
                 self.drawItem(title, 'open_regarder_film_gratuit_Item', link)
         #self.lockView('wide')
@@ -858,4 +857,3 @@ class Core:
         self.drawItem('Kinopoisk.Ru - Blu-Ray', 'recentKinopoiskRuBluRay')
         self.lockView('info')
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
-

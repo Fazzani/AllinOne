@@ -166,10 +166,10 @@ class RegarderGratuit(SearcherABC.SearcherABC):
         return (tab, nextPage)
 
     def GetPageDetails(self, url="", page="acceuil"):
-        if url is not None:
-            url = urllib.unquote_plus(self.BASE_URL)
-        else:
+        if url and url is not None:
             url = urllib.unquote_plus(url)
+        else:
+            url = urllib.unquote_plus(self.BASE_URL)
 
         response = Utils.getContentOfUrl(url)
         response = response.replace("<sc'+'ript",'<script>')

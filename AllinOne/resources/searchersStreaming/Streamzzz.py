@@ -2,7 +2,7 @@
 '''
     Torrenter plugin for XBMC
     Copyright (C) 2012 Vadim Skorba
-    vadim.skorba@gmail.com
+    tunisienheni@gmail.com
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ class Streamzzz(SearcherABC.SearcherABC):
     def __init__(self):
         self.api.configure('100043982026','29d185d98c984a359e6e6f26a0474269')
 
-    BASE_URL = "http://streamzzz.com/"
+    BASE_URL = "http://streamzzz.com"
 
     '''
     Weight of source with this searcher provided.
@@ -77,8 +77,11 @@ class Streamzzz(SearcherABC.SearcherABC):
     def search(self, keyword):
 
         filesList = []
-        url = "%s/page/1/?s=%s" % (self.BASE_URL, (urllib.quote_plus(keyword)))
+        #http://streamzzz.com/search/dead/next/1
+        print(keyword)
+        url = "%s/search/%s/next/1" % (self.BASE_URL, (urllib.quote_plus(keyword)))
         res = self.GetContentSearchPage(url)
+        print(repr(res))
         infoMedia = Media()
         if len(res[0]) > 0 :
             search = self.api.search(keyword, "tvseries")
@@ -104,6 +107,23 @@ class Streamzzz(SearcherABC.SearcherABC):
                
         return filesList
 
+    def GetContentSearchPage(self, url):
+        response = Utils.getContentOfUrl(url).replace('scr"+"ipt','script')
+        tab=[]
+        if None != response and 0 < len(response):
+            soup = BeautifulSoup(response)
+            
+            nextPage = soup.find("a", "pagination-next")
+            if nextPage != None :
+                nextPage = nextPage["href"]
+            nodes = soup.findAll('ul','search-res')[1].findAll("li")
+            for node in nodes:
+                #returns title, link
+                print('11111111111')
+                print(node.h3.a["href"].encode('utf-8').strip())
+                tab.append((node.h3.a.text.encode('utf-8').strip(), node.h3.a["href"].encode('utf-8').strip()))
+        return (tab, nextPage)
+
     '''
     Get Info Media from Url
     '''
@@ -120,7 +140,7 @@ class Streamzzz(SearcherABC.SearcherABC):
         media = Media()
         if None != htmlContent and 0 < len(htmlContent):
             soup = BeautifulSoup(htmlContent)
-            ficheFilmBloc = soup.find("div", {"class" : "infos_fiche"})
+            ficheFilmBloc = soup.find("div", {"class" : "page_content"})
             fiche = ficheFilmBloc.findAll("li")
 
             for f in fiche:
@@ -149,51 +169,28 @@ class Streamzzz(SearcherABC.SearcherABC):
         else:
             return media
 
-    def GetContentSearchPage(self, url):
-        response = Utils.getContentOfUrl(url)
-        response= response.replace("</sc'+'ript>",'</script>')
-
-        tab=[]
-        if None != response and 0 < len(response):
-            soup = BeautifulSoup(response)
-            nextPage = soup.find("a", "nextpostslink")
-            if nextPage != None :
-                nextPage = nextPage["href"]
-            nodes = soup.findAll("div", "post")
-            for node in nodes:
-                #returns title, link
-                tab.append((node.h2.a.text.encode('utf-8').strip(), node.h2.a["href"].encode('utf-8').strip()))
-        return (tab, nextPage)
-
     def GetPageDetails(self, url="", page="acceuil"):
-        if url is not None:
-            url = urllib.unquote_plus(self.BASE_URL)
-        else:
+        if url and url is not None:
             url = urllib.unquote_plus(url)
+        else:
+            url = urllib.unquote_plus(self.BASE_URL)
 
-        response = Utils.getContentOfUrl(url)
-        response = response.replace("<sc'+'ript",'<script>')
-        response= response.replace("</sc'+'ript>",'</script>')
-
+        response = Utils.getContentOfUrl(url).replace('sc"+"ript','script').replace("sc'+'ript","script").replace('scr"+"ipt','script').replace("scr'+'ipt","script")
         tab=[]
         if None != response and 0 < len(response):
             soup = BeautifulSoup(response)
             if page =='details':
                 for node in soup.findAll("object"):
                     link = node.param["value"]
-                    #print 'node.param["value"] : ' + node.param["value"]
-    ##                if "http://www" not in link and  "http://embed" not in link:
-    ##                    link = link.replace("http://","http://www.")
                     tab.append((node.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
                 for node in soup.findAll("iframe", width="600"):
+                    print('_________________________________________')
                     link = node["src"]
-    ##                if "http://www" not in link and  "http://embed" not in link:
-    ##                    link = link.replace("http://","http://www.")
-                    tab.append((node.parent.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
+                    print(link)
+                    tab.append((soup.find('div','page_content').p.text.encode('utf-8').strip(), link))
             else:
                 nodes = soup.findAll("div", "post")
                 for node in nodes:
                     listp = node.find("div","content").findAll("p")
-                    #returns title, link, synopsis, img
                     tab.append(Media(node.h2.a.text, node.h2.a["href"].encode('utf-8').strip(), listp[1].text.encode('utf-8').strip(), listp[0].img["src"]))
         return tab

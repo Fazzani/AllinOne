@@ -1,3 +1,4 @@
+#-*- coding:Utf-8 -*-
 #-------------------------------------------------------------------------------
 # Name:        utils
 # Purpose:
@@ -179,7 +180,6 @@ def GetDomain(url):
 
 def GetMediaInfoFromJson(json, typeMedia="tvseries"):
     serie = json[typeMedia]
-    print repr(tryGetValueFromArray(serie,"synopsisShort"))
     media = Media(tryGetValueFromArray(serie,"title"), "", tryGetValueFromArray(serie,"synopsisShort"), tryGetValueFromArray(tryGetValueFromArray(serie,"poster"),"href"))
     media.Genre= tryGetValueFromArray(tryGetValueFromArray(tryGetValueFromArray(serie, "genre"),0),'$')
     if typeMedia=="tvseries":
@@ -197,7 +197,7 @@ def ClearTitle(title):
 
 def VK_ResolveUrl(url):
     proc = urllib2.HTTPCookieProcessor()
-    proc.cookiejar.set_cookie(cookielib.Cookie(0, 'remixsid', '265634296',
+    proc.cookiejar.set_cookie(cookielib.Cookie(0, 'remixsid', '678572087_5033118defdc63366a',
                                    '80', False, 'vk.com', True, False, '/',
                                    True, False, None, False, None, None, None))
     opener = urllib2.build_opener(urllib2.HTTPHandler(), proc)
@@ -210,5 +210,6 @@ def VK_ResolveUrl(url):
         if resol >= maxResol:
             maxResol=resol
             streamUrl = url
+    print('%s (%s)' % (streamUrl,str(resol)))
     return streamUrl
     
