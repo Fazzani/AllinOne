@@ -135,8 +135,7 @@ class Smartorrent(SearcherABC.SearcherABC):
         media = Media()
         if None != htmlContent and 0 < len(htmlContent):
             soup = BeautifulSoup(htmlContent)
-            ficheFilmBloc = soup.find("table", "fichetorrent")
-            tr = ficheFilmBloc.tbody.findAll("tr")
+            tr = soup.find("table", "fichetorrent").tbody.findAll("tr")
             media.Title = tr[0].td.nextSibling.h1.string.encode('utf-8').strip()
             media.PictureLink = self.BASE_URL+ tr[0].td.img['src'].encode('utf-8').strip()
             #media.ReleaseDate = f.td.text.encode('utf-8').strip()
