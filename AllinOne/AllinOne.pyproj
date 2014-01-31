@@ -95,6 +95,7 @@
     <Compile Include="python_libtorrent\windows\__init__.py" />
     <Compile Include="python_libtorrent\__init__.py" />
     <Compile Include="Rates.py" />
+    <Compile Include="resources\searchers\Smartorrent.py" />
     <Compile Include="resources\searchersStreaming\Streamzzz.py" />
     <Compile Include="resources\searchersStreaming\Streamay.py" />
     <Compile Include="resources\searchersStreaming\RegarderGratuit.py" />
@@ -261,6 +262,7 @@
     <Content Include="resources\icons\rutracker.org.png" />
     <Content Include="resources\icons\thepiratebay.se.png" />
     <Content Include="resources\searchers\__init__.pyc" />
+    <Content Include="resources\settings.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
 </Project>

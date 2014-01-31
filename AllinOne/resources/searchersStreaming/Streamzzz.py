@@ -78,10 +78,8 @@ class Streamzzz(SearcherABC.SearcherABC):
 
         filesList = []
         #http://streamzzz.com/search/dead/next/1
-        print(keyword)
         url = "%s/search/%s/next/1" % (self.BASE_URL, (urllib.quote_plus(keyword)))
         res = self.GetContentSearchPage(url)
-        print(repr(res))
         infoMedia = Media()
         if len(res[0]) > 0 :
             search = self.api.search(keyword, "tvseries")
@@ -119,8 +117,6 @@ class Streamzzz(SearcherABC.SearcherABC):
             nodes = soup.findAll('ul','search-res')[1].findAll("li")
             for node in nodes:
                 #returns title, link
-                print('11111111111')
-                print(node.h3.a["href"].encode('utf-8').strip())
                 tab.append((node.h3.a.text.encode('utf-8').strip(), node.h3.a["href"].encode('utf-8').strip()))
         return (tab, nextPage)
 
@@ -184,9 +180,7 @@ class Streamzzz(SearcherABC.SearcherABC):
                     link = node.param["value"]
                     tab.append((node.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
                 for node in soup.findAll("iframe", width="600"):
-                    print('_________________________________________')
                     link = node["src"]
-                    print(link)
                     tab.append((soup.find('div','page_content').p.text.encode('utf-8').strip(), link))
             else:
                 nodes = soup.findAll("div", "post")

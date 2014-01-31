@@ -328,9 +328,12 @@ class Core:
 
     def Last_TvSeries(self, params={}):
         url = params.get("url")
-        tabRes = RegarderGratuit().GetPageDetails(page = page)
+        regarderGratuit = RegarderGratuit()
+        tabRes = regarderGratuit.GetPageDetails(url)
         for media  in tabRes:
             self.drawItem(media.Title, 'open_regarder_film_gratuit_Item', media.Link, media.PictureLink, infoMedia = media)
+        if regarderGratuit.nextPage != None and regarderGratuit != '':
+            self.drawItem("Next Page >>", 'Last_TvSeries', regarderGratuit.nextPage)
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
 
     def Last_Movies(self, params={}):
