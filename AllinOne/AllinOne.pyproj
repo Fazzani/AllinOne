@@ -159,7 +159,6 @@
     <Compile Include="resources\searchers\tmpSearchers\RuTorOrg.py" />
     <Compile Include="resources\searchers\tmpSearchers\RuTrackerOrg.py" />
     <Compile Include="resources\searchers\tmpSearchers\ThePirateBaySe.py" />
-    <Compile Include="resources\searchers\__init__.py" />
     <Compile Include="resources\__init__.py" />
     <Compile Include="SearcherABC.py" />
     <Compile Include="Utils.py" />
@@ -261,7 +260,6 @@
     <Content Include="resources\icons\rutor.org.png" />
     <Content Include="resources\icons\rutracker.org.png" />
     <Content Include="resources\icons\thepiratebay.se.png" />
-    <Content Include="resources\searchers\__init__.pyc" />
     <Content Include="resources\settings.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />

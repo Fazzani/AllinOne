@@ -32,7 +32,6 @@ from Utils import timed, tryGetValue
 
 class Smartorrent(SearcherABC.SearcherABC):
 
-    tab =["(Date de sortie)(.*?)$", "(Année de production)(.*?)$","(Nom du film)(.*?)$", "(Réalisé par)(.*?)$","(Avec)(.*?)$","(Genre)(.*?)$","(Durée)(.*?)$","(Nationalité)(.*?)$"]
     api = Allocine()
     cat= (('tvserie',33),('dvd-rip',11))
     def __init__(self):
@@ -79,35 +78,38 @@ class Smartorrent(SearcherABC.SearcherABC):
         filesList = []
         #http://www.smartorrent.com/index.php?page=search&term=dexter&cat=&voir=2
         url = "%s/index.php?page=search&term=%s&cat=&voir=1" % (self.BASE_URL, (urllib.quote_plus(keyword)))
-        res = self.GetContentSearchPage(url)
-        
-        infoMedia = Media()
-        if len(res[0]) > 0 :
-            search = self.api.search(keyword, "tvseries")
-            if int(search['feed']['totalResults']) > 0 :
-                infoMedia = Utils.GetMediaInfoFromJson(self.api.tvseries(search['feed']['tvseries'][0]['code'],"small"))
+        response = self.makeRequest(url)
+        if None != response and 0 < len(response):
+            soup = BeautifulSoup(response)
+            nodes = soup.find('table','homelisting').tbody.findAll("tr")
+            image = sys.modules["__main__"].__root__ + self.searchIcon
 
-        for (title, link) in res[0]:
-            search = self.api.search(keyword, "tvseries")
-            if infoMedia :
-                 filesList.append((
-                    title,
-                    link,
-                    infoMedia,
-                    self.__class__.__name__,
-                ))
-            else:
-                filesList.append((
-                    title,
-                    link,
-                    None,
-                    self.__class__.__name__,
-                ))
-               
+            #print response
+            for node in nodes:
+                seeds = node.find('td','seed').text.encode('utf-8').strip()
+                leechers = node.find('td','leech').text.encode('utf-8').strip()
+                titleTorrent = node.find('td','nom').a.find_next().text.encode('utf-8').strip()
+                medialink = node.find('td','nom').a.find_next()['href'].encode('utf-8').strip()
+                size = node.find('td','taille').text.encode('utf-8').strip()
+
+                torrentTitle = "%s [S\L: (%s\%s) %s]" % (titleTorrent, seeds, leechers, size)
+                match = re.match(r'(?:.+?)/([0-9]+)/', medialink)
+                if match :
+                    link = self.BASE_URL + "/?page=download&tid=%s" % match.group(1).encode('utf-8').strip()
+                else:
+                    return []
+
+                filesList.append(
+                    (int(int(self.sourceWeight) * int(seeds)),
+                    int(seeds),
+                    self.__class__.__name__ + '::' + link,
+                    self.getInfoMediaFromUrl,
+                    medialink,
+                    ))
         return filesList
 
     def GetContentSearchPage(self, url):
-        response = Utils.getContentOfUrl(url).replace('scr"+"ipt','script')
+        response = Utils.getContentOfUrl(url)
         tab=[]
         if None != response and 0 < len(response):
             soup = BeautifulSoup(response)
@@ -124,9 +126,6 @@ class Smartorrent(SearcherABC.SearcherABC):
     Get Info Media from Url
     '''
     def getInfoMediaFromUrl(self, medialink):
-        if((re.search(r"/films/", medialink, re.M|re.I)==None) and (re.search(r"/series/", medialink, re.M|re.I)==None)):
-            return None
-
         return self.extractInfosMedia(self.makeRequest(medialink))
 
     '''
@@ -136,31 +135,19 @@ class Smartorrent(SearcherABC.SearcherABC):
         media = Media()
         if None != htmlContent and 0 < len(htmlContent):
             soup = BeautifulSoup(htmlContent)
-            ficheFilmBloc = soup.find("div", {"class" : "page_content"})
-            fiche = ficheFilmBloc.findAll("li")
-
-            for f in fiche:
-                li = f.text.encode('utf-8').strip()
-
-                if re.match(self.tab[0], li):
-                    media.ReleaseDate = re.match(self.tab[0], li).group(2)
-                elif re.match(self.tab[1], li):
-                    media.Year = re.match(self.tab[1], li).group(2)
-                elif re.match(self.tab[2],li):
-                    media.Title = re.match(self.tab[2],li).group(2)
-                elif re.match(self.tab[3],li):
-                    media.Director = re.match(self.tab[3],li).group(2)
-                elif re.match(self.tab[4], li):
-                    media.Cast = re.match(self.tab[4], li).group(2)
-                elif re.match(self.tab[5], li):
-                    media.Genre = re.match(self.tab[5], li).group(2)
-                elif re.match(self.tab[6], li):
-                    media.Duration = re.match(self.tab[6], li).group(2)
-                elif re.match(self.tab[7], li):
-                    media.Country = re.match(self.tab[7], li).group(2)
-
-            media.PictureLink = re.sub(r"/r_([0-9]+)_([0-9]+)/","/r_1090_600/", ficheFilmBloc.findAll("img", "film_img")[0]["src"])
-            media.Plot = tryGetValue(ficheFilmBloc.findAll("div", recursive=False)[1].p)
+            ficheFilmBloc = soup.find("table", "fichetorrent")
+            tr = ficheFilmBloc.tbody.findAll("tr")
+            media.Title = tr[0].td.nextSibling.h1.string.encode('utf-8').strip()
+            media.PictureLink = self.BASE_URL+ tr[0].td.img['src'].encode('utf-8').strip()
+            #media.ReleaseDate = f.td.text.encode('utf-8').strip()
+            #media.Year = f.td.text.encode('utf-8').strip()
+            #media.Title = f.td.text.encode('utf-8').strip()
+            #media.Director = f.td.text.encode('utf-8').strip()
+            #media.Cast = f.td.text.encode('utf-8').strip()
+            #media.Genre = f.td.text.encode('utf-8').strip()
+            #media.Duration = f.td.text.encode('utf-8').strip()
+            #media.Country = f.td.text.encode('utf-8').strip()
+            #media.Plot = tryGetValue(ficheFilmBloc.findAll("div", description),'text')
             return media
         else:
             return media
@@ -180,9 +167,7 @@ class Smartorrent(SearcherABC.SearcherABC):
                     link = node.param["value"]
                     tab.append((node.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
                 for node in soup.findAll("iframe", width="600"):
-                    print('_________________________________________')
                     link = node["src"]
-                    print(link)
                     tab.append((soup.find('div','page_content').p.text.encode('utf-8').strip(), link))
             else:
                 nodes = soup.findAll("div", "post")

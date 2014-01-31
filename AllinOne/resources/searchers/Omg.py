@@ -28,7 +28,7 @@ from Utils import timed, tryGetValue
 
 class Omg(SearcherABC.SearcherABC):
 
-    tab =["(Date de sortie)(.*?)$", "(Année de production)(.*?)$","(Nom du film)(.*?)$", "(Réalisé par)(.*?)$","(Avec)(.*?)$","(Genre)(.*?)$","(Durée)(.*?)$","(Nationalité)(.*?)$"]
+    tab = ["(Date de sortie)(.*?)$", "(Année de production)(.*?)$","(Nom du film)(.*?)$", "(Réalisé par)(.*?)$","(Avec)(.*?)$","(Genre)(.*?)$","(Durée)(.*?)$","(Nationalité)(.*?)$"]
 
     BASE_URL = "http://www.omgtorrent.com"
 
@@ -43,7 +43,7 @@ class Omg(SearcherABC.SearcherABC):
     Relative (from root directory of plugin) path to image
     will shown as source image at result listing
     '''
-    searchIcon = '/resources/icons/logoOmg.png'
+    searchIcon = '/resources/searchers/icons/logoOmg.png'
 
     '''
     Flag indicates is this source - magnet links source or not.
@@ -67,23 +67,25 @@ class Omg(SearcherABC.SearcherABC):
     '''
     @timed()
     def search(self, keyword):
+
         filesList = []
         #http://www.omgtorrent.com/recherche/?order=seeders&orderby=desc&query=Red
-        url = self.BASE_URL + "/recherche/?order=seeders&orderby=desc&query=%s&page=%s" % (urllib.quote_plus(keyword))
+        url = "%s/recherche/?order=seeders&orderby=desc&query=%s&page=1" % (self.BASE_URL, urllib.quote_plus(keyword))
         #print url
         response = self.makeRequest(url)
         if None != response and 0 < len(response):
             soup = BeautifulSoup(response)
             nodes = soup.findAll("tr", "table_corps")
-            image = sys.modules[ "__main__"].__root__ + self.searchIcon
+            image = sys.modules["__main__"].__root__ + self.searchIcon
 
             #print response
             for node in nodes:
-                seeds= node.findAll("td","clients")[0].text
-                leechers= node.findAll("td","sources")[0].text
+                print(repr(node))
+                seeds = node.findAll("td","clients")[0].text
+                leechers = node.findAll("td","sources")[0].text
                 titleTorrent = node.findAll("a","torrent")[0].text
                 medialink = node("td")[1].a["href"]
-                size=node("td")[2].strong.text
+                size = node("td")[2].strong.text
                 #print "_______________ " + titleTorrent
 
                 torrentTitle = "%s [S\L: (%s\%s) %s]" % (titleTorrent, seeds, leechers, size)
@@ -93,20 +95,18 @@ class Omg(SearcherABC.SearcherABC):
                 else:
                     return []
 
-                filesList.append((
-                    int(int(self.sourceWeight) * int(seeds)),
+                filesList.append((int(int(self.sourceWeight) * int(seeds)),
                     int(seeds),
                     self.__class__.__name__ + '::' + link,
                     self.getInfoMediaFromUrl,
-                    self.BASE_URL + medialink,
-                ))
+                    self.BASE_URL + medialink,))
         return filesList
 
     '''
     Get Info Media from Url
     '''
     def getInfoMediaFromUrl(self, medialink):
-        if((re.search(r"/films/", medialink, re.M|re.I)==None) and (re.search(r"/series/", medialink, re.M|re.I)==None)):
+        if((re.search(r"/films/", medialink, re.M | re.I) == None) and (re.search(r"/series/", medialink, re.M | re.I) == None)):
             return None
 
         return self.extractInfosMedia(self.makeRequest(medialink))

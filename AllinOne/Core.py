@@ -469,6 +469,7 @@ class Core:
                 if None == get('isApi'):
                     progressBar.update(int(iterator), searcher)
                     iterator += 100 / len(searchersList)
+                print('Searching .... with %s' % searcher)
                 filesList += self.searchWithSearcher(url, searcher)
             if None == get('isApi') and progressBar.iscanceled():
                 progressBar.update(0)
@@ -482,23 +483,6 @@ class Core:
 
     def display_settings(self, params={}):
         urlresolver.display_settings()
-
-    def testStreaming(self, params={}):
-        web_url = "http://youwatch.org/embed-dy6wflwwgve2-800x460.html"
-        web_url = "http://www.nowvideo.sx/video/p9c6yo3gsm9lc"
-        #web_url="http://www.youtube.com/watch?v=IymhUwnFaPo"
-        #web_url = "www.video.tt/video/8b1tclAzt"
-        #web_url = "http://www.video.tt/watch_video.php?v=8b1tclAzt"
-        stream_url = urlresolver.resolve(web_url)
-        if stream_url:
-            listitem = xbmcgui.ListItem(label="Armin", path=str(stream_url))
-            listitem.setProperty('mimetype', 'video/x-msvideo')
-            listitem.setInfo(type="Video", infoLabels={ "Title": "Armin", "Plot": "Armin Only", "Genre": "Music", "Year": "20/10/2012" })
-            listitem.setProperty('IsPlayable', 'true')
-            xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=stream_url, listitem=listitem, isFolder = False)
-            xbmcplugin.setResolvedUrl(handle=int(sys.argv[1]), succeeded=True, listitem=listitem)
-        else:
-            xbmcplugin.setResolvedUrl(self.plugin_handle, False, xbmcgui.ListItem())
 
     def searchWithSearcher(self, keyword, searcher):
         filesList = []
@@ -717,37 +701,6 @@ class Core:
             return False
         return True
 
-    def recentPlaybleRu(self, params={}):
-        address = 'http://playble.ru/search/video/~rss'
-        document = xml.dom.minidom.parse(urllib.urlopen(address))
-        for item in document.getElementsByTagName('item'):
-            try:
-                title = item.getElementsByTagName('title')[0].firstChild.data.encode('utf-8', 'replace')
-                description = item.getElementsByTagName('description')[0].firstChild.data.encode('utf-8', 'replace')
-                image = re.search("<img src=\"(.+?)\" alt=\"\" />", description).group(1)
-                self.drawItem(title, 'openSection', title, image)
-            except:
-                pass
-        self.lockView('info')
-        xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
-
-    def recentRuTorOrg(self, params={}):
-        categories = [1, 5, 12, 4, 6, 7, 10, 13, 15]
-        for category in  categories:
-            address = 'http://rutor.org/rss.php?category=' + str(category)
-            document = xml.dom.minidom.parse(urllib.urlopen(address))
-            for item in document.getElementsByTagName('item'):
-                try:
-                    title = item.getElementsByTagName('title')[0].firstChild.data.encode('utf-8', 'replace')
-                    link = item.getElementsByTagName('link')[0].firstChild.data
-                    image = self.ROOT + '/icons/video.png'
-                    link = 'http://d.rutor.org/download.php?rss=' + re.search('^.+\/(\d+)$', link).group(1)
-                    self.drawItem(title, 'openTorrent', link, image)
-                except:
-                    pass
-        self.lockView('wide')
-        xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
-
     def recentOpenSharingOrg(self, params={}):
         categories = [1, 4, 6, 7]
         for category in  categories:
@@ -765,98 +718,4 @@ class Core:
         self.lockView('wide')
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
 
-    def recentRuTrackerOrg(self, params={}):
-        address = 'http://xpoft.ru/torrents.ru/rss.xml?352;93;101;905;100;2198;313;2199;312;33;124;149;7;187;2459;212;2221;2091;2092;2093;2090;921;4;2365;930;208;1900;539;822;22;941;789;772'
-        try:
-            document = xml.dom.minidom.parse(urllib.urlopen(address))
-        except:
-            return
-        for item in document.getElementsByTagName('item'):
-            try:
-                title = item.getElementsByTagName('title')[0].firstChild.data.encode('utf-8', 'replace')
-                title = re.search('^(.+?)[\[\(]', title).group(1)
-                description = item.getElementsByTagName('description')[0].firstChild.data.encode('utf-8', 'replace')
-                try:
-                    image = re.search("<img src=\"(.+?)\">", self.unescape(description)).group(1)
-                except:
-                    image = self.ROOT + '/icons/video.png'
-                self.drawItem(title, 'openSection', title, image)
-            except:
-                pass
-        self.lockView('info')
-        xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
-
-    def recentKinopoiskRuBluRay(self, params={}):
-        address = 'http://st.kinopoisk.ru/rss/bluray.rss'
-        document = xml.dom.minidom.parse(urllib.urlopen(address))
-        for item in document.getElementsByTagName('item'):
-            try:
-                title = item.getElementsByTagName('title')[0].firstChild.data.encode('utf-8', 'replace')
-                try:
-                    image = item.getElementsByTagName('enclosure')[0].attributes.get('url').nodeValue
-                except:
-                    image = self.ROOT + '/icons/video.png'
-                self.drawItem(title, 'openSection', re.search('^Blu-Ray\:\s(.+)$', title).group(1), image)
-            except:
-                pass
-        self.lockView('info')
-        xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
-
-    def recentKinopoiskRuDvd(self, params={}):
-        address = 'http://st.kinopoisk.ru/rss/dvd.rss'
-        document = xml.dom.minidom.parse(urllib.urlopen(address))
-        for item in document.getElementsByTagName('item'):
-            try:
-                title = item.getElementsByTagName('title')[0].firstChild.data.encode('utf-8', 'replace')
-                try:
-                    image = item.getElementsByTagName('enclosure')[0].attributes.get('url').nodeValue
-                except:
-                    image = self.ROOT + '/icons/video.png'
-                self.drawItem(title, 'openSection', re.search('^DVD\:\s(.+)$', title).group(1), image)
-            except:
-                pass
-        self.lockView('info')
-        xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
-
-    def recentKinopoiskRu(self, params={}):
-        address = 'http://st.kinopoisk.ru/rss/premiere.rss'
-        document = xml.dom.minidom.parse(urllib.urlopen(address))
-        for item in document.getElementsByTagName('item'):
-            try:
-                title = item.getElementsByTagName('title')[0].firstChild.data.encode('utf-8', 'replace')
-                image = item.getElementsByTagName('enclosure')[0].attributes.get('url').nodeValue
-                self.drawItem(title, 'openSection', title, image)
-            except:
-                pass
-        self.lockView('info')
-        xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
-
-    def recentNNMClubRu(self, params={}):
-        address = 'http://nnm-club.ru/forum/rss2.php?r&s&f=220,224,229,918,216,318,254,256,768,769,713,576,603,610'
-        document = xml.dom.minidom.parse(urllib.urlopen(address))
-        for item in document.getElementsByTagName('item'):
-            try:
-                title = item.getElementsByTagName('title')[0].firstChild.data.encode('utf-8', 'replace')
-                image = self.ROOT + '/icons/video.png'
-                self.drawItem(title, 'openSection', re.search('^(.+) \[.+?\]$', title).group(1), image)
-            except:
-                pass
-        self.lockView('wide')
-        xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
-
-    def recentMaterilas(self, params={}):
-        xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
-        import Filters
-        filters = Filters.Filters()
-        filters.doModal()
-        return
-        self.drawItem('RuTor.Org', 'recentRuTorOrg')
-        self.drawItem('OpenSharing.Org', 'recentOpenSharingOrg')
-        self.drawItem('NNM-Club.Ru', 'recentNNMClubRu')
-        #self.drawItem('RuTracker.Org', 'recentRuTrackerOrg')
-        self.drawItem('Playble.Ru', 'recentPlaybleRu')
-        self.drawItem('Kinopoisk.Ru', 'recentKinopoiskRu')
-        self.drawItem('Kinopoisk.Ru - DVD', 'recentKinopoiskRuDvd')
-        self.drawItem('Kinopoisk.Ru - Blu-Ray', 'recentKinopoiskRuBluRay')
-        self.lockView('info')
-        xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
+   
