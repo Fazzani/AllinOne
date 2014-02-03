@@ -43,6 +43,7 @@ from Streamay import Streamay
 from RegarderGratuit import RegarderGratuit
 
 class Core:
+   
     __plugin__ = sys.modules["__main__"].__plugin__
     __settings__ = sys.modules["__main__"].__settings__
     plugin_handle = int(sys.argv[1])
@@ -79,6 +80,7 @@ class Core:
         })
 
     def __init__(self):
+        
         self.api.configure('100043982026','29d185d98c984a359e6e6f26a0474269')
         if 0 == len(self.userStorageDirectory):
             self.userStorageDirectory = tempfile.gettempdir() + os.path.sep + 'Torrenter'

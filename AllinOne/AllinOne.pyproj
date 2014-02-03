@@ -5,14 +5,15 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>f5f6177e-b110-488d-a7e0-a1f7fbf4b113</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>
-    </StartupFile>
-    <SearchPath>
-    </SearchPath>
+    <StartupFile>default.py</StartupFile>
+    <SearchPath>C:\Program Files (x86)\XBMC\addons;..\libVS</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>AllinOne</Name>
     <RootNamespace>AllinOne</RootNamespace>
+    <IsWindowsApplication>False</IsWindowsApplication>
+    <InterpreterId>{9a7a9026-48c1-4688-9d5d-e5699d47d074}</InterpreterId>
+    <InterpreterVersion>2.7</InterpreterVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,63 +32,10 @@
     <Compile Include="allocine\Review.py" />
     <Compile Include="allocine\settings.py" />
     <Compile Include="allocine\__init__.py" />
-    <Compile Include="bs4\builder\_html5lib.py" />
-    <Compile Include="bs4\builder\_htmlparser.py" />
-    <Compile Include="bs4\builder\_lxml.py" />
-    <Compile Include="bs4\builder\__init__.py" />
-    <Compile Include="bs4\dammit.py" />
-    <Compile Include="bs4\diagnose.py" />
-    <Compile Include="bs4\element.py" />
-    <Compile Include="bs4\testing.py" />
-    <Compile Include="bs4\tests\test_builder_registry.py" />
-    <Compile Include="bs4\tests\test_docs.py" />
-    <Compile Include="bs4\tests\test_html5lib.py" />
-    <Compile Include="bs4\tests\test_htmlparser.py" />
-    <Compile Include="bs4\tests\test_lxml.py" />
-    <Compile Include="bs4\tests\test_soup.py" />
-    <Compile Include="bs4\tests\test_tree.py" />
-    <Compile Include="bs4\tests\__init__.py" />
-    <Compile Include="bs4\__init__.py" />
     <Compile Include="Core.py" />
     <Compile Include="default.py" />
     <Compile Include="Downloader.py" />
     <Compile Include="Filters.py" />
-    <Compile Include="html5lib\constants.py" />
-    <Compile Include="html5lib\filters\alphabeticalattributes.py" />
-    <Compile Include="html5lib\filters\inject_meta_charset.py" />
-    <Compile Include="html5lib\filters\lint.py" />
-    <Compile Include="html5lib\filters\optionaltags.py" />
-    <Compile Include="html5lib\filters\sanitizer.py" />
-    <Compile Include="html5lib\filters\whitespace.py" />
-    <Compile Include="html5lib\filters\_base.py" />
-    <Compile Include="html5lib\filters\__init__.py" />
-    <Compile Include="html5lib\html5parser.py" />
-    <Compile Include="html5lib\ihatexml.py" />
-    <Compile Include="html5lib\inputstream.py" />
-    <Compile Include="html5lib\sanitizer.py" />
-    <Compile Include="html5lib\serializer\htmlserializer.py" />
-    <Compile Include="html5lib\serializer\__init__.py" />
-    <Compile Include="html5lib\tokenizer.py" />
-    <Compile Include="html5lib\treeadapters\sax.py" />
-    <Compile Include="html5lib\treeadapters\__init__.py" />
-    <Compile Include="html5lib\treebuilders\dom.py" />
-    <Compile Include="html5lib\treebuilders\etree.py" />
-    <Compile Include="html5lib\treebuilders\etree_lxml.py" />
-    <Compile Include="html5lib\treebuilders\_base.py" />
-    <Compile Include="html5lib\treebuilders\__init__.py" />
-    <Compile Include="html5lib\treewalkers\dom.py" />
-    <Compile Include="html5lib\treewalkers\etree.py" />
-    <Compile Include="html5lib\treewalkers\genshistream.py" />
-    <Compile Include="html5lib\treewalkers\lxmletree.py" />
-    <Compile Include="html5lib\treewalkers\pulldom.py" />
-    <Compile Include="html5lib\treewalkers\_base.py" />
-    <Compile Include="html5lib\treewalkers\__init__.py" />
-    <Compile Include="html5lib\trie\datrie.py" />
-    <Compile Include="html5lib\trie\py.py" />
-    <Compile Include="html5lib\trie\_base.py" />
-    <Compile Include="html5lib\trie\__init__.py" />
-    <Compile Include="html5lib\utils.py" />
-    <Compile Include="html5lib\__init__.py" />
     <Compile Include="Localization.py" />
     <Compile Include="Proxier.py" />
     <Compile Include="python_libtorrent\linux_x86\__init__.py" />
@@ -99,59 +47,6 @@
     <Compile Include="resources\searchersStreaming\Streamzzz.py" />
     <Compile Include="resources\searchersStreaming\Streamay.py" />
     <Compile Include="resources\searchersStreaming\RegarderGratuit.py" />
-    <Compile Include="resources\searchers\bs4\builder\_html5lib.py" />
-    <Compile Include="resources\searchers\bs4\builder\_htmlparser.py" />
-    <Compile Include="resources\searchers\bs4\builder\_lxml.py" />
-    <Compile Include="resources\searchers\bs4\builder\__init__.py" />
-    <Compile Include="resources\searchers\bs4\dammit.py" />
-    <Compile Include="resources\searchers\bs4\diagnose.py" />
-    <Compile Include="resources\searchers\bs4\element.py" />
-    <Compile Include="resources\searchers\bs4\testing.py" />
-    <Compile Include="resources\searchers\bs4\tests\test_builder_registry.py" />
-    <Compile Include="resources\searchers\bs4\tests\test_docs.py" />
-    <Compile Include="resources\searchers\bs4\tests\test_html5lib.py" />
-    <Compile Include="resources\searchers\bs4\tests\test_htmlparser.py" />
-    <Compile Include="resources\searchers\bs4\tests\test_lxml.py" />
-    <Compile Include="resources\searchers\bs4\tests\test_soup.py" />
-    <Compile Include="resources\searchers\bs4\tests\test_tree.py" />
-    <Compile Include="resources\searchers\bs4\tests\__init__.py" />
-    <Compile Include="resources\searchers\bs4\__init__.py" />
-    <Compile Include="resources\searchers\html5lib\constants.py" />
-    <Compile Include="resources\searchers\html5lib\filters\alphabeticalattributes.py" />
-    <Compile Include="resources\searchers\html5lib\filters\inject_meta_charset.py" />
-    <Compile Include="resources\searchers\html5lib\filters\lint.py" />
-    <Compile Include="resources\searchers\html5lib\filters\optionaltags.py" />
-    <Compile Include="resources\searchers\html5lib\filters\sanitizer.py" />
-    <Compile Include="resources\searchers\html5lib\filters\whitespace.py" />
-    <Compile Include="resources\searchers\html5lib\filters\_base.py" />
-    <Compile Include="resources\searchers\html5lib\filters\__init__.py" />
-    <Compile Include="resources\searchers\html5lib\html5parser.py" />
-    <Compile Include="resources\searchers\html5lib\ihatexml.py" />
-    <Compile Include="resources\searchers\html5lib\inputstream.py" />
-    <Compile Include="resources\searchers\html5lib\sanitizer.py" />
-    <Compile Include="resources\searchers\html5lib\serializer\htmlserializer.py" />
-    <Compile Include="resources\searchers\html5lib\serializer\__init__.py" />
-    <Compile Include="resources\searchers\html5lib\tokenizer.py" />
-    <Compile Include="resources\searchers\html5lib\treeadapters\sax.py" />
-    <Compile Include="resources\searchers\html5lib\treeadapters\__init__.py" />
-    <Compile Include="resources\searchers\html5lib\treebuilders\dom.py" />
-    <Compile Include="resources\searchers\html5lib\treebuilders\etree.py" />
-    <Compile Include="resources\searchers\html5lib\treebuilders\etree_lxml.py" />
-    <Compile Include="resources\searchers\html5lib\treebuilders\_base.py" />
-    <Compile Include="resources\searchers\html5lib\treebuilders\__init__.py" />
-    <Compile Include="resources\searchers\html5lib\treewalkers\dom.py" />
-    <Compile Include="resources\searchers\html5lib\treewalkers\etree.py" />
-    <Compile Include="resources\searchers\html5lib\treewalkers\genshistream.py" />
-    <Compile Include="resources\searchers\html5lib\treewalkers\lxmletree.py" />
-    <Compile Include="resources\searchers\html5lib\treewalkers\pulldom.py" />
-    <Compile Include="resources\searchers\html5lib\treewalkers\_base.py" />
-    <Compile Include="resources\searchers\html5lib\treewalkers\__init__.py" />
-    <Compile Include="resources\searchers\html5lib\trie\datrie.py" />
-    <Compile Include="resources\searchers\html5lib\trie\py.py" />
-    <Compile Include="resources\searchers\html5lib\trie\_base.py" />
-    <Compile Include="resources\searchers\html5lib\trie\__init__.py" />
-    <Compile Include="resources\searchers\html5lib\utils.py" />
-    <Compile Include="resources\searchers\html5lib\__init__.py" />
     <Compile Include="resources\searchers\Omg.py" />
     <Compile Include="resources\searchers\tmpSearchers\Kino_ZalTv.py" />
     <Compile Include="resources\searchers\tmpSearchers\KrasfsRu.py" />
@@ -168,16 +63,6 @@
     <Folder Include="Addons\" />
     <Folder Include="Addons\plugin.video.allinone\" />
     <Folder Include="allocine\" />
-    <Folder Include="bs4\" />
-    <Folder Include="bs4\builder\" />
-    <Folder Include="bs4\tests\" />
-    <Folder Include="html5lib\" />
-    <Folder Include="html5lib\filters\" />
-    <Folder Include="html5lib\serializer\" />
-    <Folder Include="html5lib\treeadapters\" />
-    <Folder Include="html5lib\treebuilders\" />
-    <Folder Include="html5lib\treewalkers\" />
-    <Folder Include="html5lib\trie\" />
     <Folder Include="icons\" />
     <Folder Include="python_libtorrent\" />
     <Folder Include="python_libtorrent\linux_x86\" />
@@ -190,16 +75,6 @@
     <Folder Include="resources\language\Russian\" />
     <Folder Include="resources\searchersStreaming\" />
     <Folder Include="resources\searchers\" />
-    <Folder Include="resources\searchers\bs4\" />
-    <Folder Include="resources\searchers\bs4\builder\" />
-    <Folder Include="resources\searchers\bs4\tests\" />
-    <Folder Include="resources\searchers\html5lib\" />
-    <Folder Include="resources\searchers\html5lib\filters\" />
-    <Folder Include="resources\searchers\html5lib\serializer\" />
-    <Folder Include="resources\searchers\html5lib\treeadapters\" />
-    <Folder Include="resources\searchers\html5lib\treebuilders\" />
-    <Folder Include="resources\searchers\html5lib\treewalkers\" />
-    <Folder Include="resources\searchers\html5lib\trie\" />
     <Folder Include="resources\searchers\tmpSearchers\" />
   </ItemGroup>
   <ItemGroup>
@@ -214,22 +89,8 @@
     <Content Include="Addons\plugin.video.allinone\icon.png" />
     <Content Include="Addons\plugin.video.allinone\LICENSE.txt" />
     <Content Include="Addons\plugin.video.allinone\plugin.video.allinone-1.0.0.zip" />
-    <Content Include="bs4\builder\_html5lib.pyo" />
-    <Content Include="bs4\builder\_htmlparser.pyo" />
-    <Content Include="bs4\builder\_lxml.pyo" />
-    <Content Include="bs4\builder\__init__.pyc" />
-    <Content Include="bs4\builder\__init__.pyo" />
     <Content Include="changelog.txt" />
     <Content Include="fanart.jpg" />
-    <Content Include="html5lib\serializer\htmlserializer.pyo" />
-    <Content Include="html5lib\serializer\__init__.pyo" />
-    <Content Include="html5lib\treebuilders\_base.pyo" />
-    <Content Include="html5lib\treebuilders\__init__.pyo" />
-    <Content Include="html5lib\treewalkers\__init__.pyo" />
-    <Content Include="html5lib\trie\datrie.pyo" />
-    <Content Include="html5lib\trie\py.pyo" />
-    <Content Include="html5lib\trie\_base.pyo" />
-    <Content Include="html5lib\trie\__init__.pyo" />
     <Content Include="icon.png" />
     <Content Include="icons\add_bookmark.png" />
     <Content Include="icons\bookmarks.png" />
@@ -261,6 +122,9 @@
     <Content Include="resources\icons\rutracker.org.png" />
     <Content Include="resources\icons\thepiratebay.se.png" />
     <Content Include="resources\settings.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="{9a7a9026-48c1-4688-9d5d-e5699d47d074}\2.7" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
 </Project>
