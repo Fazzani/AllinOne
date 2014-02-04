@@ -19,8 +19,6 @@ import sys, cookielib
 from SearcherABC import Media
 import types
 
-__cache__ = None
-
 def timed(level=None, format='%s: %s ms'):
     if level is None:
         level = logging.DEBUG
