@@ -91,7 +91,7 @@ class Core:
             import StorageServer
         except:
             import storageserverdummy as StorageServer
-        self.__cache__ = StorageServer.StorageServer(self._pluginName, 24) # (Your plugin name, Cache time in hours)
+        self.__cache__ = StorageServer.StorageServer(self._pluginName, 0.1) # (Your plugin name, Cache time in hours)
 
     def drawItem(self, title, action, link='', image='', isFolder=True, contextMenu=None, infoMedia=None, searcherName='', page=1):
         listitem = xbmcgui.ListItem(title, iconImage=image, thumbnailImage=image)
