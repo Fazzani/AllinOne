@@ -215,11 +215,11 @@ class Streamay(SearcherABC.SearcherABC):
                        infoMedia.PictureLink = self.BASE_URL + node.find('div','image-holder').a.img["src"]
                        infoMedia.Link=node.h3.a["href"].encode('utf-8').strip()
                        infoMedia.Source = self.__class__.__name__
-                       tab.append(infoMedia)
+                       tab.append(infoMedia.__dict__)
                     except:
                        #returns title, link, synopsis, img, SearcherName
                        pic = self.BASE_URL + node.find('div','image-holder').a.img["src"]
                        #returns title, link, synopsis, img, SearcherName
-                       tab.append(Media(title, node.h3.a["href"].encode('utf-8').strip(), '', pic, self.__class__.__name__))
+                       tab.append(Media(title, node.h3.a["href"].encode('utf-8').strip(), '', pic, self.__class__.__name__).__dict__)
                        continue
         return tab

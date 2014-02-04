@@ -131,3 +131,15 @@ class Media:
 
     def __getitem__(self, item):
         return self.tab[item]
+
+    @classmethod
+    def GetFromTab(self, tab):
+        m= Media(tab['Title'],tab['Link'],tab['Plot'],tab['PictureLink'])
+        m.Country = tab['Country']
+        m.Year = tab['Year']
+        m.Director = tab['Director']
+        m.Duration = tab['Duration']
+        m.Genre = tab['Genre']
+        m.ReleaseDate = tab['ReleaseDate']
+        m.Cast = tab['Cast']
+        return m

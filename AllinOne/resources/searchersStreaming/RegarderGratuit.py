@@ -198,5 +198,5 @@ class RegarderGratuit(SearcherABC.SearcherABC):
                 for node in nodes:
                     listp = node.find("div","content").findAll("p")
                     #returns title, link, synopsis, img
-                    tab.append(Media(node.h2.a.text, node.h2.a["href"].encode('utf-8').strip(), listp[1].text.encode('utf-8').strip(), listp[0].img["src"]))
+                    tab.append(Media(node.h2.a.text, node.h2.a["href"].encode('utf-8').strip(), listp[1].text.encode('utf-8').strip(), listp[0].img["src"]).__dict__)
         return tab

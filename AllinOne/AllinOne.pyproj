@@ -56,6 +56,7 @@
     <Compile Include="resources\searchers\tmpSearchers\ThePirateBaySe.py" />
     <Compile Include="resources\__init__.py" />
     <Compile Include="SearcherABC.py" />
+    <Compile Include="storageserverdummy.py" />
     <Compile Include="Utils.py" />
     <Compile Include="__init__.py" />
   </ItemGroup>

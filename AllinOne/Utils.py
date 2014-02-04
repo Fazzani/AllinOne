@@ -17,26 +17,9 @@ import urllib, urllib2
 import re
 import sys, cookielib
 from SearcherABC import Media
+import types
 
-#-------------------------------------------------------------------------------
-# Name:        utils
-# Purpose:
-#
-# Author:      922261
-#
-# Created:     22/01/2014
-# Copyright:   (c) 922261 2014
-# Licence:     <your licence>
-#-------------------------------------------------------------------------------
-import logging
-import functools
-import time
-from bs4 import BeautifulSoup
-import urllib, urllib2
-import re
-import sys
-from SearcherABC import Media
-
+__cache__ = None
 
 def timed(level=None, format='%s: %s ms'):
     if level is None:
@@ -212,4 +195,3 @@ def VK_ResolveUrl(url):
             streamUrl = url
     print('%s (%s)' % (streamUrl,str(resol)))
     return streamUrl
-    
