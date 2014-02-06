@@ -27,20 +27,11 @@ import os
 sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/' + '../..'))
 import Utils
 from Utils import timed, tryGetValue
-from allocine.Allocine import Allocine
 
 class Streamay(SearcherABCStreaming.SearcherABCStreaming):
 
     tab = ["(Date de sortie)(.*?)$", "(Année de production)(.*?)$","(Nom du film)(.*?)$", "(Réalisé par)(.*?)$","(Avec)(.*?)$","(Genre)(.*?)$","(Durée)(.*?)$","(Nationalité)(.*?)$"]
 
-    '''
-    Api du Scraper(Allociné)
-    '''
-    api = Allocine()
-
-    def __init__(self):
-        self.api.configure('100043982026','29d185d98c984a359e6e6f26a0474269')
-    
     def BASE_URL(self):
         return "http://streamay.com"
 
@@ -49,8 +40,6 @@ class Streamay(SearcherABCStreaming.SearcherABCStreaming):
     will shown as source image at result listing
     '''
     searchIcon = '/resources/icons/logoStreamy.png'
-
-    nextPage=""
 
     @property
     def contentType(self):
@@ -62,7 +51,6 @@ class Streamay(SearcherABCStreaming.SearcherABCStreaming):
     '''
     @timed()
     def search(self, keyword):
-        self.api.configure('100043982026','29d185d98c984a359e6e6f26a0474269')
         ## do=search&subaction=search&search_start=2&full_search=0&result_from=0&story=evasion
         page = 1
         filesList = []
@@ -145,7 +133,7 @@ class Streamay(SearcherABCStreaming.SearcherABCStreaming):
             return media
 
     def GetContentSearchPage(self, url, data):
-        response = Utils.getContentOfUrl(url, data)
+        response = self.GetContentFromUrl(url, data)
 
         tab = []
         if None != response and 0 < len(response):
@@ -191,28 +179,6 @@ class Streamay(SearcherABCStreaming.SearcherABCStreaming):
                             link = self.BASE_URL() + link
                         if 'youtube' not in link:
                             tab.append((soup.find('div','describe-box').div.div.img['src'].encode('utf-8').strip(), link))
-            else:
-                '''
-                Récupération des films depuis la page d'accueil du Site
-                '''
-                content= soup.find("div", {'id':'dle-content'})
-                nodes = content.findAll('div','column')
-                self.nextPage = content.find('div','navigation').a['href']
-                for node in nodes:
-                    title = Utils.ClearTitle(node.h3.a.text)
-                    try:
-                       search = self.api.search(title,"movie")
-                       infoMedia = Utils.GetMediaInfoFromJson(self.api.movie(search['feed']['movie'][0]['code'],"small"), typeMedia="movie")
-                       infoMedia.PictureLink = self.BASE_URL() + node.find('div','image-holder').a.img["src"]
-                       infoMedia.Link=node.h3.a["href"].encode('utf-8').strip()
-                       infoMedia.Source = self.__class__.__name__
-                       tab.append(infoMedia.__dict__)
-                    except:
-                       #returns title, link, synopsis, img, SearcherName
-                       pic = self.BASE_URL() + node.find('div','image-holder').a.img["src"]
-                       #returns title, link, synopsis, img, SearcherName
-                       tab.append(Media(title, node.h3.a["href"].encode('utf-8').strip(), '', pic, self.__class__.__name__).__dict__)
-                       continue
         return tab
 
     '''

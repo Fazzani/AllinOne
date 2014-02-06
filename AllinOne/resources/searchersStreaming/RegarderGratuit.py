@@ -26,23 +26,16 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/' + '../..'))
 import Utils
-from allocine.Allocine import Allocine
 
 from Utils import timed, tryGetValue
 
 class RegarderGratuit(SearcherABCStreaming.SearcherABCStreaming):
 
     tab =["(Date de sortie)(.*?)$", "(Année de production)(.*?)$","(Nom du film)(.*?)$", "(Réalisé par)(.*?)$","(Avec)(.*?)$","(Genre)(.*?)$","(Durée)(.*?)$","(Nationalité)(.*?)$"]
-    api = Allocine()
-
-    def __init__(self):
-        self.api.configure('100043982026','29d185d98c984a359e6e6f26a0474269')
 
     def BASE_URL(self):
         return "http://www.regarder-film-gratuit.com"
 
-    nextPage=""
-    
     '''
     Relative (from root directory of plugin) path to image
     will shown as source image at result listing
@@ -130,8 +123,7 @@ class RegarderGratuit(SearcherABCStreaming.SearcherABCStreaming):
             return media
 
     def GetContentSearchPage(self, url):
-        response = Utils.getContentOfUrl(url)
-        response= response.replace("</sc'+'ript>",'</script>')
+        response = self.GetContentFromUrl(url)
 
         tab=[]
         if None != response and 0 < len(response):
@@ -160,17 +152,6 @@ class RegarderGratuit(SearcherABCStreaming.SearcherABCStreaming):
                 for node in soup.findAll("iframe", width="600"):
                     link = node["src"]
                     tab.append((node.parent.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
-            else:
-                nodes = soup.findAll("div", "post")
-                self.nextPage = soup.find('div',{'id':'pagenavi'}).findChild('a','nextpostslink')['href']
-                print(self.nextPage)
-                for node in nodes:
-                    listp = node.find("div","content").findAll("p")
-                    #returns title, link, synopsis, img
-                    tab.append(node.h2.a.text, 
-                               node.h2.a["href"].encode('utf-8').strip(),
-                               Media(node.h2.a.text, node.h2.a["href"].encode('utf-8').strip(), listp[1].text.encode('utf-8').strip(), listp[0].img["src"]).__dict__,
-                               self.__class__.__name__)
         return tab
 
     def LatestMovies(self, url):

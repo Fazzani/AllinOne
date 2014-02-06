@@ -231,8 +231,7 @@ class Core:
         if None == get('isApi'):
             progressBar.update(0)
             progressBar.close()
-        print repr(filesList)
-        self.showFilesStreamingList(filesList)
+        self.showFilesStreamingList(sorted(filesList, key= lambda x: x[0]))
 
     def showFilesStreamingList(self, filesList):
         for (title, link, infoMedia, searcherName) in filesList:

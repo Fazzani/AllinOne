@@ -26,16 +26,11 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/' + '../..'))
 import Utils
-from allocine.Allocine import Allocine
-from Utils import timed, tryGetValue
+from Utils import *
 
 class Streamzzz(SearcherABCStreaming.SearcherABCStreaming):
 
     tab =["(Date de sortie)(.*?)$", "(Année de production)(.*?)$","(Nom du film)(.*?)$", "(Réalisé par)(.*?)$","(Avec)(.*?)$","(Genre)(.*?)$","(Durée)(.*?)$","(Nationalité)(.*?)$"]
-    api = Allocine()
-
-    def __init__(self):
-        self.api.configure('100043982026','29d185d98c984a359e6e6f26a0474269')
 
     def BASE_URL(self):
         return "http://streamzzz.com"
@@ -75,6 +70,7 @@ class Streamzzz(SearcherABCStreaming.SearcherABCStreaming):
                 infoMedia = Utils.GetMediaInfoFromJson(self.api.tvseries(search['feed']['tvseries'][0]['code'],"small"))
 
         for (title, link) in res[0]:
+            print keyword
             search = self.api.search(keyword, "tvseries")
             if infoMedia :
                  filesList.append((
@@ -94,7 +90,7 @@ class Streamzzz(SearcherABCStreaming.SearcherABCStreaming):
         return filesList
 
     def GetContentSearchPage(self, url):
-        response = Utils.getContentOfUrl(url).replace('scr"+"ipt','script')
+        response = self.GetContentFromUrl(url)
         tab=[]
         if None != response and 0 < len(response):
             soup = BeautifulSoup(response)
@@ -102,8 +98,9 @@ class Streamzzz(SearcherABCStreaming.SearcherABCStreaming):
             nextPage = soup.find("a", "pagination-next")
             if nextPage != None :
                 nextPage = nextPage["href"]
-            nodes = soup.findAll('ul','search-res')[1].findAll("li")
+            nodes = soup.find('div','page_content').ul.findAll("li")
             for node in nodes:
+                print repr(node)
                 #returns title, link
                 tab.append((node.h3.a.text.encode('utf-8').strip(), node.h3.a["href"].encode('utf-8').strip()))
         return (tab, nextPage)
@@ -170,11 +167,6 @@ class Streamzzz(SearcherABCStreaming.SearcherABCStreaming):
                 for node in soup.findAll("iframe", width="600"):
                     link = node["src"]
                     tab.append((soup.find('div','page_content').p.text.encode('utf-8').strip(), link))
-            else:
-                nodes = soup.findAll("div", "post")
-                for node in nodes:
-                    listp = node.find("div","content").findAll("p")
-                    tab.append(Media(node.h2.a.text, node.h2.a["href"].encode('utf-8').strip(), listp[1].text.encode('utf-8').strip(), listp[0].img["src"]).__dict__)
         return tab
 
     def LatestMovies(self,  url):
