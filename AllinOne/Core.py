@@ -39,9 +39,6 @@ import Utils
 import urlresolver
 from allocine.Allocine import Allocine
 sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/resources/searchersStreaming/'))
-from Streamay import Streamay
-from RegarderGratuit import RegarderGratuit
-from Streamzzz import Streamzzz
 from Media import Media
 class Core:
    
@@ -97,7 +94,6 @@ class Core:
     def drawItem(self, title, action, link='', image='', isFolder=True, contextMenu=None, infoMedia=None, searcherName='', page=1, method="search"):
         listitem = xbmcgui.ListItem(title, iconImage=image, thumbnailImage=image)
         url = '%s?action=%s&url=%s&searcherName=%s&page=%s&method=%s' % (sys.argv[0], action, urllib.quote_plus(link), searcherName, str(page), method)
-        print url
         if contextMenu:
             listitem.addContextMenuItems(contextMenu, replaceItems=True)
         if isFolder:
@@ -221,7 +217,7 @@ class Core:
             print searcher
             if searcher:
                 if None == get('isApi'):
-                    progressBar.update(int(iterator), searcher)
+                    progressBar.update(int(iterator), "Seaching in [COLOR F6D8CE00][B]%s[/B][/COLOR] site " % searcher)
                     iterator += 100 / len(searchersList)
                 filesList += self.searchWithSearcherStreaming(query, searcher, method)
             if None == get('isApi') and progressBar.iscanceled():
@@ -245,6 +241,9 @@ class Core:
         #    self.drawItem("Next Page >>", 'openSectionStreaming', res[1])
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
 
+    '''
+    Open Section for Torrent
+    '''
     def openSection(self, params={}):
         get = params.get
         url = urllib.unquote_plus(get("url"))
@@ -279,6 +278,9 @@ class Core:
     def display_settings(self, params={}):
         urlresolver.display_settings()
 
+    '''
+    Searching in torrents
+    '''
     def searchWithSearcher(self, keyword, searcher):
         filesList = []
         if self.ROOT + os.sep + 'resources' + os.sep + 'searchers' not in sys.path:
@@ -292,6 +294,9 @@ class Core:
             print 'Unable to use searcher: ' + searcher + ' at ' + self.__plugin__ + ' searchWithSearcher(). Exception: ' + str(e)
         return filesList
 
+    '''
+    Searching in streaming sites
+    '''
     def searchWithSearcherStreaming(self, keyword, searcher, method="search"):
         filesList = []
         if self.ROOT + os.sep + 'resources' + os.sep + '\searchersStreaming' not in sys.path:
