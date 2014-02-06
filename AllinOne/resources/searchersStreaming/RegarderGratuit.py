@@ -166,11 +166,26 @@ class RegarderGratuit(SearcherABCStreaming.SearcherABCStreaming):
             soup = BeautifulSoup(response)
             nodes = soup.find("div", {"id" : "categories-3"}).li.ul.findAll('li')
             for node in nodes:
-                tab.append((node.a.text.encode('utf-8'),
-                           node.a["href"].encode('utf-8').strip(),
-                           Media(node.a.text.encode('utf-8'), node.a["href"].encode('utf-8').strip(), node.a["title"], "").__dict__,
+                infoMedia = self.FillMediaFromScraper(node.a.text.encode('utf-8'), 
+                                                      node.a["href"].encode('utf-8').strip(), node.a["title"], "")
+                tab.append((infoMedia.Title,
+                           infoMedia.Link,
+                           infoMedia.__dict__,
                            self.__class__.__name__))
         return tab
+
+    '''
+    Fill Media object from AlloCiné
+    '''
+    def FillMediaFromScraper(self, title, link, plot, pic):
+        infoMedia = Media(title, link, plot, pic)
+        try:
+            search = self.__cache__.cacheFunction(self.api.search, title, "tvseries")
+            if int(search['feed']['totalResults']) > 0 :
+                return Utils.GetMediaInfoFromJson(self.__cache__.cacheFunction(self.api.tvseries, search['feed']['tvseries'][0]['code'],"small"))
+        except:
+            raise
+        return infoMedia
 
     '''
     @returns title, link, synopsis, img

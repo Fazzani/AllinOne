@@ -34,6 +34,16 @@ from bs4 import BeautifulSoup
 
 class SearcherABCStreaming:
     __metaclass__ = abc.ABCMeta
+    __cache__ = sys.modules["__main__"].__cache__
+
+    def __init__(self):
+        self.api.configure('100043982026','29d185d98c984a359e6e6f26a0474269')
+        try:
+            import StorageServer
+        except:
+            import storageserverdummy as StorageServer
+        self.__cache__ = StorageServer.StorageServer((sys.argv[0]), 1) # (Your plugin name, Cache time in hours)
+
 
     searchIcon = '/icons/video.png'
     cookieJar = None

@@ -179,10 +179,11 @@ class Streamzzz(SearcherABCStreaming.SearcherABCStreaming):
             soup = BeautifulSoup(response)
             nodes = soup.find("div", 'category_widget_0').findAll('li')
             for node in nodes:
-                #returns title, link, synopsis, img
-                tab.append((node.a.text.encode('utf-8'), 
-                           node.a["href"].encode('utf-8').strip(),
-                           Media(node.a.text.encode('utf-8'), node.a["href"].encode('utf-8').strip(), node.a["title"], "").__dict__,
+                infoMedia = self.FillMediaFromScraper(node.a.text.encode('utf-8'), 
+                                                      node.a["href"].encode('utf-8').strip(), node.a["title"], "")
+                tab.append((infoMedia.Title,
+                           infoMedia.Link,
+                           infoMedia.__dict__,
                            self.__class__.__name__))
         return tab
 
@@ -202,3 +203,17 @@ class Streamzzz(SearcherABCStreaming.SearcherABCStreaming):
                            Media(node.h2.a.text, node.h2.a["href"].encode('utf-8').strip(), listp[1].text.encode('utf-8').strip(), listp[0].img["src"]).__dict__,
                            self.__class__.__name__))
         return None
+
+    '''
+    Fill Media object from AlloCiné
+    '''
+    def FillMediaFromScraper(self, title, link, plot, pic):
+        infoMedia = Media(title, link, plot, pic)
+        
+        try:
+            search = self.__cache__.cacheFunction(self.api.search, title, "tvseries")
+            if int(search['feed']['totalResults']) > 0 :
+                return Utils.GetMediaInfoFromJson(self.__cache__.cacheFunction(self.api.tvseries, search['feed']['tvseries'][0]['code'],"small"))
+        except:
+            return infoMedia
+        return infoMedia
