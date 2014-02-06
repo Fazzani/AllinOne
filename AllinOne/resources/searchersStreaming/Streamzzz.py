@@ -18,8 +18,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 from bs4 import BeautifulSoup
-import SearcherABC
-from SearcherABC import Media
+import SearcherABCStreaming
+from Media import Media
 import urllib
 import re
 import sys
@@ -27,10 +27,9 @@ import os
 sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/' + '../..'))
 import Utils
 from allocine.Allocine import Allocine
-
 from Utils import timed, tryGetValue
 
-class Streamzzz(SearcherABC.SearcherABC):
+class Streamzzz(SearcherABCStreaming.SearcherABCStreaming):
 
     tab =["(Date de sortie)(.*?)$", "(Année de production)(.*?)$","(Nom du film)(.*?)$", "(Réalisé par)(.*?)$","(Avec)(.*?)$","(Genre)(.*?)$","(Durée)(.*?)$","(Nationalité)(.*?)$"]
     api = Allocine()
@@ -38,14 +37,8 @@ class Streamzzz(SearcherABC.SearcherABC):
     def __init__(self):
         self.api.configure('100043982026','29d185d98c984a359e6e6f26a0474269')
 
-    BASE_URL = "http://streamzzz.com"
-
-    '''
-    Weight of source with this searcher provided.
-    Will be multiplied on default weight.
-    Default weight is seeds number
-    '''
-    sourceWeight = 1
+    def BASE_URL(self):
+        return "http://streamzzz.com"
 
     '''
     Relative (from root directory of plugin) path to image
@@ -53,14 +46,9 @@ class Streamzzz(SearcherABC.SearcherABC):
     '''
     searchIcon = '/resources/searchers/icons/logoOmg.png'
 
-    '''
-    Flag indicates is this source - magnet links source or not.
-    Used for filtration of sources in case of old library (setting selected).
-    Old libraries won't to convert magnet as torrent file to the storage
-    '''
     @property
-    def isMagnetLinkSource(self):
-        return False
+    def contentType(self):
+        return ContentType.TvSerieOnly
 
     '''
     Main method should be implemented for search process.
@@ -78,7 +66,7 @@ class Streamzzz(SearcherABC.SearcherABC):
 
         filesList = []
         #http://streamzzz.com/search/dead/next/1
-        url = "%s/search/%s/next/1" % (self.BASE_URL, (urllib.quote_plus(keyword)))
+        url = "%s/search/%s/next/1" % (self.BASE_URL(), (urllib.quote_plus(keyword)))
         res = self.GetContentSearchPage(url)
         infoMedia = Media()
         if len(res[0]) > 0 :
@@ -169,7 +157,7 @@ class Streamzzz(SearcherABC.SearcherABC):
         if url and url is not None:
             url = urllib.unquote_plus(url)
         else:
-            url = urllib.unquote_plus(self.BASE_URL)
+            url = urllib.unquote_plus(self.BASE_URL())
 
         response = Utils.getContentOfUrl(url).replace('sc"+"ript','script').replace("sc'+'ript","script").replace('scr"+"ipt','script').replace("scr'+'ipt","script")
         tab=[]
@@ -188,3 +176,37 @@ class Streamzzz(SearcherABC.SearcherABC):
                     listp = node.find("div","content").findAll("p")
                     tab.append(Media(node.h2.a.text, node.h2.a["href"].encode('utf-8').strip(), listp[1].text.encode('utf-8').strip(), listp[0].img["src"]).__dict__)
         return tab
+
+    def LatestMovies(self,  url):
+        return []
+
+    def AllTvSeries(self):
+        response = self.GetContentFromUrl()
+        tab=[]
+        if None != response and 0 < len(response):
+            soup = BeautifulSoup(response)
+            nodes = soup.find("div", 'category_widget_0').findAll('li')
+            for node in nodes:
+                #returns title, link, synopsis, img
+                tab.append((node.a.text.encode('utf-8'), 
+                           node.a["href"].encode('utf-8').strip(),
+                           Media(node.a.text.encode('utf-8'), node.a["href"].encode('utf-8').strip(), node.a["title"], "").__dict__,
+                           self.__class__.__name__))
+        return tab
+
+    def LatestTvSeriesEpisodes(self, url):
+        response= self.GetContentFromUrl(url)
+        tab=[]
+        if None != response and 0 < len(response):
+            soup = BeautifulSoup(response)
+            nodes = soup.findAll("div", "post")
+            self.nextPage = soup.find('div',{'id':'pagenavi'}).findChild('a','nextpostslink')['href']
+            print(self.nextPage)
+            for node in nodes:
+                listp = node.find("div","content").findAll("p")
+                #returns title, link, synopsis, img
+                tab.append((node.h2.a.text, 
+                           node.h2.a["href"].encode('utf-8').strip(),
+                           Media(node.h2.a.text, node.h2.a["href"].encode('utf-8').strip(), listp[1].text.encode('utf-8').strip(), listp[0].img["src"]).__dict__,
+                           self.__class__.__name__))
+        return None

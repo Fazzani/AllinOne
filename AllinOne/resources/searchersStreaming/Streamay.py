@@ -18,8 +18,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 from bs4 import BeautifulSoup
-import SearcherABC
-from SearcherABC import Media
+import SearcherABCStreaming
+from Media import Media
 import urllib
 import re
 import sys
@@ -29,7 +29,7 @@ import Utils
 from Utils import timed, tryGetValue
 from allocine.Allocine import Allocine
 
-class Streamay(SearcherABC.SearcherABC):
+class Streamay(SearcherABCStreaming.SearcherABCStreaming):
 
     tab = ["(Date de sortie)(.*?)$", "(Année de production)(.*?)$","(Nom du film)(.*?)$", "(Réalisé par)(.*?)$","(Avec)(.*?)$","(Genre)(.*?)$","(Durée)(.*?)$","(Nationalité)(.*?)$"]
 
@@ -40,30 +40,21 @@ class Streamay(SearcherABC.SearcherABC):
 
     def __init__(self):
         self.api.configure('100043982026','29d185d98c984a359e6e6f26a0474269')
-
-    BASE_URL = "http://streamay.com"
-
-    '''
-    Weight of source with this searcher provided.
-    Will be multiplied on default weight.
-    Default weight is seeds number
-    '''
-    sourceWeight = 1
+    
+    def BASE_URL(self):
+        return "http://streamay.com"
 
     '''
     Relative (from root directory of plugin) path to image
     will shown as source image at result listing
     '''
     searchIcon = '/resources/icons/logoStreamy.png'
+
     nextPage=""
-    '''
-    Flag indicates is this source - magnet links source or not.
-    Used for filtration of sources in case of old library (setting selected).
-    Old libraries won't to convert magnet as torrent file to the storage
-    '''
+
     @property
-    def isMagnetLinkSource(self):
-        return False
+    def contentType(self):
+        return ContentType.MovieAndTvSerie
 
     '''
     Main method should be implemented for search process.
@@ -82,7 +73,7 @@ class Streamay(SearcherABC.SearcherABC):
                 'result_from':'0',
                 'story':keyword }
 
-        res = self.GetContentSearchPage(self.BASE_URL, data)
+        res = self.GetContentSearchPage(self.BASE_URL(), data)
 
         for (title, link, imageLink) in res[0]:
             search = self.api.search(title,"movie")
@@ -91,7 +82,7 @@ class Streamay(SearcherABC.SearcherABC):
                 infoMedia = Utils.GetMediaInfoFromJson(self.api.movie(search['feed']['movie'][0]['code'],"small"), typeMedia="movie")
 
             if "http://" not in imageLink:
-                infoMedia.PictureLink = self.BASE_URL + imageLink
+                infoMedia.PictureLink = self.BASE_URL() + imageLink
             else:
                 infoMedia.PictureLink = imageLink
 
@@ -176,7 +167,7 @@ class Streamay(SearcherABC.SearcherABC):
         if url and url is not None:
             url = urllib.unquote_plus(url)
         else:
-            url = urllib.unquote_plus(self.BASE_URL)
+            url = urllib.unquote_plus(self.BASE_URL())
 
         if page == 'details':
             #Requête en GET
@@ -197,7 +188,7 @@ class Streamay(SearcherABC.SearcherABC):
                     if node.has_key("allowfullscreen"):
                         link = node["src"]
                         if 'http://' not in link:
-                            link = self.BASE_URL + link
+                            link = self.BASE_URL() + link
                         if 'youtube' not in link:
                             tab.append((soup.find('div','describe-box').div.div.img['src'].encode('utf-8').strip(), link))
             else:
@@ -212,14 +203,56 @@ class Streamay(SearcherABC.SearcherABC):
                     try:
                        search = self.api.search(title,"movie")
                        infoMedia = Utils.GetMediaInfoFromJson(self.api.movie(search['feed']['movie'][0]['code'],"small"), typeMedia="movie")
-                       infoMedia.PictureLink = self.BASE_URL + node.find('div','image-holder').a.img["src"]
+                       infoMedia.PictureLink = self.BASE_URL() + node.find('div','image-holder').a.img["src"]
                        infoMedia.Link=node.h3.a["href"].encode('utf-8').strip()
                        infoMedia.Source = self.__class__.__name__
                        tab.append(infoMedia.__dict__)
                     except:
                        #returns title, link, synopsis, img, SearcherName
-                       pic = self.BASE_URL + node.find('div','image-holder').a.img["src"]
+                       pic = self.BASE_URL() + node.find('div','image-holder').a.img["src"]
                        #returns title, link, synopsis, img, SearcherName
                        tab.append(Media(title, node.h3.a["href"].encode('utf-8').strip(), '', pic, self.__class__.__name__).__dict__)
                        continue
         return tab
+
+    '''
+     Récupération des films depuis la page d'accueil du Site
+    '''
+    def LatestMovies(self, url):
+        tab = []
+        #Requête en POST
+        data = {'dlenewssortby':'date','dledirection':'desc'}
+        response = self.GetContentFromUrl(url, data)
+        if None != response and 0 < len(response):
+            soup = BeautifulSoup(response)
+            content= soup.find("div", {'id':'dle-content'})
+            nodes = content.findAll('div','column')
+            self.nextPage = content.find('div','navigation').a['href']
+            for node in nodes:
+                title = Utils.ClearTitle(node.h3.a.text)
+                try:
+                    search = self.api.search(title,"movie")
+                    infoMedia = Utils.GetMediaInfoFromJson(self.api.movie(search['feed']['movie'][0]['code'],"small"), typeMedia="movie")
+                    infoMedia.PictureLink = self.BASE_URL() + node.find('div','image-holder').a.img["src"]
+                    infoMedia.Link =node.h3.a["href"].encode('utf-8').strip()
+                    infoMedia.Source = self.__class__.__name__
+                    tab.append((infoMedia.Title,
+                               infoMedia.Link,
+                               infoMedia.__dict__,
+                               self.__class__.__name__))
+                except:
+                    #returns title, link, synopsis, img, SearcherName
+                    pic = self.BASE_URL() + node.find('div','image-holder').a.img["src"]
+                    #returns title, link, synopsis, img, SearcherName
+                    tab.append((title,
+                               node.h3.a["href"].encode('utf-8').strip(),
+                               Media(title, node.h3.a["href"].encode('utf-8').strip(), '', pic, self.__class__.__name__).__dict__,
+                               self.__class__.__name__))
+                    continue
+        return tab
+
+    def AllTvSeries(self):
+        return []
+
+    def LatestTvSeriesEpisodes(self, url):
+        return []

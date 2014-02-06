@@ -41,7 +41,8 @@ from allocine.Allocine import Allocine
 sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/resources/searchersStreaming/'))
 from Streamay import Streamay
 from RegarderGratuit import RegarderGratuit
-from SearcherABC import Media
+from Streamzzz import Streamzzz
+from Media import Media
 class Core:
    
     __plugin__ = sys.modules["__main__"].__plugin__
@@ -93,9 +94,10 @@ class Core:
             import storageserverdummy as StorageServer
         self.__cache__ = StorageServer.StorageServer(self._pluginName, 0.1) # (Your plugin name, Cache time in hours)
 
-    def drawItem(self, title, action, link='', image='', isFolder=True, contextMenu=None, infoMedia=None, searcherName='', page=1):
+    def drawItem(self, title, action, link='', image='', isFolder=True, contextMenu=None, infoMedia=None, searcherName='', page=1, method="search"):
         listitem = xbmcgui.ListItem(title, iconImage=image, thumbnailImage=image)
-        url = '%s?action=%s&url=%s&searcherName=%s&page=%s' % (sys.argv[0], action, urllib.quote_plus(link), searcherName, str(page))
+        url = '%s?action=%s&url=%s&searcherName=%s&page=%s&method=%s' % (sys.argv[0], action, urllib.quote_plus(link), searcherName, str(page), method)
+        print url
         if contextMenu:
             listitem.addContextMenuItems(contextMenu, replaceItems=True)
         if isFolder:
@@ -113,8 +115,9 @@ class Core:
     def sectionMenu(self):
         self.drawItem(Localization.localize('< Search >'), 'search', image=self.ROOT + '/icons/search.png')
         self.drawItem('Chercher un streaming', 'searchStreaming', image=self.ROOT + '/icons/search.png')
-        self.drawItem('Les dernières séries', 'Last_TvSeries', image=self.ROOT + '/resources/icons/RFS.png')
-        self.drawItem('Les derniers films', 'Last_Movies', image=self.ROOT + '/resources/icons/logoStreamy.png')
+        self.drawItem('Les derniers films', 'openSectionStreaming', image=self.ROOT + '/resources/icons/logoStreamy.png', method="LatestMovies")
+        self.drawItem('Les dernières séries', 'openSectionStreaming', image=self.ROOT + '/resources/icons/RFS.png', method="AllTvSeries")
+        self.drawItem('Les derniers épisodes', 'openSectionStreaming', image=self.ROOT + '/resources/icons/RFS.png', method="LatestTvSeriesEpisodes")
         #self.drawItem('Test Youtube url', 'testStreaming', image=self.ROOT +
         #'/icons/search.png')
         self.drawItem('urlresolver Settings', 'display_settings', image=self.ROOT + '/icons/Settings.png')
@@ -132,28 +135,6 @@ class Core:
         if 'true' == self.__settings__.getSetting("keep_files"):
             self.drawItem(Localization.localize('< Clear Storage >'), 'clearStorage', isFolder = True)
         self.lockView('list')
-        xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
-
-    def Last_TvSeries(self, params={}):
-        url = params.get("url")
-        regarderGratuit = RegarderGratuit()
-        tabRes = self.__cache__.cacheFunction(regarderGratuit.GetPageDetails, url)
-        for i  in tabRes:
-            media = Media.GetFromTab(i)
-            self.drawItem(media.Title, 'open_regarder_film_gratuit_Item', media.Link, media.PictureLink, infoMedia = media)
-        if regarderGratuit.nextPage != None and regarderGratuit != '':
-            self.drawItem("Next Page >>", 'Last_TvSeries', regarderGratuit.nextPage)
-        xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
-
-    def Last_Movies(self, params={}):
-        url = params.get("url")
-        streamay = Streamay()
-        for i  in self.__cache__.cacheFunction(streamay.GetPageDetails, url):
-            media= Media.GetFromTab(i)
-            self.drawItem(media.Title, 'open_regarder_film_gratuit_Item', media.Link, media.PictureLink, infoMedia = media, searcherName=media.Source)
-        if streamay.nextPage != None and streamay != '':
-            self.drawItem("Next Page >>", 'Last_Movies', streamay.nextPage)
-
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
 
     def open_regarder_film_gratuit_Item(self, params={}):
@@ -216,11 +197,15 @@ class Core:
             return
         elif keyboard.isConfirmed():
             params["url"] = urllib.quote_plus(query)
+            params["method"] = urllib.quote_plus("search")
             self.openSectionStreaming(params)
 
     def openSectionStreaming(self, params={}):
         get = params.get
-        url = urllib.unquote_plus(get("url"))
+        query = get("url")
+        if query:
+            query = urllib.unquote_plus(query)
+        method = get("method")
         filesList = []
         if None == get('isApi'):
             progressBar = xbmcgui.DialogProgress()
@@ -233,12 +218,12 @@ class Core:
                 searchersList.append(searcherFile)
         for searcherFile in searchersList:
             searcher = re.search('^(\w+)\.py$', searcherFile).group(1)
-            
+            print searcher
             if searcher:
                 if None == get('isApi'):
                     progressBar.update(int(iterator), searcher)
                     iterator += 100 / len(searchersList)
-                filesList += self.searchWithSearcherStreaming(url, searcher)
+                filesList += self.searchWithSearcherStreaming(query, searcher, method)
             if None == get('isApi') and progressBar.iscanceled():
                 progressBar.update(0)
                 progressBar.close()
@@ -246,13 +231,14 @@ class Core:
         if None == get('isApi'):
             progressBar.update(0)
             progressBar.close()
-        filesList = sorted(filesList, key=lambda x: x[0], reverse=True)
+        print repr(filesList)
         self.showFilesStreamingList(filesList)
 
     def showFilesStreamingList(self, filesList):
         for (title, link, infoMedia, searcherName) in filesList:
+            media= Utils.obj_dic(infoMedia)
             if infoMedia :
-                self.drawItem("%s (%s)" % (title, searcherName), 'open_regarder_film_gratuit_Item', link, infoMedia.PictureLink, infoMedia = infoMedia, searcherName= searcherName)
+                self.drawItem(" [COLOR F6D8CE00][B]%s[/B][/COLOR] (%s) " % (title, searcherName), 'open_regarder_film_gratuit_Item', link, media.PictureLink, infoMedia = media, searcherName= searcherName)
             else:
                 self.drawItem(title, 'open_regarder_film_gratuit_Item', link)
         #self.lockView('wide')
@@ -307,17 +293,25 @@ class Core:
             print 'Unable to use searcher: ' + searcher + ' at ' + self.__plugin__ + ' searchWithSearcher(). Exception: ' + str(e)
         return filesList
 
-    def searchWithSearcherStreaming(self, keyword, searcher):
+    def searchWithSearcherStreaming(self, keyword, searcher, method="search"):
         filesList = []
         if self.ROOT + os.sep + 'resources' + os.sep + '\searchersStreaming' not in sys.path:
             sys.path.insert(0, self.ROOT + os.sep + 'resources' + os.sep + '\searchersStreaming')
         try:
             searcherObject = getattr(__import__(searcher), searcher)()
-            filesList = searcherObject.search(keyword)
+            if(method=="search"):
+                filesList = searcherObject.search(keyword)
+            if(method== "LatestMovies"):
+                filesList = self.__cache__.cacheFunction(searcherObject.LatestMovies, keyword)
+            if(method== "AllTvSeries"):
+                filesList = self.__cache__.cacheFunction(searcherObject.AllTvSeries)
+            if(method== "LatestTvSeriesEpisodes"):
+                filesList = self.__cache__.cacheFunction(searcherObject.LatestTvSeriesEpisodes, keyword)
+
         except Exception, e:
             print 'Unable to use searcher: ' + searcher + ' at ' + self.__plugin__ + ' searchWithSearcherStreaming(). Exception: ' + str(e)
         return filesList
-
+    
     @timed()
     def showFilesList(self, filesList):
         for (order, seeds, link, func, medialink) in filesList:

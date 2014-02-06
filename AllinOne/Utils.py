@@ -16,7 +16,7 @@ from bs4 import BeautifulSoup
 import urllib, urllib2
 import re
 import sys, cookielib
-from SearcherABC import Media
+from Media import Media
 import types
 
 def timed(level=None, format='%s: %s ms'):
@@ -174,7 +174,7 @@ def GetMediaInfoFromJson(json, typeMedia="tvseries"):
     return media
 
 def ClearTitle(title):
-    return title.encode('utf-8').replace('??','é').replace('?´','ô').replace('?¨','è').replace('?','à')
+    return title.encode('utf-8').replace('??','?').replace('??','?').replace('??','?').replace('?','?')
 
 def VK_ResolveUrl(url):
     proc = urllib2.HTTPCookieProcessor()
@@ -191,5 +191,16 @@ def VK_ResolveUrl(url):
         if resol >= maxResol:
             maxResol=resol
             streamUrl = url
-    print('%s (%s)' % (streamUrl,str(resol)))
     return streamUrl
+
+def obj_dic(d):
+    if isinstance(d, list):
+        d = [obj_dic(x) for x in d]
+    if not isinstance(d, dict):
+        return d
+    class C(object):
+        pass
+    o = C()
+    for k in d:
+        o.__dict__[k] = obj_dic(d[k])
+    return o

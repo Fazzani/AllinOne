@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 '''
     Torrenter plugin for XBMC
-    Copyright (C) 2012 Vadim Skorba
+    Copyright (C) 2012 Fazzani Heni
     tunisienheni@gmail.com
 
     This program is free software: you can redistribute it and/or modify
@@ -29,34 +29,32 @@ import xbmcgui
 import xbmc
 import Localization
 import sys
+import Utils
+from bs4 import BeautifulSoup
 
-class SearcherABC:
+class SearcherABCStreaming:
     __metaclass__ = abc.ABCMeta
 
     searchIcon = '/icons/video.png'
-    sourceWeight = 1
     cookieJar = None
 
     @abc.abstractmethod
     def search(self, keyword):
-        '''
-        Retrieve keyword from the input and return a list of tuples:
-        filesList.append((
-            int(weight),
-            int(seeds),
-            str(title),
-            str(link),
-            str(image),
-        ))
-        '''
         return
 
     @abc.abstractproperty
-    def isMagnetLinkSource(self):
+    def BASE_URL(self):
         return 'Should never see this'
+    
+    nextPage = ""
 
-    def getTorrentFile(self, url):
-        return url
+    '''
+    Le type de contenu du site
+    les films et les séries la valeur par défaut
+    '''
+    @property
+    def contentType(self):
+        return ContentType.MovieAndTvSerie
 
     def makeRequest(self, url, data={}, headers=[]):
         self.cookieJar = cookielib.CookieJar()
@@ -108,3 +106,26 @@ class SearcherABC:
         hasher = hashlib.md5()
         hasher.update(string)
         return hasher.hexdigest()
+
+    def GetContentFromUrl(self, url=None, data=None):
+        if url and url is not None:
+            url = urllib.unquote_plus(url)
+        else:
+            url = urllib.unquote_plus(self.BASE_URL())
+
+        return Utils.getContentOfUrl(url, data).replace("<sc'+'ript",'<script>').replace("<scr'+'ipt",'<script>').replace("</scr'+'ipt",'</script>').replace('</scr"+"ipt','</script>').replace('<scr"+"ipt','<script>').replace("</sc'+'ript>",'</script>')
+
+    @abc.abstractmethod
+    def LatestMovies(self, url):
+        pass
+
+    @abc.abstractmethod
+    def AllTvSeries(self):
+        pass
+
+    @abc.abstractmethod
+    def LatestTvSeriesEpisodes(self, url):
+        pass
+
+class ContentType:
+    TvSerieOnly, MoviesOnly, MovieAndTvSerie = range(3)

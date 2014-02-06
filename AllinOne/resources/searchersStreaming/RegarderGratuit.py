@@ -1,8 +1,8 @@
 #-*- coding: utf-8 -*-
 '''
     Torrenter plugin for XBMC
-    Copyright (C) 2012 Vadim Skorba
-    vadim.skorba@gmail.com
+    Copyright (C) 2012 Fazzani Heni
+    tunisienheni@gmail.com
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,8 +18,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 from bs4 import BeautifulSoup
-import SearcherABC
-from SearcherABC import Media
+import SearcherABCStreaming
+from Media import Media
 import urllib
 import re
 import sys
@@ -30,7 +30,7 @@ from allocine.Allocine import Allocine
 
 from Utils import timed, tryGetValue
 
-class RegarderGratuit(SearcherABC.SearcherABC):
+class RegarderGratuit(SearcherABCStreaming.SearcherABCStreaming):
 
     tab =["(Date de sortie)(.*?)$", "(Année de production)(.*?)$","(Nom du film)(.*?)$", "(Réalisé par)(.*?)$","(Avec)(.*?)$","(Genre)(.*?)$","(Durée)(.*?)$","(Nationalité)(.*?)$"]
     api = Allocine()
@@ -38,47 +38,26 @@ class RegarderGratuit(SearcherABC.SearcherABC):
     def __init__(self):
         self.api.configure('100043982026','29d185d98c984a359e6e6f26a0474269')
 
-    BASE_URL = "http://www.regarder-film-gratuit.com"
+    def BASE_URL(self):
+        return "http://www.regarder-film-gratuit.com"
 
     nextPage=""
-    '''
-    Weight of source with this searcher provided.
-    Will be multiplied on default weight.
-    Default weight is seeds number
-    '''
-    sourceWeight = 1
-
+    
     '''
     Relative (from root directory of plugin) path to image
     will shown as source image at result listing
     '''
     searchIcon = '/resources/searchers/icons/logoOmg.png'
 
-    '''
-    Flag indicates is this source - magnet links source or not.
-    Used for filtration of sources in case of old library (setting selected).
-    Old libraries won't to convert magnet as torrent file to the storage
-    '''
     @property
-    def isMagnetLinkSource(self):
-        return False
+    def contentType(self):
+        return ContentType.TvSerieOnly   
 
-    '''
-    Main method should be implemented for search process.
-    Receives keyword and have to return dictionary of proper tuples:
-    filesList.append((
-        int(weight),# Calculated global weight of sources
-        int(seeds),# Seeds count
-        str(title),# Title will be shown
-        str(link),# Link to the torrent/magnet
-        str(image),# Path/URL to image shown at the list
-    ))
-    '''
     @timed()
     def search(self, keyword):
 
         filesList = []
-        url = "%s/page/1/?s=%s" % (self.BASE_URL, (urllib.quote_plus(keyword)))
+        url = "%s/page/1/?s=%s" % (self.BASE_URL(), (urllib.quote_plus(keyword)))
         res = self.GetContentSearchPage(url)
         infoMedia = Media()
         if len(res[0]) > 0 :
@@ -166,30 +145,20 @@ class RegarderGratuit(SearcherABC.SearcherABC):
                 tab.append((node.h2.a.text.encode('utf-8').strip(), node.h2.a["href"].encode('utf-8').strip()))
         return (tab, nextPage)
 
+    '''
+    @returns title, link, synopsis, img
+    '''
     def GetPageDetails(self, url="", page="acceuil"):
-        if url and url is not None:
-            url = urllib.unquote_plus(url)
-        else:
-            url = urllib.unquote_plus(self.BASE_URL)
-
-        response = Utils.getContentOfUrl(url)
-        response = response.replace("<sc'+'ript",'<script>')
-        response= response.replace("</sc'+'ript>",'</script>')
-
+        response= self.GetContentFromUrl(url)
         tab=[]
         if None != response and 0 < len(response):
             soup = BeautifulSoup(response)
             if page =='details':
                 for node in soup.findAll("object"):
                     link = node.param["value"]
-                    #print 'node.param["value"] : ' + node.param["value"]
-    ##                if "http://www" not in link and  "http://embed" not in link:
-    ##                    link = link.replace("http://","http://www.")
                     tab.append((node.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
                 for node in soup.findAll("iframe", width="600"):
                     link = node["src"]
-    ##                if "http://www" not in link and  "http://embed" not in link:
-    ##                    link = link.replace("http://","http://www.")
                     tab.append((node.parent.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
             else:
                 nodes = soup.findAll("div", "post")
@@ -198,5 +167,45 @@ class RegarderGratuit(SearcherABC.SearcherABC):
                 for node in nodes:
                     listp = node.find("div","content").findAll("p")
                     #returns title, link, synopsis, img
-                    tab.append(Media(node.h2.a.text, node.h2.a["href"].encode('utf-8').strip(), listp[1].text.encode('utf-8').strip(), listp[0].img["src"]).__dict__)
+                    tab.append(node.h2.a.text, 
+                               node.h2.a["href"].encode('utf-8').strip(),
+                               Media(node.h2.a.text, node.h2.a["href"].encode('utf-8').strip(), listp[1].text.encode('utf-8').strip(), listp[0].img["src"]).__dict__,
+                               self.__class__.__name__)
+        return tab
+
+    def LatestMovies(self, url):
+        return []
+    '''
+    @returns title, link, synopsis, img
+    '''
+    def AllTvSeries(self):
+        response = self.GetContentFromUrl()
+        tab=[]
+        if None != response and 0 < len(response):
+            soup = BeautifulSoup(response)
+            nodes = soup.find("div", {"id" : "categories-3"}).li.ul.findAll('li')
+            for node in nodes:
+                tab.append((node.a.text.encode('utf-8'),
+                           node.a["href"].encode('utf-8').strip(),
+                           Media(node.a.text.encode('utf-8'), node.a["href"].encode('utf-8').strip(), node.a["title"], "").__dict__,
+                           self.__class__.__name__))
+        return tab
+
+    '''
+    @returns title, link, synopsis, img
+    '''
+    def LatestTvSeriesEpisodes(self, url):
+        response= self.GetContentFromUrl(url)
+        tab=[]
+        if None != response and 0 < len(response):
+            soup = BeautifulSoup(response)
+            nodes = soup.findAll("div", "post")
+            self.nextPage = soup.find('div',{'id':'pagenavi'}).findChild('a','nextpostslink')['href']
+            print(self.nextPage)
+            for node in nodes:
+                listp = node.find("div","content").findAll("p")
+                tab.append((node.h2.a.text,
+                           node.h2.a["href"].encode('utf-8').strip(),
+                           Media(node.h2.a.text, node.h2.a["href"].encode('utf-8').strip(), listp[1].text.encode('utf-8').strip(), listp[0].img["src"]).__dict__,
+                           self.__class__.__name__))
         return tab
