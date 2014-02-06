@@ -227,20 +227,45 @@ class Core:
         if None == get('isApi'):
             progressBar.update(0)
             progressBar.close()
-        self.showFilesStreamingList(sorted(filesList, key= lambda x: x[0]))
+        self.showFilesStreamingList(sorted(filesList, key= lambda x: x[0]), method)
 
-    def showFilesStreamingList(self, filesList):
+    def showFilesStreamingList(self, filesList, method):
         for (title, link, infoMedia, searcherName) in filesList:
-            media= Utils.obj_dic(infoMedia)
+            media = Utils.obj_dic(infoMedia)
             if infoMedia :
-                self.drawItem(" [COLOR F6D8CE00][B]%s[/B][/COLOR] (%s) " % (title, searcherName), 'open_regarder_film_gratuit_Item', link, media.PictureLink, infoMedia = media, searcherName= searcherName)
+                if(method == "AllTvSeries"):
+                    self.drawItem(" [COLOR F6D8CE00][B]%s[/B][/COLOR] (%s) " % (title, searcherName), 'open_TvSeriePage', link, media.PictureLink, infoMedia = media, searcherName= searcherName, isFolder = true, method= method)
+                else:
+                    self.drawItem(" [COLOR F6D8CE00][B]%s[/B][/COLOR] (%s) " % (title, searcherName), 'open_regarder_film_gratuit_Item', link, media.PictureLink, infoMedia = media, searcherName = searcherName, method= method)
             else:
-                self.drawItem(title, 'open_regarder_film_gratuit_Item', link)
+                if(method == "AllTvSeries"):
+                    self.drawItem(title, 'open_TvSeriePage', link, isFolder=true, searcherName = searcherName, method = method)
+                else:
+                    self.drawItem(title, 'open_regarder_film_gratuit_Item', link, searcherName = searcherName, method = method)
         #self.lockView('wide')
         #if res[1] != None:
         #    self.drawItem("Next Page >>", 'openSectionStreaming', res[1])
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
 
+    def open_TvSeriePage(self):
+        get = params.get
+        url = get("url")
+        if url:
+            url = urllib.unquote_plus(query)
+        method = get("method")
+        searcher = get("searcherName")
+        filesList = []
+        if self.ROOT + os.sep + 'resources' + os.sep + '\searchersStreaming' not in sys.path:
+            sys.path.insert(0, self.ROOT + os.sep + 'resources' + os.sep + '\searchersStreaming')
+        try:
+            searcherObject = getattr(__import__(searcher), searcher)()
+            filesList = self.__cache__.cacheFunction(searcherObject.GetPageDetailsTvSerie, url)
+            self.showFilesStreamingList(sorted(filesList, key= lambda x: x[0]), method)
+
+        except Exception, e:
+            print 'Unable to use searcher: ' + searcher + ' at ' + self.__plugin__ + ' open_TvSeriePage(). Exception: ' + str(e)
+        self.showFilesStreamingList(sorted(filesList, key= lambda x: x[0]), method)
+        pass
     '''
     Open Section for Torrent
     '''
@@ -303,13 +328,13 @@ class Core:
             sys.path.insert(0, self.ROOT + os.sep + 'resources' + os.sep + '\searchersStreaming')
         try:
             searcherObject = getattr(__import__(searcher), searcher)()
-            if(method=="search"):
+            if(method == "search"):
                 filesList = searcherObject.search(keyword)
-            if(method== "LatestMovies"):
+            if(method == "LatestMovies"):
                 filesList = self.__cache__.cacheFunction(searcherObject.LatestMovies, keyword)
-            if(method== "AllTvSeries"):
+            if(method == "AllTvSeries"):
                 filesList = self.__cache__.cacheFunction(searcherObject.AllTvSeries)
-            if(method== "LatestTvSeriesEpisodes"):
+            if(method == "LatestTvSeriesEpisodes"):
                 filesList = self.__cache__.cacheFunction(searcherObject.LatestTvSeriesEpisodes, keyword)
 
         except Exception, e:

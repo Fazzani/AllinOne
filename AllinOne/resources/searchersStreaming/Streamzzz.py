@@ -205,11 +205,29 @@ class Streamzzz(SearcherABCStreaming.SearcherABCStreaming):
         return None
 
     '''
+    liste des épisodes d'une série.
+    '''
+    def GetPageDetailsTvSerie(self, url=""):
+        response= self.GetContentFromUrl(url)
+        tab=[]
+        if None != response and 0 < len(response):
+            soup = BeautifulSoup(response)
+            
+            for node in soup.findAll("object"):
+                link = node.param["value"]
+                tab.append((node.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
+            for node in soup.findAll("iframe", width="600"):
+                link = node["src"]
+                tab.append((node.parent.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
+        return tab
+
+    '''
     Fill Media object from AlloCiné
     '''
     def FillMediaFromScraper(self, title, link, plot, pic):
         infoMedia = Media(title, link, plot, pic)
-        
+        #TODO : à virer 
+        return infoMedia
         try:
             search = self.__cache__.cacheFunction(self.api.search, title, "tvseries")
             if int(search['feed']['totalResults']) > 0 :

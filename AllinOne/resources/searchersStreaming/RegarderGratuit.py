@@ -153,9 +153,26 @@ class RegarderGratuit(SearcherABCStreaming.SearcherABCStreaming):
                     link = node["src"]
                     tab.append((node.parent.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
         return tab
+    '''
+    liste des épisodes d'une série.
+    '''
+    def GetPageDetailsTvSerie(self, url=""):
+        response= self.GetContentFromUrl(url)
+        tab=[]
+        if None != response and 0 < len(response):
+            soup = BeautifulSoup(response)
+            
+            for node in soup.findAll("object"):
+                link = node.param["value"]
+                tab.append((node.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
+            for node in soup.findAll("iframe", width="600"):
+                link = node["src"]
+                tab.append((node.parent.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
+        return tab
 
     def LatestMovies(self, url):
         return []
+
     '''
     @returns title, link, synopsis, img
     '''
@@ -174,19 +191,7 @@ class RegarderGratuit(SearcherABCStreaming.SearcherABCStreaming):
                            self.__class__.__name__))
         return tab
 
-    '''
-    Fill Media object from AlloCiné
-    '''
-    def FillMediaFromScraper(self, title, link, plot, pic):
-        infoMedia = Media(title, link, plot, pic)
-        try:
-            search = self.__cache__.cacheFunction(self.api.search, title, "tvseries")
-            if int(search['feed']['totalResults']) > 0 :
-                return Utils.GetMediaInfoFromJson(self.__cache__.cacheFunction(self.api.tvseries, search['feed']['tvseries'][0]['code'],"small"))
-        except:
-            raise
-        return infoMedia
-
+   
     '''
     @returns title, link, synopsis, img
     '''
@@ -205,3 +210,18 @@ class RegarderGratuit(SearcherABCStreaming.SearcherABCStreaming):
                            Media(node.h2.a.text, node.h2.a["href"].encode('utf-8').strip(), listp[1].text.encode('utf-8').strip(), listp[0].img["src"]).__dict__,
                            self.__class__.__name__))
         return tab
+
+    '''
+    Fill Media object from AlloCiné
+    '''
+    def FillMediaFromScraper(self, title, link, plot, pic):
+        infoMedia = Media(title, link, plot, pic)
+        #TODO : à virer 
+        return infoMedia
+        try:
+            search = self.__cache__.cacheFunction(self.api.search, title, "tvseries")
+            if int(search['feed']['totalResults']) > 0 :
+                return Utils.GetMediaInfoFromJson(self.__cache__.cacheFunction(self.api.tvseries, search['feed']['tvseries'][0]['code'],"small"))
+        except:
+            raise
+        return infoMedia
