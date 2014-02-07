@@ -49,11 +49,11 @@ class Streamzzz(SearcherABCStreaming.SearcherABCStreaming):
     
     '''
     @timed()
-    def search(self, keyword):
+    def search(self, keyword, page = 1):
 
         filesList = []
         #http://streamzzz.com/search/dead/next/1
-        url = "%s/search/%s/next/1" % (self.BASE_URL(), (urllib.quote_plus(keyword)))
+        url = "%s/search/%s/next/%s" % (self.BASE_URL(), urllib.quote_plus(keyword), str(page))
         res = self.GetContentSearchPage(url)
         infoMedia = Media()
         if len(res[0]) > 0 :
@@ -62,7 +62,6 @@ class Streamzzz(SearcherABCStreaming.SearcherABCStreaming):
                 infoMedia = Utils.GetMediaInfoFromJson(self.api.tvseries(search['feed']['tvseries'][0]['code'],"small"))
 
         for (title, link) in res[0]:
-            print keyword
             search = self.api.search(keyword, "tvseries")
             if infoMedia :
                  filesList.append((
@@ -90,8 +89,9 @@ class Streamzzz(SearcherABCStreaming.SearcherABCStreaming):
             nextPage = soup.find("a", "pagination-next")
             if nextPage != None :
                 nextPage = nextPage["href"]
-            nodes = soup.find('div','page_content').ul.findAll("li")
-            for node in nodes:
+            #nodes = soup.find('ul','search-res').findAll("li")
+            allSearchContent = soup.findAll('ul','search-res')
+            for node in allSearchContent[len(allSearchContent)-1].children:
                 print repr(node)
                 #returns title, link
                 tab.append((node.h3.a.text.encode('utf-8').strip(), node.h3.a["href"].encode('utf-8').strip()))

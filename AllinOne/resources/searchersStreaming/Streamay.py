@@ -50,9 +50,8 @@ class Streamay(SearcherABCStreaming.SearcherABCStreaming):
     Receives keyword and have to return dictionary of proper tuples:
     '''
     @timed()
-    def search(self, keyword):
+    def search(self, keyword, page = 1):
         ## do=search&subaction=search&search_start=2&full_search=0&result_from=0&story=evasion
-        page = 1
         filesList = []
         data = {'do':'search',
                 'subaction':'search',
@@ -150,35 +149,36 @@ class Streamay(SearcherABCStreaming.SearcherABCStreaming):
                 tab.append((Utils.ClearTitle(node.h3.a.text), node.h3.a["href"].encode('utf-8').strip(), node.div.a.img['src'].encode('utf-8').strip()))
         return (tab, nextPage)
 
-    def GetLinksForPlay(self, url="", page="accueil"):
+    def GetLinksForPlay(self, url=""):
 
         if url and url is not None:
             url = urllib.unquote_plus(url)
         else:
             url = urllib.unquote_plus(self.BASE_URL())
 
-        if page == 'details':
+        response = Utils.getContentOfUrl(url)
+        #if page == 'details':
             #Requête en GET
-            response = Utils.getContentOfUrl(url)
-        else:
-            #Requête en POST
-            data = {'dlenewssortby':'date','dledirection':'desc'}
-            response = Utils.getContentOfUrl(url, data)
+            #response = Utils.getContentOfUrl(url)
+        #else:
+        #    #Requête en POST
+        #    data = {'dlenewssortby':'date','dledirection':'desc'}
+        #    response = Utils.getContentOfUrl(url, data)
 
         tab = []
         if None != response and 0 < len(response):
             soup = BeautifulSoup(response)
-            if page == 'details':
-                for node in soup.findAll("object"):
-                    link = node.param["value"]
-                    tab.append((node.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
-                for node in soup.findAll("iframe"):
-                    if node.has_key("allowfullscreen"):
-                        link = node["src"]
-                        if 'http://' not in link:
-                            link = self.BASE_URL() + link
-                        if 'youtube' not in link:
-                            tab.append((soup.find('div','describe-box').div.div.img['src'].encode('utf-8').strip(), link))
+            #if page == 'details':
+            for node in soup.findAll("object"):
+                link = node.param["value"]
+                tab.append((node.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
+            for node in soup.findAll("iframe"):
+                if node.has_key("allowfullscreen"):
+                   link = node["src"]
+                   if 'http://' not in link:
+                       link = self.BASE_URL() + link
+                   if 'youtube' not in link:
+                       tab.append((soup.find('div','describe-box').div.div.img['src'].encode('utf-8').strip(), link))
         return tab
 
     '''

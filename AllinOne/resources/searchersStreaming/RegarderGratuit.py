@@ -47,10 +47,10 @@ class RegarderGratuit(SearcherABCStreaming.SearcherABCStreaming):
         return ContentType.TvSerieOnly   
 
     @timed()
-    def search(self, keyword):
+    def search(self, keyword, page = 1):
 
         filesList = []
-        url = "%s/page/1/?s=%s" % (self.BASE_URL(), (urllib.quote_plus(keyword)))
+        url = "%s/page/%s/?s=%s" % (self.BASE_URL(),str(page), urllib.quote_plus(keyword))
         res = self.GetContentSearchPage(url)
         infoMedia = Media()
         if len(res[0]) > 0 :

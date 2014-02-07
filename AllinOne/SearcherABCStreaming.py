@@ -52,7 +52,7 @@ class SearcherABCStreaming:
     cookieJar = None
 
     @abc.abstractmethod
-    def search(self, keyword):
+    def search(self, keyword, page = 1):
         return
 
     @abc.abstractproperty
