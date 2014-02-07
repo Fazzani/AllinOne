@@ -179,8 +179,7 @@ class Streamzzz(SearcherABCStreaming.SearcherABCStreaming):
                 tab.append((node.parent.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
         return tab
 
-
-    def LatestMovies(self,  url):
+    def LatestMovies(self,  page = 1):
         return []
 
     def AllTvSeries(self):
@@ -198,7 +197,9 @@ class Streamzzz(SearcherABCStreaming.SearcherABCStreaming):
                            self.__class__.__name__))
         return tab
 
-    def LatestTvSeriesEpisodes(self, url):
+    def LatestTvSeriesEpisodes(self, page = 1):
+        url = '%s/home/next/%s' % (self.BASE_URL(),str(page))
+
         response= self.GetContentFromUrl(url)
         tab=[]
         if None != response and 0 < len(response):

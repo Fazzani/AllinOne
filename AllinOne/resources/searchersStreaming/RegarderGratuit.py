@@ -170,7 +170,7 @@ class RegarderGratuit(SearcherABCStreaming.SearcherABCStreaming):
                            self.__class__.__name__))
         return tab
 
-    def LatestMovies(self, url):
+    def LatestMovies(self, page = 1):
         return []
 
     '''
@@ -193,11 +193,11 @@ class RegarderGratuit(SearcherABCStreaming.SearcherABCStreaming):
                            self.__class__.__name__))
         return tab
 
-   
     '''
     @returns title, link, synopsis, img
     '''
-    def LatestTvSeriesEpisodes(self, url):
+    def LatestTvSeriesEpisodes(self, page = 1):
+        url = "%s/page/%s/" % (self.BASE_URL(),str(page))
         response = self.GetContentFromUrl(url)
         tab = []
         if None != response and 0 < len(response):

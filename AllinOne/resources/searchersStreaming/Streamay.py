@@ -190,7 +190,8 @@ class Streamay(SearcherABCStreaming.SearcherABCStreaming):
     '''
      Récupération des films depuis la page d'accueil du Site
     '''
-    def LatestMovies(self, url):
+    def LatestMovies(self, page = 1):
+        url ="%s/page/%s/" % (BASE_URL, str(page))
         tab = []
         #Requête en POST
         data = {'dlenewssortby':'date','dledirection':'desc'}
@@ -226,5 +227,5 @@ class Streamay(SearcherABCStreaming.SearcherABCStreaming):
     def AllTvSeries(self):
         return []
 
-    def LatestTvSeriesEpisodes(self, url):
+    def LatestTvSeriesEpisodes(self, page = 1 ):
         return []

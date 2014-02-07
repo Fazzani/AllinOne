@@ -120,7 +120,9 @@ class SearcherABCStreaming:
         hasher.update(string)
         return hasher.hexdigest()
 
-    def GetContentFromUrl(self, url=None, data=None):
+    def GetContentFromUrl(self, url = None, data = None):
+        print url
+        print data
         if url and url is not None:
             url = urllib.unquote_plus(url)
         else:
@@ -129,7 +131,7 @@ class SearcherABCStreaming:
         return Utils.getContentOfUrl(url, data).replace("<sc'+'ript",'<script>').replace("<scr'+'ipt",'<script>').replace("</scr'+'ipt",'</script>').replace('</scr"+"ipt','</script>').replace('<scr"+"ipt','<script>').replace("</sc'+'ript>",'</script>')
 
     @abc.abstractmethod
-    def LatestMovies(self, url):
+    def LatestMovies(self, page = 1):
         pass
 
     @abc.abstractmethod
@@ -137,7 +139,7 @@ class SearcherABCStreaming:
         pass
 
     @abc.abstractmethod
-    def LatestTvSeriesEpisodes(self, url):
+    def LatestTvSeriesEpisodes(self, page = 1):
         pass
 
     '''

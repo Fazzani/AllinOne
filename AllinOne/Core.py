@@ -379,12 +379,12 @@ class Core:
             if(method == "search"):
                 filesList = searcherObject.search(keyword, page)
             if(method == "LatestMovies"):
-                filesList = self.__cache__.cacheFunction(searcherObject.LatestMovies, keyword)
+                filesList = self.__cache__.cacheFunction(searcherObject.LatestMovies)
             if(method == "AllTvSeries"):
                 filesList = self.__cache__.cacheFunction(searcherObject.AllTvSeries)
                 #filesList = searcherObject.AllTvSeries()
             if(method == "LatestTvSeriesEpisodes"):
-                filesList = self.__cache__.cacheFunction(searcherObject.LatestTvSeriesEpisodes, keyword)
+                filesList = self.__cache__.cacheFunction(searcherObject.LatestTvSeriesEpisodes, page)
 
         except Exception, e:
             print 'Unable to use searcher: ' + searcher + ' at ' + self.__plugin__ + ' searchWithSearcherStreaming(). Exception: ' + str(e)
