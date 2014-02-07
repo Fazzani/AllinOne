@@ -140,10 +140,7 @@ class Core:
         searcherObject = self.getSearcherStreaming(searcherName)
         if searcherObject is None :
             return
-        ##url='http://streamay.com/5386-eyjafjallajgkull-le-volcan.html'
-        dict = searcherObject.GetPageDetails(url,'details')
-        #url='http://www.regarder-film-gratuit.com/person-of-interest-saison-1-episode-1/'
-        #print Utils.GetContentPage(url, "details")
+        dict = searcherObject.GetLinksForPlay(url,'details')
         self.playVideo(dict)
 
     '''
