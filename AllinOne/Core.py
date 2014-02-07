@@ -95,9 +95,9 @@ class Core:
         else:
             self.__cache__ = StorageServer.StorageServer(self._pluginName, 0.5) # (Your plugin name, Cache time in hours)
 
-    def drawItem(self, title, action, link='', image='', isFolder=True, contextMenu=None, infoMedia=None, searcherName='', page=1, method="search"):
+    def drawItem(self, title, action, link='', image='', isFolder=True, contextMenu=None, infoMedia=None, searcherName='', page=1, method="search", query=''):
         listitem = xbmcgui.ListItem(title, iconImage=image, thumbnailImage=image)
-        url = '%s?action=%s&url=%s&searcherName=%s&page=%s&method=%s' % (sys.argv[0], action, urllib.quote_plus(link), searcherName, str(page), method)
+        url = '%s?action=%s&url=%s&searcherName=%s&page=%s&method=%s&query=%s' % (sys.argv[0], action, urllib.quote_plus(link), searcherName, str(page), method, query)
         if contextMenu:
             listitem.addContextMenuItems(contextMenu, replaceItems=True)
         if isFolder:
@@ -195,16 +195,18 @@ class Core:
         if not query:
             return
         elif keyboard.isConfirmed():
-            params["url"] = urllib.quote_plus(query)
+            params["query"] = urllib.quote_plus(query)
             params["method"] = urllib.quote_plus("search")
+            params["page"] = 1
             self.openSectionStreaming(params)
 
     def openSectionStreaming(self, params={}):
         get = params.get
-        query = get("url")
+        query = get("query")
         if query:
             query = urllib.unquote_plus(query)
         method = get("method")
+        page = get("page")
         filesList = []
         if None == get('isApi'):
             progressBar = xbmcgui.DialogProgress()
@@ -222,7 +224,7 @@ class Core:
                 if None == get('isApi'):
                     progressBar.update(int(iterator), "Seaching in [COLOR F6D8CE00][B]%s[/B][/COLOR] site " % searcher)
                     iterator += 100 / len(searchersList)
-                filesList += self.searchWithSearcherStreaming(query, searcher, method)
+                filesList += self.searchWithSearcherStreaming(query, searcher, method, page)
                 
             if None == get('isApi') and progressBar.iscanceled():
                 progressBar.update(0)
@@ -231,9 +233,9 @@ class Core:
         if None == get('isApi'):
             progressBar.update(0)
             progressBar.close()
-        self.showFilesStreamingList(sorted(filesList, key= lambda x: x[0]), method)
+        self.showFilesStreamingList(sorted(filesList, key= lambda x: x[0]), query, method, page)
 
-    def showFilesStreamingList(self, filesList, method):
+    def showFilesStreamingList(self, filesList, query, method, page):
         for (title, link, infoMedia, searcherName) in filesList:
             media = Utils.obj_dic(infoMedia)
             #print link
@@ -251,7 +253,7 @@ class Core:
                     self.drawItem(title, 'play_video_stream', link, searcherName = searcherName, method = method)
         #self.lockView('wide')
         #if res[1] != None:
-        #    self.drawItem("Next Page >>", 'openSectionStreaming', res[1])
+        self.drawItem("[COLOR F6D8CE88][I]La page suivante >>[/I][/COLOR]", 'openSectionStreaming', method = method, page= int(page) + 1, query = query)
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
     '''
     Lister les épisodes d'une série
@@ -304,7 +306,7 @@ class Core:
             searcherObject = getattr(__import__(searcher), searcher)()
             filesList = searcherObject.GetLinksForPlay(url)
             index = xbmcgui.Dialog().select('Choose a source', map(lambda x, y: '[COLOR F6D8CE00][B]Link %s [/B][/COLOR](%s)' % (x, Utils.GetDomain(y[1])), range(len(filesList)),filesList))
-            tabLink=[]
+            tabLink = []
             tabLink.append(filesList[index])
             self.playVideo(tabLink)
 
@@ -368,14 +370,14 @@ class Core:
     '''
     Searching in streaming sites
     '''
-    def searchWithSearcherStreaming(self, keyword, searcher, method="search"):
+    def searchWithSearcherStreaming(self, keyword, searcher, method="search", page=1):
         filesList = []
         if self.ROOT + os.sep + 'resources' + os.sep + '\searchersStreaming' not in sys.path:
             sys.path.insert(0, self.ROOT + os.sep + 'resources' + os.sep + '\searchersStreaming')
         try:
             searcherObject = getattr(__import__(searcher), searcher)()
             if(method == "search"):
-                filesList = searcherObject.search(keyword)
+                filesList = searcherObject.search(keyword, page)
             if(method == "LatestMovies"):
                 filesList = self.__cache__.cacheFunction(searcherObject.LatestMovies, keyword)
             if(method == "AllTvSeries"):
@@ -571,7 +573,8 @@ class Core:
         classMatch = re.search('(\w+)::(.+)', url)
         if classMatch:
             searcher = classMatch.group(1)
-            #print "openTorrent............................" + classMatch.group(2)
+            #print "openTorrent............................" +
+            #classMatch.group(2)
             if self.ROOT + os.sep + 'resources' + os.sep + 'searchers' not in sys.path:
                 sys.path.insert(0, self.ROOT + os.sep + 'resources' + os.sep + 'searchers')
             try:
