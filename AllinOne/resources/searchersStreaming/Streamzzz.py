@@ -150,24 +150,41 @@ class Streamzzz(SearcherABCStreaming.SearcherABCStreaming):
         else:
             return media
 
-    def GetPageDetails(self, url="", page="acceuil"):
-        if url and url is not None:
-            url = urllib.unquote_plus(url)
-        else:
-            url = urllib.unquote_plus(self.BASE_URL())
+    '''
+    liste des épisodes d'une série.
+    '''
+    def ListEpisodesPageDetailsTvSerie(self, url):
+        response = self.GetContentFromUrl(url)
+        tab = []
+        if None != response and 0 < len(response):
+            soup = BeautifulSoup(response)
+            main = soup.find("div",'content-wrap').find('div','type_category')
+            title = main.h1.text.encode('utf-8') 
+            infoMedia = self.FillMediaFromScraper(title,'','','')
+            for node in main.ul.findAll('li'):
+               tab.append((node.a.text.encode('utf-8'),
+                           node.a['href'],
+                           infoMedia.__dict__,
+                           self.__class__.__name__))
+        return tab
 
-        response = Utils.getContentOfUrl(url).replace('sc"+"ript','script').replace("sc'+'ript","script").replace('scr"+"ipt','script').replace("scr'+'ipt","script")
+    '''
+    @returns title, link, synopsis, img
+    '''
+    def GetLinksForPlay(self, url):
+        response= self.GetContentFromUrl(url)
         tab=[]
         if None != response and 0 < len(response):
             soup = BeautifulSoup(response)
-            if page =='details':
-                for node in soup.findAll("object"):
-                    link = node.param["value"]
-                    tab.append((node.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
-                for node in soup.findAll("iframe", width="600"):
-                    link = node["src"]
-                    tab.append((soup.find('div','page_content').p.text.encode('utf-8').strip(), link))
+            
+            for node in soup.findAll("object"):
+                link = node.param["value"]
+                tab.append((node.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
+            for node in soup.findAll("iframe", width="600"):
+                link = node["src"]
+                tab.append((node.parent.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
         return tab
+
 
     def LatestMovies(self,  url):
         return []
@@ -203,23 +220,6 @@ class Streamzzz(SearcherABCStreaming.SearcherABCStreaming):
                            Media(node.h2.a.text, node.h2.a["href"].encode('utf-8').strip(), listp[1].text.encode('utf-8').strip(), listp[0].img["src"]).__dict__,
                            self.__class__.__name__))
         return None
-
-    '''
-    liste des épisodes d'une série.
-    '''
-    def GetPageDetailsTvSerie(self, url=""):
-        response= self.GetContentFromUrl(url)
-        tab=[]
-        if None != response and 0 < len(response):
-            soup = BeautifulSoup(response)
-            
-            for node in soup.findAll("object"):
-                link = node.param["value"]
-                tab.append((node.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
-            for node in soup.findAll("iframe", width="600"):
-                link = node["src"]
-                tab.append((node.parent.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
-        return tab
 
     '''
     Fill Media object from AlloCiné

@@ -150,7 +150,7 @@ class Streamay(SearcherABCStreaming.SearcherABCStreaming):
                 tab.append((Utils.ClearTitle(node.h3.a.text), node.h3.a["href"].encode('utf-8').strip(), node.div.a.img['src'].encode('utf-8').strip()))
         return (tab, nextPage)
 
-    def GetPageDetails(self, url="", page="accueil"):
+    def GetLinksForPlay(self, url="", page="accueil"):
 
         if url and url is not None:
             url = urllib.unquote_plus(url)
@@ -180,6 +180,12 @@ class Streamay(SearcherABCStreaming.SearcherABCStreaming):
                         if 'youtube' not in link:
                             tab.append((soup.find('div','describe-box').div.div.img['src'].encode('utf-8').strip(), link))
         return tab
+
+    '''
+    liste des épisodes d'une série.
+    '''
+    def ListEpisodesPageDetailsTvSerie(self, url=""):
+        pass
 
     '''
      Récupération des films depuis la page d'accueil du Site

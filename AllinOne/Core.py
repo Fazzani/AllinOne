@@ -103,7 +103,6 @@ class Core:
 
         if infoMedia is not None:
             listitem.setInfo(type = 'Video', infoLabels = {"Title": infoMedia.Title ,"Year": infoMedia.Year, "Genre" : infoMedia.Genre , "Country" : infoMedia.Country,"Plot": infoMedia.Plot,"Director": infoMedia.Director,"Duration":infoMedia.Duration,"Cast": infoMedia.Cast})
-
         xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=url, listitem=listitem, isFolder=isFolder)
 
     '''
@@ -114,8 +113,6 @@ class Core:
         self.drawItem('Les derniers films', 'openSectionStreaming', image=self.ROOT + '/resources/icons/logoStreamy.png', method="LatestMovies")
         self.drawItem('Les dernières séries', 'openSectionStreaming', image=self.ROOT + '/resources/icons/RFS.png', method="AllTvSeries")
         self.drawItem('Les derniers épisodes', 'openSectionStreaming', image=self.ROOT + '/resources/icons/RFS.png', method="LatestTvSeriesEpisodes")
-        #self.drawItem('Test Youtube url', 'testStreaming', image=self.ROOT +
-        #'/icons/search.png')
         self.drawItem('urlresolver Settings', 'display_settings', image=self.ROOT + '/icons/Settings.png')
 
         '''self.drawItem(Localization.localize('< Popular >'), 'getPopular', image=self.ROOT + '/icons/video.png')
@@ -140,11 +137,16 @@ class Core:
         if searcherObject is None :
             return
         ##url='http://streamay.com/5386-eyjafjallajgkull-le-volcan.html'
-        res = searcherObject.GetPageDetails(url,'details')
+        dict = searcherObject.GetPageDetails(url,'details')
         #url='http://www.regarder-film-gratuit.com/person-of-interest-saison-1-episode-1/'
         #print Utils.GetContentPage(url, "details")
-        
-        for title, linkStrm  in res:
+        self.playVideo(dict)
+
+    '''
+    Play Vidéo from a dict (title, link of stream)
+    '''
+    def playVideo(self, dict):
+        for title, linkStrm  in dict:
             try:
                 if re.match('http://(.*)vk\.(com|me)/(.*)', linkStrm):
                     stream_url = Utils.VK_ResolveUrl(linkStrm)
@@ -220,6 +222,7 @@ class Core:
                     progressBar.update(int(iterator), "Seaching in [COLOR F6D8CE00][B]%s[/B][/COLOR] site " % searcher)
                     iterator += 100 / len(searchersList)
                 filesList += self.searchWithSearcherStreaming(query, searcher, method)
+                
             if None == get('isApi') and progressBar.iscanceled():
                 progressBar.update(0)
                 progressBar.close()
@@ -234,24 +237,28 @@ class Core:
             media = Utils.obj_dic(infoMedia)
             if infoMedia :
                 if(method == "AllTvSeries"):
-                    self.drawItem(" [COLOR F6D8CE00][B]%s[/B][/COLOR] (%s) " % (title, searcherName), 'open_TvSeriePage', link, media.PictureLink, infoMedia = media, searcherName= searcherName, isFolder = true, method= method)
+                    self.drawItem(" [COLOR F6D8CE00][B]%s[/B][/COLOR] (%s) " % (title, searcherName), 'open_TvSeriePage', 
+                                  link, media.PictureLink, infoMedia = media, searcherName= searcherName, isFolder = True, method = method)
                 else:
-                    self.drawItem(" [COLOR F6D8CE00][B]%s[/B][/COLOR] (%s) " % (title, searcherName), 'open_regarder_film_gratuit_Item', link, media.PictureLink, infoMedia = media, searcherName = searcherName, method= method)
+                    self.drawItem(" [COLOR F6D8CE00][B]%s[/B][/COLOR] (%s) " % (title, searcherName), 'open_regarder_film_gratuit_Item', 
+                                  link, media.PictureLink, infoMedia = media, searcherName = searcherName, method = method)
             else:
                 if(method == "AllTvSeries"):
-                    self.drawItem(title, 'open_TvSeriePage', link, isFolder=true, searcherName = searcherName, method = method)
+                    self.drawItem(title, 'open_TvSeriePage', link, isFolder=True, searcherName = searcherName, method = method)
                 else:
                     self.drawItem(title, 'open_regarder_film_gratuit_Item', link, searcherName = searcherName, method = method)
         #self.lockView('wide')
         #if res[1] != None:
         #    self.drawItem("Next Page >>", 'openSectionStreaming', res[1])
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
-
-    def open_TvSeriePage(self):
+    '''
+    Lister les épisodes d'une série
+    '''
+    def open_TvSeriePage(self, params={}):
         get = params.get
         url = get("url")
         if url:
-            url = urllib.unquote_plus(query)
+            url = urllib.unquote_plus(url)
         method = get("method")
         searcher = get("searcherName")
         filesList = []
@@ -259,13 +266,50 @@ class Core:
             sys.path.insert(0, self.ROOT + os.sep + 'resources' + os.sep + '\searchersStreaming')
         try:
             searcherObject = getattr(__import__(searcher), searcher)()
-            filesList = self.__cache__.cacheFunction(searcherObject.GetPageDetailsTvSerie, url)
-            self.showFilesStreamingList(sorted(filesList, key= lambda x: x[0]), method)
+            print repr(searcherObject)
+            filesList = searcherObject.ListEpisodesPageDetailsTvSerie(url)
+            print repr(filesList)
+            self.ShowListVideosLinks(sorted(filesList, key= lambda x: x[0]))
 
         except Exception, e:
             print 'Unable to use searcher: ' + searcher + ' at ' + self.__plugin__ + ' open_TvSeriePage(). Exception: ' + str(e)
-        self.showFilesStreamingList(sorted(filesList, key= lambda x: x[0]), method)
+            self.ShowListVideosLinks(sorted(filesList, key= lambda x: x[0]))
         pass
+
+    '''
+    Récupérer les liens de streaming 
+    '''
+    def ShowListVideosLinks(self, filesList):
+        for (title, link, infoMedia, searcherName) in filesList:
+            media = Utils.obj_dic(infoMedia)
+            if infoMedia :
+                self.drawItem(" [COLOR F6D8CE00][B]%s[/B][/COLOR] (%s) " % (title, searcherName), 'open_link_video_Item', 
+                                  link, media.PictureLink, infoMedia = media, searcherName = searcherName)
+            else:
+                self.drawItem(title, 'open_link_video_Item', link, searcherName = searcherName)
+        xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
+        
+    def open_link_video_Item(self, params={}):
+        get = params.get
+        url = get("url")
+        if url:
+            url = urllib.unquote_plus(url)
+        searcher = get("searcherName")
+        filesList = []
+        if self.ROOT + os.sep + 'resources' + os.sep + '\searchersStreaming' not in sys.path:
+            sys.path.insert(0, self.ROOT + os.sep + 'resources' + os.sep + '\searchersStreaming')
+        try:
+            searcherObject = getattr(__import__(searcher), searcher)()
+            filesList = searcherObject.GetLinksForPlay(url)
+            index = xbmcgui.Dialog().select('Choose a source', map(lambda x, y: '[COLOR F6D8CE00][B]Link %s [/B][/COLOR](%s)' % (x, Utils.GetDomain(y[1])), range(len(filesList)),filesList))
+            tabLink=[]
+            tabLink.append(filesList[index])
+            self.playVideo(tabLink)
+
+        except Exception, e:
+            print 'Unable to use searcher: ' + searcher + ' at ' + self.__plugin__ + ' open_link_video_Item(). Exception: ' + str(e)
+            #self.open_regarder_film_gratuit_Item(sorted(filesList, key= lambda x: x[0]),'')
+        
     '''
     Open Section for Torrent
     '''
@@ -333,7 +377,8 @@ class Core:
             if(method == "LatestMovies"):
                 filesList = self.__cache__.cacheFunction(searcherObject.LatestMovies, keyword)
             if(method == "AllTvSeries"):
-                filesList = self.__cache__.cacheFunction(searcherObject.AllTvSeries)
+                #filesList = self.__cache__.cacheFunction(searcherObject.AllTvSeries)
+                filesList = searcherObject.AllTvSeries()
             if(method == "LatestTvSeriesEpisodes"):
                 filesList = self.__cache__.cacheFunction(searcherObject.LatestTvSeriesEpisodes, keyword)
 

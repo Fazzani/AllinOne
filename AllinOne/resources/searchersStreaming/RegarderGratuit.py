@@ -31,7 +31,7 @@ from Utils import timed, tryGetValue
 
 class RegarderGratuit(SearcherABCStreaming.SearcherABCStreaming):
 
-    tab =["(Date de sortie)(.*?)$", "(Année de production)(.*?)$","(Nom du film)(.*?)$", "(Réalisé par)(.*?)$","(Avec)(.*?)$","(Genre)(.*?)$","(Durée)(.*?)$","(Nationalité)(.*?)$"]
+    tab = ["(Date de sortie)(.*?)$", "(Année de production)(.*?)$","(Nom du film)(.*?)$", "(Réalisé par)(.*?)$","(Avec)(.*?)$","(Genre)(.*?)$","(Durée)(.*?)$","(Nationalité)(.*?)$"]
 
     def BASE_URL(self):
         return "http://www.regarder-film-gratuit.com"
@@ -61,19 +61,15 @@ class RegarderGratuit(SearcherABCStreaming.SearcherABCStreaming):
         for (title, link) in res[0]:
             search = self.api.search(keyword, "tvseries")
             if infoMedia :
-                 filesList.append((
-                    title,
+                 filesList.append((title,
                     link,
                     infoMedia,
-                    self.__class__.__name__,
-                ))
+                    self.__class__.__name__,))
             else:
-                filesList.append((
-                    title,
+                filesList.append((title,
                     link,
                     None,
-                    self.__class__.__name__,
-                ))
+                    self.__class__.__name__,))
                
         return filesList
 
@@ -81,7 +77,7 @@ class RegarderGratuit(SearcherABCStreaming.SearcherABCStreaming):
     Get Info Media from Url
     '''
     def getInfoMediaFromUrl(self, medialink):
-        if((re.search(r"/films/", medialink, re.M|re.I)==None) and (re.search(r"/series/", medialink, re.M|re.I)==None)):
+        if((re.search(r"/films/", medialink, re.M | re.I) == None) and (re.search(r"/series/", medialink, re.M | re.I) == None)):
             return None
 
         return self.extractInfosMedia(self.makeRequest(medialink))
@@ -125,7 +121,7 @@ class RegarderGratuit(SearcherABCStreaming.SearcherABCStreaming):
     def GetContentSearchPage(self, url):
         response = self.GetContentFromUrl(url)
 
-        tab=[]
+        tab = []
         if None != response and 0 < len(response):
             soup = BeautifulSoup(response)
             nextPage = soup.find("a", "nextpostslink")
@@ -138,36 +134,39 @@ class RegarderGratuit(SearcherABCStreaming.SearcherABCStreaming):
         return (tab, nextPage)
 
     '''
+    Récupère la liste des liens de streaming 
     @returns title, link, synopsis, img
     '''
-    def GetPageDetails(self, url="", page="acceuil"):
-        response= self.GetContentFromUrl(url)
-        tab=[]
+    def GetLinksForPlay(self, url):
+        response = self.GetContentFromUrl(url)
+        tab = []
         if None != response and 0 < len(response):
             soup = BeautifulSoup(response)
-            if page =='details':
-                for node in soup.findAll("object"):
-                    link = node.param["value"]
-                    tab.append((node.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
-                for node in soup.findAll("iframe", width="600"):
-                    link = node["src"]
-                    tab.append((node.parent.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
-        return tab
-    '''
-    liste des épisodes d'une série.
-    '''
-    def GetPageDetailsTvSerie(self, url=""):
-        response= self.GetContentFromUrl(url)
-        tab=[]
-        if None != response and 0 < len(response):
-            soup = BeautifulSoup(response)
-            
             for node in soup.findAll("object"):
                 link = node.param["value"]
                 tab.append((node.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
             for node in soup.findAll("iframe", width="600"):
                 link = node["src"]
                 tab.append((node.parent.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
+        return tab
+
+    '''
+    liste des épisodes d'une série.
+    '''
+    def ListEpisodesPageDetailsTvSerie(self, url):
+        response = self.GetContentFromUrl(url)
+        tab = []
+        if None != response and 0 < len(response):
+            soup = BeautifulSoup(response)
+            main = soup.find("div",{'id': 'main'})
+            title = main.find('div','box').strong.text.encode('utf-8') 
+            title = re.search("Série ‘(.+?)’", title).group(1)
+            infoMedia = self.FillMediaFromScraper(title,'','','')
+            for node in main.findAll('div','post'):
+               tab.append((node.h2.a.text.encode('utf-8'),
+                           node.h2.a['href'],
+                           infoMedia.__dict__,
+                           self.__class__.__name__))
         return tab
 
     def LatestMovies(self, url):
@@ -178,13 +177,15 @@ class RegarderGratuit(SearcherABCStreaming.SearcherABCStreaming):
     '''
     def AllTvSeries(self):
         response = self.GetContentFromUrl()
-        tab=[]
+        tab = []
         if None != response and 0 < len(response):
             soup = BeautifulSoup(response)
             nodes = soup.find("div", {"id" : "categories-3"}).li.ul.findAll('li')
             for node in nodes:
                 infoMedia = self.FillMediaFromScraper(node.a.text.encode('utf-8'), 
-                                                      node.a["href"].encode('utf-8').strip(), node.a["title"], "")
+                                                      node.a["href"].encode('utf-8').strip(), 
+                                                      node.a["title"], 
+                                                      "")
                 tab.append((infoMedia.Title,
                            infoMedia.Link,
                            infoMedia.__dict__,
@@ -196,8 +197,8 @@ class RegarderGratuit(SearcherABCStreaming.SearcherABCStreaming):
     @returns title, link, synopsis, img
     '''
     def LatestTvSeriesEpisodes(self, url):
-        response= self.GetContentFromUrl(url)
-        tab=[]
+        response = self.GetContentFromUrl(url)
+        tab = []
         if None != response and 0 < len(response):
             soup = BeautifulSoup(response)
             nodes = soup.findAll("div", "post")
@@ -216,7 +217,7 @@ class RegarderGratuit(SearcherABCStreaming.SearcherABCStreaming):
     '''
     def FillMediaFromScraper(self, title, link, plot, pic):
         infoMedia = Media(title, link, plot, pic)
-        #TODO : à virer 
+        #TODO : à virer
         return infoMedia
         try:
             search = self.__cache__.cacheFunction(self.api.search, title, "tvseries")
