@@ -142,12 +142,13 @@ class RegarderGratuit(SearcherABCStreaming.SearcherABCStreaming):
         tab = []
         if None != response and 0 < len(response):
             soup = BeautifulSoup(response)
+            title = soup.find('div',{'id':'content'}).h2.text.encode('utf-8').strip()
             for node in soup.findAll("object"):
                 link = node.param["value"]
-                tab.append((node.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
+                tab.append(title, link)
             for node in soup.findAll("iframe", width="600"):
                 link = node["src"]
-                tab.append((node.parent.parent.parent.p.img['alt'].encode('utf-8').strip(), link))
+                tab.append(title, link)
         return tab
 
     '''

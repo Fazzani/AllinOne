@@ -134,13 +134,13 @@ class Core:
         self.lockView('list')
         xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
 
-    def open_regarder_film_gratuit_Item(self, params={}):
+    def play_video_stream(self, params={}):
         url = params.get("url")
         searcherName = params.get("searcherName")
         searcherObject = self.getSearcherStreaming(searcherName)
         if searcherObject is None :
             return
-        dict = searcherObject.GetLinksForPlay(url,'details')
+        dict = searcherObject.GetLinksForPlay(url)
         self.playVideo(dict)
 
     '''
@@ -242,13 +242,13 @@ class Core:
                     self.drawItem(" [COLOR F6D8CE00][B]%s[/B][/COLOR] (%s) " % (title, searcherName), 'open_TvSeriePage', 
                                   link, media.PictureLink, infoMedia = media, searcherName= searcherName, isFolder = True, method = method)
                 else:
-                    self.drawItem(" [COLOR F6D8CE00][B]%s[/B][/COLOR] (%s) " % (title, searcherName), 'open_regarder_film_gratuit_Item', 
+                    self.drawItem(" [COLOR F6D8CE00][B]%s[/B][/COLOR] (%s) " % (title, searcherName), 'play_video_stream', 
                                   link, media.PictureLink, infoMedia = media, searcherName = searcherName, method = method)
             else:
                 if(method == "AllTvSeries"):
                     self.drawItem(title, 'open_TvSeriePage', link, isFolder=True, searcherName = searcherName, method = method)
                 else:
-                    self.drawItem(title, 'open_regarder_film_gratuit_Item', link, searcherName = searcherName, method = method)
+                    self.drawItem(title, 'play_video_stream', link, searcherName = searcherName, method = method)
         #self.lockView('wide')
         #if res[1] != None:
         #    self.drawItem("Next Page >>", 'openSectionStreaming', res[1])
@@ -310,7 +310,7 @@ class Core:
 
         except Exception, e:
             print 'Unable to use searcher: ' + searcher + ' at ' + self.__plugin__ + ' open_link_video_Item(). Exception: ' + str(e)
-            #self.open_regarder_film_gratuit_Item(sorted(filesList, key= lambda x: x[0]),'')
+            #self.play_video_stream(sorted(filesList, key= lambda x: x[0]),'')
         
     '''
     Open Section for Torrent
