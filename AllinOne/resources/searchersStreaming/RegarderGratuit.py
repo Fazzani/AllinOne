@@ -161,7 +161,7 @@ class RegarderGratuit(SearcherABCStreaming.SearcherABCStreaming):
             main = soup.find("div",{'id': 'main'})
             title = main.find('div','box').strong.text.encode('utf-8') 
             title = re.search("Série ‘(.+?)’", title).group(1)
-            infoMedia = self.FillMediaFromScraper(title,'','','')
+            infoMedia = self.FillMediaTvSerieFromScraper(title,'','','')
             for node in main.findAll('div','post'):
                tab.append((node.h2.a.text.encode('utf-8'),
                            node.h2.a['href'],
@@ -182,12 +182,12 @@ class RegarderGratuit(SearcherABCStreaming.SearcherABCStreaming):
             soup = BeautifulSoup(response)
             nodes = soup.find("div", {"id" : "categories-3"}).li.ul.findAll('li')
             for node in nodes:
-                infoMedia = self.FillMediaFromScraper(node.a.text.encode('utf-8'), 
+                infoMedia = self.FillMediaTvSerieFromScraper(node.a.text.encode('utf-8'), 
                                                       node.a["href"].encode('utf-8').strip(), 
                                                       node.a["title"], 
                                                       "")
                 tab.append((infoMedia.Title,
-                           infoMedia.Link,
+                           node.a["href"].encode('utf-8').strip(),
                            infoMedia.__dict__,
                            self.__class__.__name__))
         return tab
@@ -212,17 +212,3 @@ class RegarderGratuit(SearcherABCStreaming.SearcherABCStreaming):
                            self.__class__.__name__))
         return tab
 
-    '''
-    Fill Media object from AlloCiné
-    '''
-    def FillMediaFromScraper(self, title, link, plot, pic):
-        infoMedia = Media(title, link, plot, pic)
-        #TODO : à virer
-        return infoMedia
-        try:
-            search = self.__cache__.cacheFunction(self.api.search, title, "tvseries")
-            if int(search['feed']['totalResults']) > 0 :
-                return Utils.GetMediaInfoFromJson(self.__cache__.cacheFunction(self.api.tvseries, search['feed']['tvseries'][0]['code'],"small"))
-        except:
-            raise
-        return infoMedia

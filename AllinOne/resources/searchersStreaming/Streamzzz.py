@@ -46,15 +46,7 @@ class Streamzzz(SearcherABCStreaming.SearcherABCStreaming):
         return ContentType.TvSerieOnly
 
     '''
-    Main method should be implemented for search process.
-    Receives keyword and have to return dictionary of proper tuples:
-    filesList.append((
-        int(weight),# Calculated global weight of sources
-        int(seeds),# Seeds count
-        str(title),# Title will be shown
-        str(link),# Link to the torrent/magnet
-        str(image),# Path/URL to image shown at the list
-    ))
+    
     '''
     @timed()
     def search(self, keyword):
@@ -155,12 +147,14 @@ class Streamzzz(SearcherABCStreaming.SearcherABCStreaming):
     '''
     def ListEpisodesPageDetailsTvSerie(self, url):
         response = self.GetContentFromUrl(url)
+        print '____________________________'
+        print url
         tab = []
         if None != response and 0 < len(response):
             soup = BeautifulSoup(response)
-            main = soup.find("div",'content-wrap').find('div','type_category')
+            main = soup.find("div",'content-wrap').div
             title = main.h1.text.encode('utf-8') 
-            infoMedia = self.FillMediaFromScraper(title,'','','')
+            infoMedia = self.FillMediaTvSerieFromScraper(title,'','','')
             for node in main.ul.findAll('li'):
                tab.append((node.a.text.encode('utf-8'),
                            node.a['href'],
@@ -196,10 +190,10 @@ class Streamzzz(SearcherABCStreaming.SearcherABCStreaming):
             soup = BeautifulSoup(response)
             nodes = soup.find("div", 'category_widget_0').findAll('li')
             for node in nodes:
-                infoMedia = self.FillMediaFromScraper(node.a.text.encode('utf-8'), 
+                infoMedia = self.FillMediaTvSerieFromScraper(node.a.text.encode('utf-8'), 
                                                       node.a["href"].encode('utf-8').strip(), node.a["title"], "")
                 tab.append((infoMedia.Title,
-                           infoMedia.Link,
+                           node.a["href"].encode('utf-8').strip(),
                            infoMedia.__dict__,
                            self.__class__.__name__))
         return tab
@@ -222,12 +216,12 @@ class Streamzzz(SearcherABCStreaming.SearcherABCStreaming):
         return None
 
     '''
-    Fill Media object from AlloCiné
+    Fill Media(TvSérie) object from AlloCiné
     '''
-    def FillMediaFromScraper(self, title, link, plot, pic):
+    def FillMediaTvSerieFromScraper(self, title, link='', plot='', pic=''):
         infoMedia = Media(title, link, plot, pic)
         #TODO : à virer 
-        return infoMedia
+        #return infoMedia
         try:
             search = self.__cache__.cacheFunction(self.api.search, title, "tvseries")
             if int(search['feed']['totalResults']) > 0 :

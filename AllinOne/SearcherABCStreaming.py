@@ -30,11 +30,14 @@ import xbmc
 import Localization
 import sys
 import Utils
+from allocine.Allocine import Allocine
+from Media import Media
 from bs4 import BeautifulSoup
 
 class SearcherABCStreaming:
     __metaclass__ = abc.ABCMeta
     __cache__ = sys.modules["__main__"].__cache__
+    api = Allocine()
 
     def __init__(self):
         self.api.configure('100043982026','29d185d98c984a359e6e6f26a0474269')
@@ -136,6 +139,21 @@ class SearcherABCStreaming:
     @abc.abstractmethod
     def LatestTvSeriesEpisodes(self, url):
         pass
+
+    '''
+    Fill Media(TvSérie) object from AlloCiné
+    '''
+    def FillMediaTvSerieFromScraper(self, title, link='', plot='', pic=''):
+        infoMedia = Media(title, link, plot, pic)
+        #TODO : à virer 
+        #return infoMedia
+        try:
+            search = self.__cache__.cacheFunction(self.api.search, title, "tvseries")
+            if int(search['feed']['totalResults']) > 0 :
+                return Utils.GetMediaInfoFromJson(self.__cache__.cacheFunction(self.api.tvseries, search['feed']['tvseries'][0]['code'],"small"))
+        except:
+            return infoMedia
+        return infoMedia
 
 class ContentType:
     TvSerieOnly, MoviesOnly, MovieAndTvSerie = range(3)

@@ -42,6 +42,7 @@ sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/resources/searcher
 from Media import Media
 class Core:
    
+    Debug = True
     __plugin__ = sys.modules["__main__"].__plugin__
     __settings__ = sys.modules["__main__"].__settings__
     plugin_handle = int(sys.argv[1])
@@ -89,7 +90,10 @@ class Core:
             import StorageServer
         except:
             import storageserverdummy as StorageServer
-        self.__cache__ = StorageServer.StorageServer(self._pluginName, 0.1) # (Your plugin name, Cache time in hours)
+        if(self.Debug):
+            self.__cache__ = StorageServer.StorageServer(self._pluginName, 0) # (Your plugin name, Cache time in hours)
+        else:
+            self.__cache__ = StorageServer.StorageServer(self._pluginName, 0.5) # (Your plugin name, Cache time in hours)
 
     def drawItem(self, title, action, link='', image='', isFolder=True, contextMenu=None, infoMedia=None, searcherName='', page=1, method="search"):
         listitem = xbmcgui.ListItem(title, iconImage=image, thumbnailImage=image)
@@ -154,8 +158,8 @@ class Core:
                     stream_url = urlresolver.resolve(linkStrm)
                 
                 if stream_url:
-                    print(stream_url)
-                    print("Source : %s" % Utils.GetDomain(linkStrm))
+                    #print(stream_url)
+                    #print("Source : %s" % Utils.GetDomain(linkStrm))
                     listitem = xbmcgui.ListItem(title)
                     listitem.setInfo(type = 'Video', infoLabels = {"Title": title})
                     search = self.api.search(title, "tvseries")
@@ -216,7 +220,7 @@ class Core:
                 searchersList.append(searcherFile)
         for searcherFile in searchersList:
             searcher = re.search('^(\w+)\.py$', searcherFile).group(1)
-            print searcher
+            #print searcher
             if searcher:
                 if None == get('isApi'):
                     progressBar.update(int(iterator), "Seaching in [COLOR F6D8CE00][B]%s[/B][/COLOR] site " % searcher)
@@ -235,6 +239,7 @@ class Core:
     def showFilesStreamingList(self, filesList, method):
         for (title, link, infoMedia, searcherName) in filesList:
             media = Utils.obj_dic(infoMedia)
+            #print link
             if infoMedia :
                 if(method == "AllTvSeries"):
                     self.drawItem(" [COLOR F6D8CE00][B]%s[/B][/COLOR] (%s) " % (title, searcherName), 'open_TvSeriePage', 
@@ -255,6 +260,7 @@ class Core:
     Lister les épisodes d'une série
     '''
     def open_TvSeriePage(self, params={}):
+
         get = params.get
         url = get("url")
         if url:
@@ -266,9 +272,8 @@ class Core:
             sys.path.insert(0, self.ROOT + os.sep + 'resources' + os.sep + '\searchersStreaming')
         try:
             searcherObject = getattr(__import__(searcher), searcher)()
-            print repr(searcherObject)
+            #print url
             filesList = searcherObject.ListEpisodesPageDetailsTvSerie(url)
-            print repr(filesList)
             self.ShowListVideosLinks(sorted(filesList, key= lambda x: x[0]))
 
         except Exception, e:
@@ -377,8 +382,8 @@ class Core:
             if(method == "LatestMovies"):
                 filesList = self.__cache__.cacheFunction(searcherObject.LatestMovies, keyword)
             if(method == "AllTvSeries"):
-                #filesList = self.__cache__.cacheFunction(searcherObject.AllTvSeries)
-                filesList = searcherObject.AllTvSeries()
+                filesList = self.__cache__.cacheFunction(searcherObject.AllTvSeries)
+                #filesList = searcherObject.AllTvSeries()
             if(method == "LatestTvSeriesEpisodes"):
                 filesList = self.__cache__.cacheFunction(searcherObject.LatestTvSeriesEpisodes, keyword)
 
@@ -569,7 +574,7 @@ class Core:
         classMatch = re.search('(\w+)::(.+)', url)
         if classMatch:
             searcher = classMatch.group(1)
-            print "openTorrent............................" + classMatch.group(2)
+            #print "openTorrent............................" + classMatch.group(2)
             if self.ROOT + os.sep + 'resources' + os.sep + 'searchers' not in sys.path:
                 sys.path.insert(0, self.ROOT + os.sep + 'resources' + os.sep + 'searchers')
             try:
