@@ -42,6 +42,7 @@ def go():
             index = contentfile.index("id0=") + 4
             oldId = contentfile[index:index + 14]
             contentfile = contentfile.replace(oldId, newedId)
+            file.seek(0, 0);
             file.write(contentfile)
         #Enregistrement du dernier passage
         __last_run__ = time.time()
