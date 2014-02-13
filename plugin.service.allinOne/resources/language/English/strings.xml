@@ -2,4 +2,5 @@
 <strings>
   <string id="30001">General</string>
   <string id="30002">Checking Interval</string>
+  <string id="30003">Last run</string>
 </strings>

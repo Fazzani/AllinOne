@@ -28,13 +28,12 @@ def go():
     global __last_run__ 
     if(xbmc.Player().isPlaying() == False):
         utils.showNotification('Start Update TeleduNet','Mise a jour de la playlist...')
-        print('____________________run')
         #recuperer la page du Site
         url = 'http://www.teledunet.com/'
         htmlContent = utils.makeRequest(url)
         #chercher l'id
         index = htmlContent.index("id0=") + 4
-        newedId =  htmlContent[index:index + 13].replace('.','') + '00'
+        newedId = htmlContent[index:index + 13].replace('.','') + '00'
         print newedId
         #maj de la playlist de la LiveTv
         filePath = r"\\FREEBOX\Disque dur\XBMC\myplaylist2.m3u"
@@ -53,7 +52,7 @@ def go():
 while (not xbmc.abortRequested):
   delaySettings = __addon__.getSetting("delay")
   readLastRun()
-  delay = 3600 * int(d)
+  delay = 3600 * int(delaySettings)
   #don't check unless new minute
   if(time.time() > __last_run__ + (delay)):
       go()

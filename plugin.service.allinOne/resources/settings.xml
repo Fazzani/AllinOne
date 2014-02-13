@@ -2,5 +2,6 @@
 <settings>
 	<category id="general" label="30001">
     <setting label="30002" type="slider" id="delay" default="12" range="1,1,24" option="int" />
-	</category>
+    <setting id="last_run" type="text" label="30003" default="0" visible="false" />
+  </category>
 </settings>

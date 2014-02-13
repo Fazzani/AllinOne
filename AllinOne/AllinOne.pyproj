@@ -92,7 +92,7 @@
     <Content Include="Addons\plugin.service.allinone\fanart.jpg" />
     <Content Include="Addons\plugin.service.allinone\icon.png" />
     <Content Include="Addons\plugin.service.allinone\LICENSE.txt" />
-    <Content Include="Addons\plugin.service.allinone\plugin.service.allinOne.zip" />
+    <Content Include="Addons\plugin.service.allinone\plugin.service.allinone.zip" />
     <Content Include="Addons\plugin.video.allinone\addon.xml" />
     <Content Include="Addons\plugin.video.allinone\changelog-1.0.0.txt" />
     <Content Include="Addons\plugin.video.allinone\fanart.jpg" />
