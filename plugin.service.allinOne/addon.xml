@@ -2,15 +2,14 @@
 <addon id="plugin.service.allinone" name="AllinOne Services"
 	version="1.0.2" provider-name="Fazzani Heni">
   <requires>
-    <import addon="script.module.beautifulsoup4" version="4.3.1"/>
     <import addon="xbmc.python" version="2.0" />
   </requires>
   <extension point="xbmc.service"
              library="default.py" start="startup">
   </extension>
   <extension point="xbmc.addon.metadata">
-    <summary lang="en">Services spécifiques</summary>
-    <description lang="en">
+    <summary lang="fr">Services spécifiques</summary>
+    <description lang="fr">
       QQ services spécifiques
     </description>
     <platform>all</platform>
