@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<settings>
+	<category id="general" label="30001">
+		<setting id="last_run" type="text" label="last_run" default="0" visible="false" />
+	</category>
+</settings>
