@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Addons\" />
+    <Folder Include="Addons\plugin.service.allinone\" />
     <Folder Include="Addons\plugin.video.allinone\" />
     <Folder Include="allocine\" />
     <Folder Include="icons\" />
@@ -86,6 +87,12 @@
     <Content Include="Addons\addons.xml.md5" />
     <Content Include="Addons\fanart.jpg" />
     <Content Include="Addons\icon.png" />
+    <Content Include="Addons\plugin.service.allinone\addon.xml" />
+    <Content Include="Addons\plugin.service.allinone\changelog-1.0.0.txt" />
+    <Content Include="Addons\plugin.service.allinone\fanart.jpg" />
+    <Content Include="Addons\plugin.service.allinone\icon.png" />
+    <Content Include="Addons\plugin.service.allinone\LICENSE.txt" />
+    <Content Include="Addons\plugin.service.allinone\plugin.service.allinOne.zip" />
     <Content Include="Addons\plugin.video.allinone\addon.xml" />
     <Content Include="Addons\plugin.video.allinone\changelog-1.0.0.txt" />
     <Content Include="Addons\plugin.video.allinone\fanart.jpg" />
