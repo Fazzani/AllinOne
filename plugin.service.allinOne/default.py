@@ -7,7 +7,7 @@ import time
 from datetime import datetime
 import re
 
-__addon__ = xbmcaddon.Addon()
+__addon__ = xbmcaddon.Addon(id='plugin.service.allinone')
 __addonname__ = __addon__.getAddonInfo('name')
 __icon__ = __addon__.getAddonInfo('icon')
 __last_run__ = 0
@@ -38,22 +38,22 @@ def go():
         print newedId
         #maj de la playlist de la LiveTv
         filePath = r"\\FREEBOX\Disque dur\XBMC\myplaylist2.m3u"
-        with open(filePath) as file:
+        with open(filePath,'r+') as file:
             contentfile = file.read()
             index = contentfile.index("id0=") + 4
             oldId = contentfile[index:index + 14]
-            print('old id = %s') % str(oldId)
             contentfile = contentfile.replace(oldId, newedId)
-            with open(r"C:\xbmc\tmp.txt","w") as fd:
-                fd.write(contentfile)
+            file.write(contentfile)
         #Enregistrement du dernier passage
         __last_run__ = time.time()
         writeLastRun()
+        xbmc.executebuiltin('StartPVRManager')
+
 
 while (not xbmc.abortRequested):
+  delaySettings = __addon__.getSetting("delay")
   readLastRun()
-  delay = 3600 * 24
-  delay = 10
+  delay = 3600 * int(d)
   #don't check unless new minute
   if(time.time() > __last_run__ + (delay)):
       go()
