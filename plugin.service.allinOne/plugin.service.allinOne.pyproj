@@ -25,6 +25,7 @@
     <Content Include="LICENSE.txt" />
     <Compile Include="default.py" />
     <Content Include="resources\.gitignore" />
+    <Content Include="resources\images\clock.png" />
     <Content Include="resources\language\English\strings.xml" />
     <Content Include="resources\language\French\strings.xml" />
     <Content Include="resources\settings.xml" />
@@ -34,6 +35,7 @@
     <Folder Include="resources\language\" />
     <Folder Include="resources\language\English\" />
     <Folder Include="resources\language\French\" />
+    <Folder Include="resources\images\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
 </Project>
