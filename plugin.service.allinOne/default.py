@@ -34,19 +34,28 @@ def go():
         htmlContent = utils.makeRequest(url)
         #chercher l'id
         index = htmlContent.index("id0=") + 4
-        print htmlContent[index:index + 13].replace('.','') + '00'
+        newedId =  htmlContent[index:index + 13].replace('.','') + '00'
+        print newedId
         #maj de la playlist de la LiveTv
+        filePath = r"\\FREEBOX\Disque dur\XBMC\myplaylist2.m3u"
+        with open(filePath) as file:
+            contentfile = file.read()
+            index = contentfile.index("id0=") + 4
+            oldId = contentfile[index:index + 14]
+            print('old id = %s') % str(oldId)
+            contentfile = contentfile.replace(oldId, newedId)
+            with open(r"C:\xbmc\tmp.txt","w") as fd:
+                fd.write(contentfile)
         #Enregistrement du dernier passage
-        #write last run time
         __last_run__ = time.time()
         writeLastRun()
 
 while (not xbmc.abortRequested):
-  
   readLastRun()
-
+  delay = 3600 * 24
+  delay = 10
   #don't check unless new minute
-  if(time.time() > __last_run__ + (3600*24)):
+  if(time.time() > __last_run__ + (delay)):
       go()
       
   xbmc.sleep(__sleep_time__)
