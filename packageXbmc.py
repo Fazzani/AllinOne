@@ -1,8 +1,8 @@
 #-------------------------------------------------------------------------------
-# Name:        module1
+# Name:        packaging AllinOne
 # Purpose:
 #
-# Author:      922261
+# Author:      tunisienheni@outlook.com
 #
 # Created:     27/01/2014
 # Copyright:   (c) 922261 2014

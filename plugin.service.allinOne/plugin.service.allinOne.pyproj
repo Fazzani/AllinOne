@@ -6,7 +6,7 @@
     <ProjectGuid>{d2b660c7-9eea-4ad9-8c8e-ba836583a243}</ProjectGuid>
     <ProjectHome />
     <StartupFile>default.py</StartupFile>
-    <SearchPath>..\xbmcstubs-master\</SearchPath>
+    <SearchPath>..\xbmcstubs-master\;..\libVS</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

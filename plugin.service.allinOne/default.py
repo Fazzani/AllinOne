@@ -60,7 +60,6 @@ while (not xbmc.abortRequested):
   delaySettings = __addon__.getSetting("delay")
   readLastRun()
   delay = 3600 * int(delaySettings)
-  delay = 60
   #don't check unless new minute
   if(time.time() > __last_run__ + (delay)):
       go()
