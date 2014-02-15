@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 import sys
 import xbmc
+import xbmcvfs
 import xbmcaddon
 import utils
 import time
@@ -34,16 +35,23 @@ def go():
         #chercher l'id
         index = htmlContent.index("id0=") + 4
         newedId = htmlContent[index:index + 13].replace('.','') + '00'
-        print newedId
+        print ("the new Id of Télédunet.com :::::::::::::::::::::::::::: %s" % newedId)
         #maj de la playlist de la LiveTv
-        filePath = r"\\FREEBOX\Disque dur\XBMC\myplaylist2.m3u"
-        with open(filePath,'r+') as file:
+        __datapath__ = xbmc.translatePath("smb://192.168.1.254/Disque\040dur/XBMC/myplaylist2.m3u").decode('utf-8')
+        if xbmcvfs.exists(__datapath__):
+            print __datapath__
+        if xbmcvfs.exists(__datapath__):
+            file = xbmcvfs.File(__datapath__,'r+')
             contentfile = file.read()
             index = contentfile.index("id0=") + 4
             oldId = contentfile[index:index + 14]
             contentfile = contentfile.replace(oldId, newedId)
-            file.seek(0, 0);
-            file.write(contentfile)
+            file.close()
+            f = xbmcvfs.File(__datapath__, 'w')
+            f.seek(0, 0);
+            result = f.write(contentfile)
+            f.close()
+
         #Enregistrement du dernier passage
         __last_run__ = time.time()
         writeLastRun()
@@ -54,9 +62,9 @@ while (not xbmc.abortRequested):
   delaySettings = __addon__.getSetting("delay")
   readLastRun()
   delay = 3600 * int(delaySettings)
+  delay = 60
   #don't check unless new minute
   if(time.time() > __last_run__ + (delay)):
       go()
       
   xbmc.sleep(__sleep_time__)
-

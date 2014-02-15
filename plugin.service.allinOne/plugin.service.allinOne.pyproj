@@ -13,6 +13,7 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
     <Name>plugin.service.allinOne</Name>
     <RootNamespace>plugin.service.allinOne</RootNamespace>
+    <PublishUrl>C:\Users\Heni\AppData\Roaming\XBMC\addons\plugin.service.allinone</PublishUrl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
