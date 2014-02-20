@@ -42,7 +42,7 @@ def go():
         print ("the new Id of livetv.tn :::::::::::::::::::::::::::: %s" % newedIdLiveTv)
         #maj de la playlist de la LiveTv
         __datapath__ = xbmc.translatePath("smb://192.168.1.254/Disque\040dur/XBMC/myplaylist2.m3u").decode('utf-8')
-        __datapath__ = r"C:\Users\922261\Desktop\myplaylist2.m3u".decode('utf-8')
+        #__datapath__ = r"C:\Users\922261\Desktop\myplaylist2.m3u".decode('utf-8')
         if xbmcvfs.exists(__datapath__):
             file = xbmcvfs.File(__datapath__,'r+')
             contentfile = file.read()
