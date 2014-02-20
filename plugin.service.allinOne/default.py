@@ -28,22 +28,33 @@ def writeLastRun():
 def go():
     global __last_run__ 
     if(xbmc.Player().isPlaying() == False):
-        utils.showNotification('Start Update TeleduNet','Mise a jour de la playlist...')
+        utils.showNotification('Start Update','Mise a jour de la playlist...')
         #recuperer la page du Site
         url = 'http://www.teledunet.com/'
         htmlContent = utils.makeRequest(url)
+        htmlContentLiveTv = utils.makeRequest("http://www.livetv.tn/")
         #chercher l'id
         index = htmlContent.index("id0=") + 4
+        indexLiveTv = htmlContentLiveTv.index("code=w_") + 5
         newedId = htmlContent[index:index + 13].replace('.','') + '00'
-        print ("the new Id of Télédunet.com :::::::::::::::::::::::::::: %s" % newedId)
+        newedIdLiveTv = htmlContentLiveTv[indexLiveTv:indexLiveTv + 17]
+        print ("the new Id of télédunet :::::::::::::::::::::::::::: %s" % newedId)
+        print ("the new Id of livetv.tn :::::::::::::::::::::::::::: %s" % newedIdLiveTv)
         #maj de la playlist de la LiveTv
         __datapath__ = xbmc.translatePath("smb://192.168.1.254/Disque\040dur/XBMC/myplaylist2.m3u").decode('utf-8')
+        __datapath__ = r"C:\Users\922261\Desktop\myplaylist2.m3u".decode('utf-8')
         if xbmcvfs.exists(__datapath__):
             file = xbmcvfs.File(__datapath__,'r+')
             contentfile = file.read()
+            #Màj Télédunet
             index = contentfile.index("id0=") + 4
             oldId = contentfile[index:index + 14]
             contentfile = contentfile.replace(oldId, newedId)
+            #Màj Live Tv
+            index = contentfile.index("code=w_") + 5
+            oldId = contentfile[index:index + 17]
+            contentfile = contentfile.replace(oldId, newedIdLiveTv)
+
             file.close()
             f = xbmcvfs.File(__datapath__, 'w')
             f.seek(0, 0);
@@ -60,6 +71,7 @@ while (not xbmc.abortRequested):
   delaySettings = __addon__.getSetting("delay")
   readLastRun()
   delay = 3600 * int(delaySettings)
+  #delay = 30
   #don't check unless new minute
   if(time.time() > __last_run__ + (delay)):
       go()
