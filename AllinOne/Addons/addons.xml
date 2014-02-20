@@ -10,9 +10,9 @@
              library="default.py" start="startup">
   </extension>
   <extension point="xbmc.addon.metadata">
-    <summary lang="en">Services spécifiques</summary>
+    <summary lang="en">Services spÃ©cifiques</summary>
     <description lang="en">
-      QQ services spécifiques
+      QQ services spÃ©cifiques
     </description>
     <platform>all</platform>
     <language>en</language>

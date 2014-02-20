@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.service.allinone" name="AllinOne Services"
 	version="1.0.2" provider-name="Fazzani Heni">
-  <requires>
-    <import addon="xbmc.python" version="2.0" />
-  </requires>
   <extension point="xbmc.service"
              library="default.py" start="startup">
   </extension>
