@@ -71,7 +71,7 @@ if __name__ == '__main__' and not xbmc.Player().isPlaying():
       pathM3u = __DefaultPathOfPlayList__
     try:
         go(pathM3u)
-        xbmc.sleep(12000)
+        xbmc.sleep(20000)
     except:
         xbmc.log("Unexpected error: %s" % sys.exc_info()[0], level = xbmc.LOGDEBUG)
 xbmc.executebuiltin("XBMC.ActivateWindow(10601)")
