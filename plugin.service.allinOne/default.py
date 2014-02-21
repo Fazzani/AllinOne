@@ -89,3 +89,5 @@ while (not xbmc.abortRequested):
       go()
       
   xbmc.sleep(__sleep_time__)
+
+#http://localhost:2000/jsonrpc?request={'jsonrpc:'2.0','id':1,'method':'Addons.ExecuteAddon','params':{'addonid':'plugin.service.allinone','params':{'mode':'true'}}}
