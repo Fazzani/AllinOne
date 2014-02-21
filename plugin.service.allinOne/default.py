@@ -14,6 +14,7 @@ __icon__ = __addon__.getAddonInfo('icon')
 __last_run__ = 0
 __sleep_time__ = 5000
 __DefaultPathOfPlayList__ = "smb://192.168.1.254/Disque\040dur/XBMC/myplaylist2.m3u"
+__delaySettings__=60
 
 def getNewId(url, pattern, offset):
     htmlContent = utils.makeRequest(url)
@@ -73,14 +74,15 @@ def go():
         writeLastRun()
         xbmc.executebuiltin('StartPVRManager')
 
-while (not xbmc.abortRequested):
-  delaySettings = __addon__.getSetting("delay")
-  __PathOfPlayList__ = __addon__.getSetting("path_input")
-  if(__PathOfPlayList__==""):
+if __name__ == '__main__':
+    __delaySettings__ = __addon__.getSetting("delay")
+    __PathOfPlayList__ = __addon__.getSetting("path_input")
+    if(__PathOfPlayList__== "" ):
       __PathOfPlayList__ = __DefaultPathOfPlayList__
 
+while (not xbmc.abortRequested):
   readLastRun()
-  delay = 3600 * int(delaySettings)
+  delay = 3600 * int(__delaySettings__)
   #delay = 60
   #don't check unless new minute
   if((time.time() > __last_run__ + (delay))):
