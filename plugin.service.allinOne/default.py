@@ -7,6 +7,7 @@ import utils
 import time
 from datetime import datetime
 import re
+import urlparse
 
 __addon__ = xbmcaddon.Addon(id='plugin.service.allinone')
 __addonname__ = __addon__.getAddonInfo('name')
@@ -15,6 +16,7 @@ __last_run__ = 0
 __sleep_time__ = 5000
 __DefaultPathOfPlayList__ = "smb://192.168.1.254/Disque\040dur/XBMC/myplaylist2.m3u"
 __delaySettings__=60
+__force__= False
 
 def getNewId(url, pattern, offset):
     htmlContent = utils.makeRequest(url)
@@ -75,6 +77,14 @@ def go():
         xbmc.executebuiltin('StartPVRManager')
 
 if __name__ == '__main__':
+    #print('________________________________')
+    #print (repr(sys.argv))
+    if(len(sys.argv)>1):
+        args = urlparse.parse_qs(sys.argv[1])
+        #print(args["mode"][0])
+    if(len(sys.argv)>1 and args["mode"][0]=='true') :
+        #print('--------------------------')
+        __force__= True
     __delaySettings__ = __addon__.getSetting("delay")
     __PathOfPlayList__ = __addon__.getSetting("path_input")
     if(__PathOfPlayList__== "" ):
@@ -85,8 +95,9 @@ while (not xbmc.abortRequested):
   delay = 3600 * int(__delaySettings__)
   #delay = 60
   #don't check unless new minute
-  if((time.time() > __last_run__ + (delay))):
+  if((time.time() > __last_run__ + (delay)) or __force__):
       go()
+      __force__ = False
       
   xbmc.sleep(__sleep_time__)
 
