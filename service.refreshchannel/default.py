@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 import sys
 import xbmc
-import xbmcvfs
+import xbmcgui
 import xbmcaddon
 import utils
 import time
@@ -25,39 +25,52 @@ def getNewContent(contentfile, pattern, offset, newedId):
     oldId = contentfile[index:index + offset]
     return contentfile.replace(oldId, newedId)
 
-def go():
-    if(xbmc.Player().isPlaying() == False):
-        utils.showNotification('Start Update','Mise a jour de la playlist...')
-        #recuperer la page du Site
+def go(pathOfPlayList):
+    utils.showNotification('Start Update','Mise a jour de la playlist...')
+    pb = xbmcgui.DialogProgress()
+    pb.create('Refresh', 'Refresh de la PlayList en cours')
+    pb.update(0)
+    #recuperer la page du Site
+    newedId = getNewId('http://www.teledunet.com/','id0=',13).replace('.','') + '00'
+    while('E' in newedId):
+        print("pass in boucle because this id %s contain E" % newedId)
         newedId = getNewId('http://www.teledunet.com/','id0=',13).replace('.','') + '00'
-        while('E' in newedId):
-            print("pass in boucle because this id %s contain E" % newedId)
-            newedId = getNewId('http://www.teledunet.com/','id0=',13).replace('.','') + '00'
+    pb.update(20)
+    newedIdLiveTv = getNewId('http://www.livetv.tn/','code=w_', 15)
+    #maj de la playlist de la LiveTv
+    datapath = xbmc.translatePath(pathOfPlayList).decode('utf-8')
+    pb.update(40)
 
-        newedIdLiveTv = getNewId('http://www.livetv.tn/','code=w_', 15)
-       
-        __datapath__ = xbmc.translatePath(__PathOfPlayList__).decode('utf-8')
-        if xbmcvfs.exists(__datapath__):
+    #r"C:\Users\922261\Desktop\myplaylist2.m3u".decode('utf-8')
+    try:
+        if xbmcvfs.exists(datapath):
             file = xbmcvfs.File(__datapath__,'r+')
             contentfile = file.read()
             #Màj Télédunet
             contentfile = getNewContent(contentfile, "id0=", 14, newedId)
             #Màj Live Tv
             contentfile = getNewContent(contentfile, "code=w_", 15, newedIdLiveTv)
-            
             file.close()
+            pb.update(60)
             f = xbmcvfs.File(__datapath__, 'w')
             f.seek(0, 0)
             result = f.write(contentfile)
             f.close()
-        xbmc.executebuiltin('StartPVRManager')
-
-if __name__ == '__main__':
-    #print('________________________________')
-    __PathOfPlayList__ = __addon__.getSetting("path_input")
-    if(__PathOfPlayList__== "" ):
-      __PathOfPlayList__ = __DefaultPathOfPlayList__
-    try:
-        go()
+            pb.update(80)
+            xbmc.executebuiltin('StartPVRManager')
     except:
-        print "Unexpected error:", sys.exc_info()[0]
+        pass
+    pb.update(100)
+    pb.close()
+
+if __name__ == '__main__' and not xbmc.Player().isPlaying():
+    xbmc.executebuiltin("XBMC.ActivateWindow(10000)")
+    pathM3u = __addon__.getSetting("path_input")
+    if(pathM3u == "" ):
+      pathM3u = __DefaultPathOfPlayList__
+    try:
+        go(pathM3u)
+        xbmc.executebuiltin("XBMC.ActivateWindow(10601)")
+    except:
+        xbmc.executebuiltin("XBMC.ActivateWindow(10601)")
+        xbmc.log("Unexpected error: %s" % sys.exc_info()[0], level = xbmc.LOGDEBUG)
