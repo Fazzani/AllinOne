@@ -3,6 +3,7 @@ import sys
 import xbmc
 import xbmcgui
 import xbmcaddon
+import xbmcvfs
 import utils
 import time
 from datetime import datetime
@@ -44,15 +45,15 @@ def go(pathOfPlayList):
     #r"C:\Users\922261\Desktop\myplaylist2.m3u".decode('utf-8')
     try:
         if xbmcvfs.exists(datapath):
-            file = xbmcvfs.File(__datapath__,'r+')
-            contentfile = file.read()
+            file = xbmcvfs.File(datapath,'r+')
+            contentfile = file.read()  
             #Màj Télédunet
             contentfile = getNewContent(contentfile, "id0=", 14, newedId)
             #Màj Live Tv
             contentfile = getNewContent(contentfile, "code=w_", 15, newedIdLiveTv)
             file.close()
             pb.update(60)
-            f = xbmcvfs.File(__datapath__, 'w')
+            f = xbmcvfs.File(datapath, 'w')
             f.seek(0, 0)
             result = f.write(contentfile)
             f.close()
@@ -70,6 +71,7 @@ if __name__ == '__main__' and not xbmc.Player().isPlaying():
       pathM3u = __DefaultPathOfPlayList__
     try:
         go(pathM3u)
+        xbmc.sleep(12000)
         xbmc.executebuiltin("XBMC.ActivateWindow(10601)")
     except:
         xbmc.executebuiltin("XBMC.ActivateWindow(10601)")
