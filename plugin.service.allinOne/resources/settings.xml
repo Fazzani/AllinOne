@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <settings>
 	<category id="general" label="30001">
-    <setting label="30002" type="slider" id="delay" default="12" range="1,1,24" option="int" />
+    <setting id="delay" label="30002" type="slider" default="12" range="1,1,24" option="int" />
     <setting id="last_run" type="text" label="30003" default="0" visible="false" />
+    <setting id="path_input" label="30004" type="file" value="smb://192.168.1.254/Disque\040dur/XBMC/myplaylist2.m3u" />
+    <!--<setting id="path_playlist" label="30005" type="text" default="0" visible="false" />-->
   </category>
 </settings>

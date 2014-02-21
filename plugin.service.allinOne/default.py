@@ -13,7 +13,17 @@ __addonname__ = __addon__.getAddonInfo('name')
 __icon__ = __addon__.getAddonInfo('icon')
 __last_run__ = 0
 __sleep_time__ = 5000
+__DefaultPathOfPlayList__ = "smb://192.168.1.254/Disque\040dur/XBMC/myplaylist2.m3u"
 
+def getNewId(url, pattern, offset):
+    htmlContent = utils.makeRequest(url)
+    index = htmlContent.index(pattern) + len(pattern)
+    return htmlContent[index:index + offset]
+
+def getNewContent(contentfile, pattern, offset, newedId):
+    index = contentfile.index(pattern) + len(pattern)
+    oldId = contentfile[index:index + offset]
+    return contentfile.replace(oldId, newedId)
 
 def readLastRun():
   global __last_run__ 
@@ -30,34 +40,31 @@ def go():
     if(xbmc.Player().isPlaying() == False):
         utils.showNotification('Start Update','Mise a jour de la playlist...')
         #recuperer la page du Site
-        url = 'http://www.teledunet.com/'
-        htmlContent = utils.makeRequest(url)
-        htmlContentLiveTv = utils.makeRequest("http://www.livetv.tn/")
-        #chercher l'id
-        index = htmlContent.index("id0=") + 4
-        indexLiveTv = htmlContentLiveTv.index("code=w_") + 5
-        newedId = htmlContent[index:index + 13].replace('.','') + '00'
-        newedIdLiveTv = htmlContentLiveTv[indexLiveTv:indexLiveTv + 17]
-        print ("the new Id of télédunet :::::::::::::::::::::::::::: %s" % newedId)
-        print ("the new Id of livetv.tn :::::::::::::::::::::::::::: %s" % newedIdLiveTv)
+        newedId = getNewId('http://www.teledunet.com/','id0=',13).replace('.','') + '00'
+        while('E' in newedId):
+            print("pass in boucle because this id %s contain E" % newedId)
+            newedId = getNewId('http://www.teledunet.com/','id0=',13).replace('.','') + '00'
+
+        newedIdLiveTv = getNewId('http://www.livetv.tn/','code=w_', 15)
+        #print("the new Id of télédunet :::::::::::::::::::::::::::: %s" %
+        #newedId)
+        #print("the new Id of livetv.tn :::::::::::::::::::::::::::: %s" %
+        #newedIdLiveTv)
         #maj de la playlist de la LiveTv
-        __datapath__ = xbmc.translatePath("smb://192.168.1.254/Disque\040dur/XBMC/myplaylist2.m3u").decode('utf-8')
-        #__datapath__ = r"C:\Users\922261\Desktop\myplaylist2.m3u".decode('utf-8')
+        __datapath__ = xbmc.translatePath(__PathOfPlayList__).decode('utf-8')
+        #__datapath__ =
+        #r"C:\Users\922261\Desktop\myplaylist2.m3u".decode('utf-8')
         if xbmcvfs.exists(__datapath__):
             file = xbmcvfs.File(__datapath__,'r+')
             contentfile = file.read()
             #Màj Télédunet
-            index = contentfile.index("id0=") + 4
-            oldId = contentfile[index:index + 14]
-            contentfile = contentfile.replace(oldId, newedId)
+            contentfile = getNewContent(contentfile, "id0=", 14, newedId)
             #Màj Live Tv
-            index = contentfile.index("code=w_") + 5
-            oldId = contentfile[index:index + 17]
-            contentfile = contentfile.replace(oldId, newedIdLiveTv)
-
+            contentfile = getNewContent(contentfile, "code=w_", 15, newedIdLiveTv)
+            
             file.close()
             f = xbmcvfs.File(__datapath__, 'w')
-            f.seek(0, 0);
+            f.seek(0, 0)
             result = f.write(contentfile)
             f.close()
 
@@ -66,14 +73,17 @@ def go():
         writeLastRun()
         xbmc.executebuiltin('StartPVRManager')
 
-
 while (not xbmc.abortRequested):
   delaySettings = __addon__.getSetting("delay")
+  __PathOfPlayList__ = __addon__.getSetting("path_input")
+  if(__PathOfPlayList__==""):
+      __PathOfPlayList__ = __DefaultPathOfPlayList__
+
   readLastRun()
   delay = 3600 * int(delaySettings)
-  #delay = 30
+  #delay = 60
   #don't check unless new minute
-  if(time.time() > __last_run__ + (delay)):
+  if((time.time() > __last_run__ + (delay))):
       go()
       
   xbmc.sleep(__sleep_time__)
