@@ -96,7 +96,10 @@ while (not xbmc.abortRequested):
   #delay = 60
   #don't check unless new minute
   if((time.time() > __last_run__ + (delay)) or __force__):
-      go()
+      try:
+        go()
+      except:
+        print "Unexpected error:", sys.exc_info()[0]
       __force__ = False
       
   xbmc.sleep(__sleep_time__)

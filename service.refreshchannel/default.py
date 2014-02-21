@@ -57,4 +57,7 @@ if __name__ == '__main__':
     __PathOfPlayList__ = __addon__.getSetting("path_input")
     if(__PathOfPlayList__== "" ):
       __PathOfPlayList__ = __DefaultPathOfPlayList__
-    go()
+    try:
+        go()
+    except:
+        print "Unexpected error:", sys.exc_info()[0]
