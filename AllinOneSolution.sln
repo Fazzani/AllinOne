@@ -5,6 +5,8 @@ Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "AllinOne", "AllinOne\AllinO
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "plugin.service.allinOne", "plugin.service.allinOne\plugin.service.allinOne.pyproj", "{D2B660C7-9EEA-4AD9-8C8E-BA836583A243}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "service.refreshchannel", "service.refreshchannel\service.refreshchannel.pyproj", "{6034974C-C5D6-442D-AF42-ABCC89969936}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{D2B660C7-9EEA-4AD9-8C8E-BA836583A243}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2B660C7-9EEA-4AD9-8C8E-BA836583A243}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2B660C7-9EEA-4AD9-8C8E-BA836583A243}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6034974C-C5D6-442D-AF42-ABCC89969936}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6034974C-C5D6-442D-AF42-ABCC89969936}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6034974C-C5D6-442D-AF42-ABCC89969936}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6034974C-C5D6-442D-AF42-ABCC89969936}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -10,9 +10,9 @@
              library="default.py" start="startup">
   </extension>
   <extension point="xbmc.addon.metadata">
-    <summary lang="en">Services spÃ©cifiques</summary>
+    <summary lang="en">Services spécifiques</summary>
     <description lang="en">
-      QQ services spÃ©cifiques
+      QQ services spécifiques
     </description>
     <platform>all</platform>
     <language>en</language>
@@ -38,6 +38,22 @@
     <summary lang='en'>Plugin helps you to watch videos from p2p torrent-networks, without full predownload and to watch Streaming from www.regarder-film-gratuit.com</summary>
     <description lang='en'>Plugin helps you to watch videos from p2p torrent-networks, without full predownload. Requires installed 'python-libtorrent' library (read README.TXT) and helps you to watch streaming froms www.regarder-film-gratuit.com.</description>
     <disclaimer lang='en'>GNU GPLv3 http://www.gnu.org/licenses/</disclaimer>
+  </extension>
+</addon>
+
+<addon id="service.refreshchannel" name="Refresh channels"
+	version="1.0.2" provider-name="Fazzani Heni">
+  <extension library="default.py" point="xbmc.python.pluginsource">
+        <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="fr">Services spécifiques</summary>
+    <description lang="fr">
+      QQ services spécifiques
+    </description>
+    <platform>all</platform>
+    <language>en</language>
+    <email>tunisienheni@outlook.com</email>
   </extension>
 </addon>
 </addons>

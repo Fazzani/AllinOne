@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Addons\" />
+    <Folder Include="Addons\service.refreshchannel\" />
     <Folder Include="Addons\plugin.service.allinone\" />
     <Folder Include="Addons\plugin.video.allinone\" />
     <Folder Include="allocine\" />
@@ -99,6 +100,11 @@
     <Content Include="Addons\plugin.video.allinone\icon.png" />
     <Content Include="Addons\plugin.video.allinone\LICENSE.txt" />
     <Content Include="Addons\plugin.video.allinone\plugin.video.allinone-1.0.0.zip" />
+    <Content Include="Addons\service.refreshchannel\addon.xml" />
+    <Content Include="Addons\service.refreshchannel\fanart.jpg" />
+    <Content Include="Addons\service.refreshchannel\icon.png" />
+    <Content Include="Addons\service.refreshchannel\LICENSE.txt" />
+    <Content Include="Addons\service.refreshchannel\service.refreshchannel.zip" />
     <Content Include="changelog.txt" />
     <Content Include="fanart.jpg" />
     <Content Include="icon.png" />
