@@ -34,7 +34,7 @@ def encode(string):
 def makeRequest(url, data={}, headers=[]):
     cookieJar = cookielib.CookieJar()
     opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookieJar))
-    opener.addheaders = headers
+    opener.addheaders = [('User-agent', 'Mozilla/5.0 (Windows NT 6.3; rv:28.0) Gecko/20100101 Firefox/28.0'),('Referer', 'http://www.google.fr'),('Accept','text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8')]
     if 0 < len(data):
         encodedData = urllib.urlencode(data)
     else:
