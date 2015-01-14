@@ -18,6 +18,35 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
+    <Compile Include="resources\site-packages\xbmcswift2\actions.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\cli\app.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\cli\cli.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\cli\console.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\cli\create.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\cli\data\addon.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\cli\data\resources\__init__.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\cli\__init__.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\common.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\constants.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\ext\playlist.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\ext\__init__.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\listitem.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\logger.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\mockxbmc\utils.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\mockxbmc\xbmc.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\mockxbmc\xbmcaddon.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\mockxbmc\xbmcgui.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\mockxbmc\xbmcplugin.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\mockxbmc\xbmcvfs.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\mockxbmc\__init__.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\module.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\plugin.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\request.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\storage.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\urls.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\xbmcmixin.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\__init__.py" />
+    <Compile Include="resources\site-packages\__init__.py" />
     <Compile Include="resources\__init__.py" />
     <Content Include="addon.xml" />
     <Content Include="fanart.jpg" />
@@ -25,10 +54,22 @@
     <Content Include="LICENSE.txt" />
     <Compile Include="default.py" />
     <Content Include="resources\.gitignore" />
-    <Content Include="resources\images\clock.png" />
     <Content Include="resources\language\English\strings.xml" />
     <Content Include="resources\language\French\strings.xml" />
     <Content Include="resources\settings.xml" />
+    <Content Include="resources\site-packages\xbmcswift2\cli\data\addon.xml" />
+    <Content Include="resources\site-packages\xbmcswift2\cli\data\resources\language\English\strings.xml" />
+    <Content Include="resources\site-packages\xbmcswift2\common.pyo" />
+    <Content Include="resources\site-packages\xbmcswift2\constants.pyo" />
+    <Content Include="resources\site-packages\xbmcswift2\listitem.pyo" />
+    <Content Include="resources\site-packages\xbmcswift2\logger.pyo" />
+    <Content Include="resources\site-packages\xbmcswift2\module.pyo" />
+    <Content Include="resources\site-packages\xbmcswift2\plugin.pyo" />
+    <Content Include="resources\site-packages\xbmcswift2\request.pyo" />
+    <Content Include="resources\site-packages\xbmcswift2\storage.pyo" />
+    <Content Include="resources\site-packages\xbmcswift2\urls.pyo" />
+    <Content Include="resources\site-packages\xbmcswift2\xbmcmixin.pyo" />
+    <Content Include="resources\site-packages\xbmcswift2\__init__.pyo" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="resources\" />
@@ -36,6 +77,15 @@
     <Folder Include="resources\language\English\" />
     <Folder Include="resources\language\French\" />
     <Folder Include="resources\images\" />
+    <Folder Include="resources\site-packages\" />
+    <Folder Include="resources\site-packages\xbmcswift2\" />
+    <Folder Include="resources\site-packages\xbmcswift2\cli\" />
+    <Folder Include="resources\site-packages\xbmcswift2\cli\data\" />
+    <Folder Include="resources\site-packages\xbmcswift2\cli\data\resources\" />
+    <Folder Include="resources\site-packages\xbmcswift2\cli\data\resources\language\" />
+    <Folder Include="resources\site-packages\xbmcswift2\cli\data\resources\language\English\" />
+    <Folder Include="resources\site-packages\xbmcswift2\ext\" />
+    <Folder Include="resources\site-packages\xbmcswift2\mockxbmc\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
 </Project>
