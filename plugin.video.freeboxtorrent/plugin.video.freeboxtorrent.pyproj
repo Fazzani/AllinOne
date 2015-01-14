@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{d2b660c7-9eea-4ad9-8c8e-ba836583a243}</ProjectGuid>
+    <ProjectGuid>{9f371218-4f19-451f-b6a7-f964095df115}</ProjectGuid>
     <ProjectHome />
     <StartupFile>default.py</StartupFile>
     <SearchPath>..\xbmcstubs-master\;..\libVS</SearchPath>
@@ -19,7 +19,6 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
     <Compile Include="resources\__init__.py" />
-    <Compile Include="utils.py" />
     <Content Include="addon.xml" />
     <Content Include="fanart.jpg" />
     <Content Include="icon.png" />

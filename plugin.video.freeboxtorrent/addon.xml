@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="plugin.video.freeboxtorrent" name="freeboxtorrent"
+	version="1.0.2" provider-name="Fazzani Heni">
+  <extension point="xbmc.video" library="default.py">
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="fr">Services spécifiques</summary>
+    <description lang="fr">
+      FreeBox torrent 
+    </description>
+    <platform>all</platform>
+    <language>en</language>
+    <email>tunisienheni@outlook.com</email>
+  </extension>
+</addon>
+ 
