@@ -9,7 +9,7 @@ from datetime import datetime
 import re
 import urlparse
 
-__addon__ = xbmcaddon.Addon(id='plugin.video.refreshplaylist')
+__addon__ = xbmcaddon.Addon(id='plugin.video.freeboxtorrent')
 __addonname__ = __addon__.getAddonInfo('name')
 __icon__ = __addon__.getAddonInfo('icon')
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.freeboxtorrent" name="freeboxtorrent"
-	version="1.0.2" provider-name="Fazzani Heni">
+	version="0.0.1" provider-name="Fazzani Heni">
   <extension point="xbmc.video" library="default.py">
   </extension>
   <extension point="xbmc.addon.metadata">
