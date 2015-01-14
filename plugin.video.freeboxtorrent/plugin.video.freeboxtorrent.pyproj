@@ -72,6 +72,7 @@
     <Content Include="resources\site-packages\xbmcswift2\urls.pyo" />
     <Content Include="resources\site-packages\xbmcswift2\xbmcmixin.pyo" />
     <Content Include="resources\site-packages\xbmcswift2\__init__.pyo" />
+    <Content Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="resources\" />
