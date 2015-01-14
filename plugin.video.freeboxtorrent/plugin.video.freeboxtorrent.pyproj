@@ -18,6 +18,7 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
+    <Compile Include="resources\site-packages\freebox\plugin.py" />
     <Compile Include="resources\site-packages\xbmcswift2\actions.py" />
     <Compile Include="resources\site-packages\xbmcswift2\cli\app.py" />
     <Compile Include="resources\site-packages\xbmcswift2\cli\cli.py" />
@@ -54,6 +55,7 @@
     <Content Include="LICENSE.txt" />
     <Compile Include="default.py" />
     <Content Include="resources\.gitignore" />
+    <Content Include="resources\images\black.png" />
     <Content Include="resources\language\English\strings.xml" />
     <Content Include="resources\language\French\strings.xml" />
     <Content Include="resources\settings.xml" />
@@ -78,6 +80,7 @@
     <Folder Include="resources\language\French\" />
     <Folder Include="resources\images\" />
     <Folder Include="resources\site-packages\" />
+    <Folder Include="resources\site-packages\freebox\" />
     <Folder Include="resources\site-packages\xbmcswift2\" />
     <Folder Include="resources\site-packages\xbmcswift2\cli\" />
     <Folder Include="resources\site-packages\xbmcswift2\cli\data\" />

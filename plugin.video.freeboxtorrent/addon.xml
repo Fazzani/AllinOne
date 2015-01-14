@@ -4,7 +4,7 @@
   <extension point="xbmc.video" library="default.py">
   </extension>
   <extension point="xbmc.addon.metadata">
-    <summary lang="fr">Services spécifiques</summary>
+    <summary lang="fr">FreeBox torrent</summary>
     <description lang="fr">
       FreeBox torrent 
     </description>
