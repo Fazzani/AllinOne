@@ -18,7 +18,12 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
+    <Compile Include="resources\site-packages\freebox\common.py" />
+    <Compile Include="resources\site-packages\freebox\index.py" />
+    <Compile Include="resources\site-packages\freebox\monkey_patches.py" />
     <Compile Include="resources\site-packages\freebox\plugin.py" />
+    <Compile Include="resources\site-packages\freebox\__init__.py" />
+    <Compile Include="resources\site-packages\six.py" />
     <Compile Include="resources\site-packages\xbmcswift2\actions.py" />
     <Compile Include="resources\site-packages\xbmcswift2\cli\app.py" />
     <Compile Include="resources\site-packages\xbmcswift2\cli\cli.py" />
