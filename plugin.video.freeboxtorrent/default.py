@@ -17,7 +17,7 @@ def listTorrent():
     for torrent in listTorrents:
        file = requestFreebox("%s/downloads/%s/files" % (FREEBOX_API,torrent["id"]))[CONST_RESULT]
        if ('video' or 'stream') in file[0]['mimetype']:
-           path = xbmc.translatePath("smb://Freebox" + (base64.b64decode(torrent['download_dir'])+file[0]['name'].encode('utf-8')))
+           path = xbmc.translatePath(FREEBOX_SMB_PREFIXE + (base64.b64decode(torrent['download_dir'])+file[0]['name'].encode('utf-8')))
            plugin.log.info(path)
            yield{
                 "label": torrent["name"],

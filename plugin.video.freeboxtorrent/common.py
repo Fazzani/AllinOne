@@ -11,6 +11,7 @@ USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 
 HEADERS={"X-Fbx-App-Auth":"","Content-Type":"application/json"}
 APP_ID = "plugin.video.freeboxtorrent"
 DEVICE_NAME="XBMC"
+FREEBOX_SMB_PREFIXE="smb://FREEBOX"
 
 def url_get(url, params={}, headers={"Content-Type":"application/json","charset":"utf-8","Accept":"text/plain"}, method='AUTO'):
     import urllib2
