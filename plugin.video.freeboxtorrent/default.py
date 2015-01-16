@@ -10,17 +10,18 @@ plugin = Plugin()
 
 @plugin.route("/")
 def listTorrent():
+    import base64
     listTorrents = requestFreebox(FREEBOX_API + "/downloads/")[CONST_RESULT]
     for torrent in listTorrents:
        file = requestFreebox("%s/downloads/%s/files" % (FREEBOX_API,torrent["id"]))[CONST_RESULT]
-       print('Path ===== ' + "smb:/" + xbmc.translatePath(os.path.join("\\\\Freebox", file[0]["path"].encode('utf-8').replace('//','/'))))
-       print('filepath ::::::::::::: '+file[0]['filepath'].decode(sys.getfilesystemencoding()))
        if ('video' or 'stream') in file[0]['mimetype']:
-        yield{
-            "label": torrent["name"],
-            "path":"smb://" + xbmc.translatePath("Freebox" + file[0]["path"].encode('utf-8').strip().replace('//','/')),
-            "is_playable":True
-           }
+           path = xbmc.translatePath("smb://Freebox" + (base64.b64decode(torrent['download_dir'])+file[0]['name'].encode('utf-8')))
+           plugin.log.info(path)
+           yield{
+                "label": torrent["name"],
+                "path":path,
+                "is_playable":True
+            }
 
 def authorize():
     
