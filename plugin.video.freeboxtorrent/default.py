@@ -1,6 +1,8 @@
 from common import *
-import xbmc, json
-import sys, os
+import xbmc
+import json
+import sys
+import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'resources', 'site-packages'))
 from xbmcswift2 import Plugin
 
@@ -8,43 +10,52 @@ plugin = Plugin()
 
 @plugin.route("/")
 def listTorrent():
-    #authorize()
     listTorrents = requestFreebox(FREEBOX_API + "/downloads/")[CONST_RESULT]
     for torrent in listTorrents:
-       file = requestFreebox("%s/downloads/%s/files"%(FREEBOX_API,torrent["id"]))[CONST_RESULT]
-       print ( 'Path ===== '+"smb:/"+ xbmc.translatePath(os.path.join("\\\\Freebox", file[0]["path"].encode('utf-8').replace('//','/'))))
+       file = requestFreebox("%s/downloads/%s/files" % (FREEBOX_API,torrent["id"]))[CONST_RESULT]
+       print('Path ===== ' + "smb:/" + xbmc.translatePath(os.path.join("\\\\Freebox", file[0]["path"].encode('utf-8').replace('//','/'))))
+       print('filepath ::::::::::::: '+file[0]['filepath'].decode(sys.getfilesystemencoding()))
        if ('video' or 'stream') in file[0]['mimetype']:
         yield{
             "label": torrent["name"],
-            "path":"smb://"+ xbmc.translatePath("Freebox"+ file[0]["path"].encode('utf-8').strip().replace('//','/')),
+            "path":"smb://" + xbmc.translatePath("Freebox" + file[0]["path"].encode('utf-8').strip().replace('//','/')),
             "is_playable":True
            }
 
 def authorize():
+    
     params = {"app_id": APP_ID,
-              "app_name": "freeboxtorrent",
-              "app_version": "0.0.1",
-              "device_name": "XBMC"}
+              "app_name": plugin.addon.getAddonInfo('name'),
+              "app_version": plugin.addon.getAddonInfo('version'),
+              "device_name": DEVICE_NAME }
     auth = json.loads(url_get(FREEBOX_API + "/login/authorize/", params = params, method='POST'))
-    plugin.log.info('auth ____________'+repr(auth))
+    plugin.log.info('auth ____________' + repr(auth))
     if auth['success']:
-        plugin.log.info('auth success : '+auth[CONST_RESULT]['app_token'])
+        plugin.log.info('auth success : ' + auth[CONST_RESULT]['app_token'])
         authStorage = plugin.get_storage(name='authStorage', file_format='json', TTL=None)
         authStorage.update({'app_token': auth[CONST_RESULT]['app_token']})
+        authStorage.update({'track_id': auth[CONST_RESULT]['track_id']})
+        authStorage.sync()
 
         while 1 == 1:
-            res = json.loads(url_get(FREEBOX_API + "/login/authorize/%s" % auth[CONST_RESULT]['track_id']))
-            if res['result']['status'] == 'granted':
-                plugin.notify('Granted')
-                authStorage['challenge'] = res[CONST_RESULT]['challenge']
-                authStorage['password'] = getPassword(authStorage['app_token'], authStorage['challenge'])
-                authStorage.update({'session': getSession(APP_ID, authStorage['password'])})
-                authStorage.sync()
+           if not openSession():
                 break
-            
-            xbmc.sleep(1000)
+        xbmc.sleep(1000)
     else:
         plugin.log.info('auth failed')
+
+def openSession():
+    authStorage = plugin.get_storage(name='authStorage', file_format='json', TTL=None)
+    print('________________________' + authStorage['track_id'])
+    res = json.loads(url_get(FREEBOX_API + "/login/authorize/%s" % 46))
+    print(res)
+    if res['result']['status'] == 'granted' or res['result']['status']=='timeout':
+       authStorage['challenge'] = res[CONST_RESULT]['challenge']
+       authStorage['password'] = getPassword(authStorage['app_token'], authStorage['challenge'])
+       authStorage.update({'session': getSession(APP_ID, authStorage['password'])})
+       authStorage.sync()
+       return True
+    return False
 
 def getSession(app_id,password):
     #POST /api/v3/login/session/
@@ -61,10 +72,14 @@ def getPassword(app_token,challenge):
 
 def requestFreebox(path, params={}, method="GET"):
     authStorage = plugin.get_storage(name='authStorage', file_format='json', TTL=None)
-    plugin.log.info('session : ----------- '+str(authStorage.get('session')['session_token']))
+    plugin.log.info('session : ----------- ' + str(authStorage.get('session')['session_token']))
     HEADERS["X-Fbx-App-Auth"] = str(authStorage.get('session')['session_token'])
     res = url_get(path, params, HEADERS, method)
-    plugin.log.info('______________'+repr(res))
+    if res is None:
+       if openSession():
+            requestFreebox(path,params,method)
+       else:
+            plugin.notify('Failed to open session')
     return json.loads(res)
 
 if __name__ == '__main__':
