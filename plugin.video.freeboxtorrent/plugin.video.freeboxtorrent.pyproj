@@ -5,7 +5,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{9f371218-4f19-451f-b6a7-f964095df115}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>default.py</StartupFile>
+    <StartupFile>
+    </StartupFile>
     <SearchPath>..\xbmcstubs-master\;..\libVS</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -18,11 +19,9 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
-    <Compile Include="resources\site-packages\freebox\common.py" />
-    <Compile Include="resources\site-packages\freebox\index.py" />
-    <Compile Include="resources\site-packages\freebox\monkey_patches.py" />
-    <Compile Include="resources\site-packages\freebox\plugin.py" />
-    <Compile Include="resources\site-packages\freebox\__init__.py" />
+    <Compile Include="common.py" />
+    <Compile Include="default.py" />
+    <Compile Include="monkey_patches.py" />
     <Compile Include="resources\site-packages\six.py" />
     <Compile Include="resources\site-packages\xbmcswift2\actions.py" />
     <Compile Include="resources\site-packages\xbmcswift2\cli\app.py" />
@@ -58,7 +57,6 @@
     <Content Include="fanart.jpg" />
     <Content Include="icon.png" />
     <Content Include="LICENSE.txt" />
-    <Compile Include="default.py" />
     <Content Include="resources\.gitignore" />
     <Content Include="resources\images\black.png" />
     <Content Include="resources\language\English\strings.xml" />
@@ -86,7 +84,6 @@
     <Folder Include="resources\language\French\" />
     <Folder Include="resources\images\" />
     <Folder Include="resources\site-packages\" />
-    <Folder Include="resources\site-packages\freebox\" />
     <Folder Include="resources\site-packages\xbmcswift2\" />
     <Folder Include="resources\site-packages\xbmcswift2\cli\" />
     <Folder Include="resources\site-packages\xbmcswift2\cli\data\" />
