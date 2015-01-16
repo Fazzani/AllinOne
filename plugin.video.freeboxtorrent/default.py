@@ -8,14 +8,16 @@ plugin = Plugin()
 
 @plugin.route("/")
 def listTorrent():
-    authorize()
-    listTorrents = requestFreebox(FREEBOX_API + "/downloads")
-    plugin.log.info(listTorrents)
-    for torrent in ListTorrent:
-       yield{
+    #authorize()
+    listTorrents = requestFreebox(FREEBOX_API + "/downloads/")[CONST_RESULT]
+    for torrent in listTorrents:
+       file = requestFreebox("%s/downloads/%s/files"%(FREEBOX_API,torrent["id"]))[CONST_RESULT]
+       print ( 'Path ===== '+"smb:/"+ xbmc.translatePath(os.path.join("\\\\Freebox", file[0]["path"].encode('utf-8').replace('//','/'))))
+       if ('video' or 'stream') in file[0]['mimetype']:
+        yield{
             "label": torrent["name"],
-            "thumbnail": torrent["image"],
-            "path": plugin.url_for(torrent["view"])
+            "path":"smb://"+ xbmc.translatePath("Freebox"+ file[0]["path"].encode('utf-8').strip().replace('//','/')),
+            "is_playable":True
            }
 
 def authorize():
@@ -26,18 +28,17 @@ def authorize():
     auth = json.loads(url_get(FREEBOX_API + "/login/authorize/", params = params, method='POST'))
     plugin.log.info('auth ____________'+repr(auth))
     if auth['success']:
-        plugin.log.info('auth success : '+auth['result']['app_token'])
+        plugin.log.info('auth success : '+auth[CONST_RESULT]['app_token'])
         authStorage = plugin.get_storage(name='authStorage', file_format='json', TTL=None)
-        authStorage.update({'app_token': auth['result']['app_token']})
+        authStorage.update({'app_token': auth[CONST_RESULT]['app_token']})
 
         while 1 == 1:
-            res = json.loads(url_get(FREEBOX_API + "/login/authorize/%s" % auth['result']['track_id']))
+            res = json.loads(url_get(FREEBOX_API + "/login/authorize/%s" % auth[CONST_RESULT]['track_id']))
             if res['result']['status'] == 'granted':
-                plugin.notify('GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGranted')
-                authStorage['challenge'] = res['result']['challenge']
+                plugin.notify('Granted')
+                authStorage['challenge'] = res[CONST_RESULT]['challenge']
                 authStorage['password'] = getPassword(authStorage['app_token'], authStorage['challenge'])
                 authStorage.update({'session': getSession(APP_ID, authStorage['password'])})
-                plugin.log.info("session = "+authStorage.get('session'))
                 authStorage.sync()
                 break
             
@@ -47,28 +48,24 @@ def authorize():
 
 def getSession(app_id,password):
     #POST /api/v3/login/session/
-    res = url_get(FREEBOX_API + "/login/session/",params={"app_id":app_id,"password":password}, method = "POST")
+    res = json.loads(url_get(FREEBOX_API + "/login/session/",params={"app_id":app_id,"password":password}, method = "POST"))
     print(repr(res))
-    if res["success"]:
+    if res["result"]:
         return res["result"]
     raise Exception('Getting token session failed')
 
 def getPassword(app_token,challenge):
     from hashlib import sha1
     import hmac
-    plugin.log.info("app_token : "+app_token)
-    plugin.log.info("app_token encoded: "+app_token.replace('\\','').encode())
-    plugin.log.info("challenge : "+challenge.replace('\\',''))
-    plugin.log.info("challenge modified: "+challenge.replace('\\',''))
-    hashed = hmac.new(app_token.replace('\\','').encode(), challenge.replace('\\',''), sha1)
-    # The signature
-    return hashed.hexdigest()
+    return hmac.new(app_token.replace('\\','').encode(), challenge.replace('\\',''), sha1).hexdigest()
 
 def requestFreebox(path, params={}, method="GET"):
     authStorage = plugin.get_storage(name='authStorage', file_format='json', TTL=None)
-    plugin.log.info('session : ----------- '+str(authStorage.get('session')))
-    HEADERS["X-Fbx-App-Auth"] = authStorage.get('session')['session_token']
-    return json.dumps(url_get(FREEBOX_API + "/login/session/", params, HEADERS, method))
+    plugin.log.info('session : ----------- '+str(authStorage.get('session')['session_token']))
+    HEADERS["X-Fbx-App-Auth"] = str(authStorage.get('session')['session_token'])
+    res = url_get(path, params, HEADERS, method)
+    plugin.log.info('______________'+repr(res))
+    return json.loads(res)
 
 if __name__ == '__main__':
     try:
