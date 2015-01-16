@@ -21,7 +21,7 @@ def from_torrent_url(url):
     import hashlib
     import urllib
     import urllib2
-    from xbmctorrent.utils import url_get
+    from common import url_get
     request = urllib2.Request(url, headers=HEADERS)
     u = urllib2.urlopen(request)
     #meta = u.info()

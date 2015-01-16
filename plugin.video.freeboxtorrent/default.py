@@ -3,6 +3,8 @@ import xbmc
 import json
 import sys
 import os
+from magnet import ensure_magnet
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'resources', 'site-packages'))
 from xbmcswift2 import Plugin
 
@@ -22,6 +24,30 @@ def listTorrent():
                 "path":path,
                 "is_playable":True
             }
+    yield{
+          "label": "Add Torrent",
+          "path":plugin.url_for("addByUrl",url="http://www.omgtorrent.com/clic_dl.php?id=22147"),
+          "is_playable":False
+        }
+
+#POST /api/v3/downloads/add
+@plugin.route("/downloads/addUrl/<url>")
+def addByUrl(url):
+    #plugin.log.info('Magnet uri : '+ensure_magnet(url))
+    res = requestFreeboxWithChaine("%s/downloads/add" % FREEBOX_API, dict(download_url=url) ,{"Content-Type":"application/x-www-form-urlencoded","Accept": "text/plain"})
+    plugin.log.info('AddByUrl : ' + repr(res))
+    return {
+          "label": "Torrent added",
+          "path":"",
+          "is_playable":False
+        }
+
+#POST /api/v3/downloads/add (multipart/form-data)
+@plugin.route("/downloads/addfile/<file>")
+def addByFile(file):
+    res = requestFreeboxWithChaine("%s/downloads/add" % FREEBOX_AP,"download_url:"+ ensure_magnet(url),{"Content-Type":"multipart/form-data;charset=UTF-8"})
+    plugin.log.info('AddByUrl : ' + repr(res))
+    return res
 
 def authorize():
     
@@ -71,14 +97,32 @@ def getPassword(app_token,challenge):
     import hmac
     return hmac.new(app_token.replace('\\','').encode(), challenge.replace('\\',''), sha1).hexdigest()
 
-def requestFreebox(path, params={}, method="GET"):
+def requestFreeboxWithChaine(path, params,headers={}):
     authStorage = plugin.get_storage(name='authStorage', file_format='json', TTL=None)
     plugin.log.info('session : ----------- ' + str(authStorage.get('session')['session_token']))
     HEADERS["X-Fbx-App-Auth"] = str(authStorage.get('session')['session_token'])
-    res = url_get(path, params, HEADERS, method)
+    for key,value in headers.items(): 
+        HEADERS[key]=value
+    res = url_get_param_string(path, params, HEADERS)
+    plugin.log.info(repr(res))
     if res is None:
        if openSession():
-            requestFreebox(path,params,method)
+            requestFreeboxWithChaine(path,params,headers)
+       else:
+            plugin.notify('Failed to open session')
+    return json.loads(res)
+
+def requestFreebox(path, params={}, method="GET", headers={}):
+    authStorage = plugin.get_storage(name='authStorage', file_format='json', TTL=None)
+    plugin.log.info('session : ----------- ' + str(authStorage.get('session')['session_token']))
+    HEADERS["X-Fbx-App-Auth"] = str(authStorage.get('session')['session_token'])
+    for key,value in headers.items(): 
+        HEADERS[key]=value
+    res = url_get(path, params, HEADERS, method)
+    plugin.log.info(repr(res))
+    if res is None:
+       if openSession():
+            requestFreebox(path,params,method,headers)
        else:
             plugin.notify('Failed to open session')
     return json.loads(res)

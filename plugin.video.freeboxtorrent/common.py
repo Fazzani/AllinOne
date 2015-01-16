@@ -40,3 +40,31 @@ def url_get(url, params={}, headers={"Content-Type":"application/json","charset"
             return data
     except urllib2.HTTPError:
         return None
+
+
+def url_get_param_string(url, params, headers={"Content-Type":"application/json","charset":"utf-8","Accept":"text/plain"}):
+    import urllib2
+    import urllib
+    plugin.log.info(url)
+    plugin.log.info(headers)
+    plugin.log.info(params)
+    data = ''
+    for key,value in params.items():
+        data+="%s=%s&"%(key,value)
+    data=data[:-1]
+    plugin.log.info('data ====================== '+data)
+    req = urllib2.Request(url, data)
+    print(url)
+    req.add_header("User-Agent", USER_AGENT)
+    for k, v in headers.items():
+        req.add_header(k, v)
+
+    try:
+        with closing(urllib2.urlopen(req)) as response:
+            data = response.read()
+            if response.headers.get("Content-Encoding", "") == "gzip":
+                import zlib
+                return zlib.decompressobj(16 + zlib.MAX_WBITS).decompress(data)
+            return data
+    except urllib2.HTTPError:
+        return None

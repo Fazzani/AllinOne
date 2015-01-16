@@ -21,7 +21,10 @@
   <ItemGroup>
     <Compile Include="common.py" />
     <Compile Include="default.py" />
+    <Compile Include="magnet.py" />
     <Compile Include="monkey_patches.py" />
+    <Compile Include="resources\site-packages\bencode\BTL.py" />
+    <Compile Include="resources\site-packages\bencode\__init__.py" />
     <Compile Include="resources\site-packages\six.py" />
     <Compile Include="resources\site-packages\xbmcswift2\actions.py" />
     <Compile Include="resources\site-packages\xbmcswift2\cli\app.py" />
@@ -84,6 +87,7 @@
     <Folder Include="resources\language\French\" />
     <Folder Include="resources\images\" />
     <Folder Include="resources\site-packages\" />
+    <Folder Include="resources\site-packages\bencode\" />
     <Folder Include="resources\site-packages\xbmcswift2\" />
     <Folder Include="resources\site-packages\xbmcswift2\cli\" />
     <Folder Include="resources\site-packages\xbmcswift2\cli\data\" />
