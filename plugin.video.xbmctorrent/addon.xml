@@ -2,6 +2,7 @@
 <addon id="plugin.video.xbmctorrent" name="XBMCtorrent" version="0.6.4.019" provider-name="Heni, steeve">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
+		<import addon="script.module.requests" version="2.4.3"/>  
     </requires>
     <extension point="xbmc.python.pluginsource" library="addon.py">
         <provides>video</provides>

@@ -156,3 +156,7 @@ $RECYCLE.BIN/
 .DS_Store
 
 #/AllinOne/Addons/plugin.video.allinonetest2
+/plugin.video.xbmctorrent/resources/site-packages/xbmctorrent/xbmcTorrent.pyproj
+/plugin.video.xbmctorrent/resources/site-packages/xbmctorrent/player - Copy.py
+/plugin.video.xbmctorrent/resources/site-packages/xbmctorrent/TODO.txt
+/plugin.video.xbmctorrent/resources/site-packages/xbmctorrent
