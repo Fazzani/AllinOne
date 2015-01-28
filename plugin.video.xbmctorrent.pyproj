@@ -1,0 +1,205 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3125a83e-a034-4fc4-a9da-8b9300b28d6f}</ProjectGuid>
+    <ProjectHome>plugin.video.xbmctorrent\</ProjectHome>
+    <StartupFile>addon.py</StartupFile>
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId />
+    <InterpreterVersion />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+    <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include=".firstrun" />
+    <Content Include="addon.xml" />
+    <Content Include="fanart.jpg" />
+    <Content Include="icon.png" />
+    <Content Include="LICENSE" />
+    <Content Include="Makefile" />
+    <Content Include="README.md" />
+    <Content Include="resources\images\black.png" />
+    <Content Include="resources\site-packages\xbmctorrent\README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="addon.py" />
+    <Compile Include="resources\site-packages\bencode\BTL.py" />
+    <Compile Include="resources\site-packages\bencode\__init__.py" />
+    <Compile Include="resources\site-packages\bs4\builder\_html5lib.py" />
+    <Compile Include="resources\site-packages\bs4\builder\_htmlparser.py" />
+    <Compile Include="resources\site-packages\bs4\builder\_lxml.py" />
+    <Compile Include="resources\site-packages\bs4\builder\__init__.py" />
+    <Compile Include="resources\site-packages\bs4\dammit.py" />
+    <Compile Include="resources\site-packages\bs4\diagnose.py" />
+    <Compile Include="resources\site-packages\bs4\element.py" />
+    <Compile Include="resources\site-packages\bs4\testing.py" />
+    <Compile Include="resources\site-packages\bs4\tests\test_builder_registry.py" />
+    <Compile Include="resources\site-packages\bs4\tests\test_docs.py" />
+    <Compile Include="resources\site-packages\bs4\tests\test_html5lib.py" />
+    <Compile Include="resources\site-packages\bs4\tests\test_htmlparser.py" />
+    <Compile Include="resources\site-packages\bs4\tests\test_lxml.py" />
+    <Compile Include="resources\site-packages\bs4\tests\test_soup.py" />
+    <Compile Include="resources\site-packages\bs4\tests\test_tree.py" />
+    <Compile Include="resources\site-packages\bs4\tests\__init__.py" />
+    <Compile Include="resources\site-packages\bs4\__init__.py" />
+    <Compile Include="resources\site-packages\concurrent\futures\process.py" />
+    <Compile Include="resources\site-packages\concurrent\futures\thread.py" />
+    <Compile Include="resources\site-packages\concurrent\futures\_base.py" />
+    <Compile Include="resources\site-packages\concurrent\futures\_compat.py" />
+    <Compile Include="resources\site-packages\concurrent\futures\__init__.py" />
+    <Compile Include="resources\site-packages\concurrent\__init__.py" />
+    <Compile Include="resources\site-packages\html5lib\constants.py" />
+    <Compile Include="resources\site-packages\html5lib\filters\alphabeticalattributes.py" />
+    <Compile Include="resources\site-packages\html5lib\filters\inject_meta_charset.py" />
+    <Compile Include="resources\site-packages\html5lib\filters\lint.py" />
+    <Compile Include="resources\site-packages\html5lib\filters\optionaltags.py" />
+    <Compile Include="resources\site-packages\html5lib\filters\sanitizer.py" />
+    <Compile Include="resources\site-packages\html5lib\filters\whitespace.py" />
+    <Compile Include="resources\site-packages\html5lib\filters\_base.py" />
+    <Compile Include="resources\site-packages\html5lib\filters\__init__.py" />
+    <Compile Include="resources\site-packages\html5lib\html5parser.py" />
+    <Compile Include="resources\site-packages\html5lib\ihatexml.py" />
+    <Compile Include="resources\site-packages\html5lib\inputstream.py" />
+    <Compile Include="resources\site-packages\html5lib\sanitizer.py" />
+    <Compile Include="resources\site-packages\html5lib\serializer\htmlserializer.py" />
+    <Compile Include="resources\site-packages\html5lib\serializer\__init__.py" />
+    <Compile Include="resources\site-packages\html5lib\tokenizer.py" />
+    <Compile Include="resources\site-packages\html5lib\treeadapters\sax.py" />
+    <Compile Include="resources\site-packages\html5lib\treeadapters\__init__.py" />
+    <Compile Include="resources\site-packages\html5lib\treebuilders\dom.py" />
+    <Compile Include="resources\site-packages\html5lib\treebuilders\etree.py" />
+    <Compile Include="resources\site-packages\html5lib\treebuilders\etree_lxml.py" />
+    <Compile Include="resources\site-packages\html5lib\treebuilders\_base.py" />
+    <Compile Include="resources\site-packages\html5lib\treebuilders\__init__.py" />
+    <Compile Include="resources\site-packages\html5lib\treewalkers\dom.py" />
+    <Compile Include="resources\site-packages\html5lib\treewalkers\etree.py" />
+    <Compile Include="resources\site-packages\html5lib\treewalkers\genshistream.py" />
+    <Compile Include="resources\site-packages\html5lib\treewalkers\lxmletree.py" />
+    <Compile Include="resources\site-packages\html5lib\treewalkers\pulldom.py" />
+    <Compile Include="resources\site-packages\html5lib\treewalkers\_base.py" />
+    <Compile Include="resources\site-packages\html5lib\treewalkers\__init__.py" />
+    <Compile Include="resources\site-packages\html5lib\trie\datrie.py" />
+    <Compile Include="resources\site-packages\html5lib\trie\py.py" />
+    <Compile Include="resources\site-packages\html5lib\trie\_base.py" />
+    <Compile Include="resources\site-packages\html5lib\trie\__init__.py" />
+    <Compile Include="resources\site-packages\html5lib\utils.py" />
+    <Compile Include="resources\site-packages\html5lib\__init__.py" />
+    <Compile Include="resources\site-packages\pyga\entities.py" />
+    <Compile Include="resources\site-packages\pyga\exceptions.py" />
+    <Compile Include="resources\site-packages\pyga\requests.py" />
+    <Compile Include="resources\site-packages\pyga\utils.py" />
+    <Compile Include="resources\site-packages\pyga\__init__.py" />
+    <Compile Include="resources\site-packages\six.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\actions.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\cli\app.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\cli\cli.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\cli\console.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\cli\create.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\cli\data\addon.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\cli\data\resources\__init__.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\cli\__init__.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\common.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\constants.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\ext\playlist.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\ext\__init__.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\listitem.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\logger.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\mockxbmc\utils.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\mockxbmc\xbmc.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\mockxbmc\xbmcaddon.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\mockxbmc\xbmcgui.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\mockxbmc\xbmcplugin.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\mockxbmc\xbmcvfs.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\mockxbmc\__init__.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\module.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\plugin.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\request.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\storage.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\urls.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\xbmcmixin.py" />
+    <Compile Include="resources\site-packages\xbmcswift2\__init__.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\addon.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\caching.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\cmd.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\common.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\freeboxPlayer.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\freeboxUtils.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\ga.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\immunicity.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\index.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\library.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\magnet.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\MediaDbService.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\monkey_patches.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\platform.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\player.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\plugin.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\scrapers\bitsnoop.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\scrapers\btdigg.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\scrapers\cpb.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\scrapers\extratorrent.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\scrapers\eztv.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\scrapers\kickass.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\scrapers\mods\btdigg_mod.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\scrapers\mods\eztv_mod.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\scrapers\mods\index.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\scrapers\mods\index_mod.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\scrapers\mods\tpb_mod.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\scrapers\mods\yify_mod.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\scrapers\nyaa.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\scrapers\omg.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\scrapers\omg2.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\scrapers\rss.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\scrapers\tpb.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\scrapers\yify.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\scrapers\__init__.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\threadPlayer.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\tmdb.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\torrent2http.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\tvdb.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\utils.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\__init__.py" />
+    <Compile Include="resources\site-packages\__init__.py" />
+    <Compile Include="resources\__init__.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="resources" />
+    <Folder Include="resources\images" />
+    <Folder Include="resources\site-packages" />
+    <Folder Include="resources\site-packages\bencode" />
+    <Folder Include="resources\site-packages\bs4" />
+    <Folder Include="resources\site-packages\bs4\builder" />
+    <Folder Include="resources\site-packages\bs4\tests" />
+    <Folder Include="resources\site-packages\concurrent" />
+    <Folder Include="resources\site-packages\concurrent\futures" />
+    <Folder Include="resources\site-packages\html5lib" />
+    <Folder Include="resources\site-packages\html5lib\filters" />
+    <Folder Include="resources\site-packages\html5lib\serializer" />
+    <Folder Include="resources\site-packages\html5lib\treeadapters" />
+    <Folder Include="resources\site-packages\html5lib\treebuilders" />
+    <Folder Include="resources\site-packages\html5lib\treewalkers" />
+    <Folder Include="resources\site-packages\html5lib\trie" />
+    <Folder Include="resources\site-packages\pyga" />
+    <Folder Include="resources\site-packages\xbmcswift2" />
+    <Folder Include="resources\site-packages\xbmcswift2\cli" />
+    <Folder Include="resources\site-packages\xbmcswift2\cli\data" />
+    <Folder Include="resources\site-packages\xbmcswift2\cli\data\resources" />
+    <Folder Include="resources\site-packages\xbmcswift2\ext" />
+    <Folder Include="resources\site-packages\xbmcswift2\mockxbmc" />
+    <Folder Include="resources\site-packages\xbmctorrent" />
+    <Folder Include="resources\site-packages\xbmctorrent\scrapers" />
+    <Folder Include="resources\site-packages\xbmctorrent\scrapers\mods" />
+  </ItemGroup>
+  <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="!Exists($(PtvsTargetsFile))" />
+</Project>
