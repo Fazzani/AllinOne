@@ -11,7 +11,7 @@ Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "service.refreshchannel", "s
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "plugin.video.freeboxtorrent", "plugin.video.freeboxtorrent\plugin.video.freeboxtorrent.pyproj", "{9F371218-4F19-451F-B6A7-F964095DF115}"
 EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "plugin.video.xbmctorrent", "..\plugin.video.xbmctorrent.pyproj", "{3125A83E-A034-4FC4-A9DA-8B9300B28D6F}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "plugin.video.xbmctorrent", "plugin.video.xbmctorrent.pyproj", "{3125A83E-A034-4FC4-A9DA-8B9300B28D6F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
