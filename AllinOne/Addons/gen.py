@@ -50,6 +50,7 @@ class Generator:
     def _generate_addons_file( self ):
         # addon list
         addons = os.listdir( "." )
+        print repr(addons)
         # final addons text
         addons_xml = ("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<addons>\n")
         # loop thru and add each addons addon.xml file
@@ -58,6 +59,7 @@ class Generator:
                 # skip any file or .svn folder or .git folder
                 if ( not os.path.isdir( addon ) or addon == ".svn" or addon == ".git" ): continue
                 # create path
+                print addon
                 _path = os.path.join( addon, "addon.xml" )
                 # split lines for stripping
                 xml_lines = open( _path, "r" ).read().splitlines()
