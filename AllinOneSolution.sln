@@ -11,7 +11,7 @@ Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "service.refreshchannel", "s
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "plugin.video.freeboxtorrent", "plugin.video.freeboxtorrent\plugin.video.freeboxtorrent.pyproj", "{9F371218-4F19-451F-B6A7-F964095DF115}"
 EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "plugin.video.xbmctorrent", "plugin.video.xbmctorrent.pyproj", "{3125A83E-A034-4FC4-A9DA-8B9300B28D6F}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "FullXbmcTorrent", "plugin.video.xbmctorrent\resources\FullXbmcTorrent.pyproj", "{3877664E-7AE6-496C-966F-30FB9805DAF2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,8 +33,8 @@ Global
 		{6034974C-C5D6-442D-AF42-ABCC89969936}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9F371218-4F19-451F-B6A7-F964095DF115}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9F371218-4F19-451F-B6A7-F964095DF115}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3125A83E-A034-4FC4-A9DA-8B9300B28D6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3125A83E-A034-4FC4-A9DA-8B9300B28D6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3877664E-7AE6-496C-966F-30FB9805DAF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3877664E-7AE6-496C-966F-30FB9805DAF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

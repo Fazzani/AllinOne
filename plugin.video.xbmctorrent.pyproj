@@ -30,6 +30,15 @@
     <Content Include="README.md" />
     <Content Include="resources\images\black.png" />
     <Content Include="resources\site-packages\xbmctorrent\README.md" />
+    <Content Include="resources\site-packages\xbmctorrent\resources\skins\Default\720p\overlayWindow.xml" />
+    <Content Include="resources\site-packages\xbmctorrent\resources\skins\Default\backgrounds\Pictures.jpg" />
+    <Content Include="resources\site-packages\xbmctorrent\resources\skins\Default\colors\defaults.xml" />
+    <Content Include="resources\site-packages\xbmctorrent\resources\skins\Default\media\black.png" />
+    <Content Include="resources\site-packages\xbmctorrent\resources\skins\Default\media\black_background.png" />
+    <Content Include="resources\site-packages\xbmctorrent\resources\skins\Default\media\blue.png" />
+    <Content Include="resources\site-packages\xbmctorrent\resources\skins\Default\media\blue_background.png" />
+    <Content Include="resources\site-packages\xbmctorrent\resources\skins\Default\media\white.png" />
+    <Content Include="resources\site-packages\xbmctorrent\TODO.txt" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="addon.py" />
@@ -132,6 +141,8 @@
     <Compile Include="resources\site-packages\xbmctorrent\caching.py" />
     <Compile Include="resources\site-packages\xbmctorrent\cmd.py" />
     <Compile Include="resources\site-packages\xbmctorrent\common.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\CustomPlayer.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\freebox.py" />
     <Compile Include="resources\site-packages\xbmctorrent\freeboxPlayer.py" />
     <Compile Include="resources\site-packages\xbmctorrent\freeboxUtils.py" />
     <Compile Include="resources\site-packages\xbmctorrent\ga.py" />
@@ -141,9 +152,11 @@
     <Compile Include="resources\site-packages\xbmctorrent\magnet.py" />
     <Compile Include="resources\site-packages\xbmctorrent\MediaDbService.py" />
     <Compile Include="resources\site-packages\xbmctorrent\monkey_patches.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\overlayWindow.py" />
     <Compile Include="resources\site-packages\xbmctorrent\platform.py" />
     <Compile Include="resources\site-packages\xbmctorrent\player.py" />
     <Compile Include="resources\site-packages\xbmctorrent\plugin.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\resources\skins\__init__.py" />
     <Compile Include="resources\site-packages\xbmctorrent\scrapers\bitsnoop.py" />
     <Compile Include="resources\site-packages\xbmctorrent\scrapers\btdigg.py" />
     <Compile Include="resources\site-packages\xbmctorrent\scrapers\cpb.py" />
@@ -163,6 +176,7 @@
     <Compile Include="resources\site-packages\xbmctorrent\scrapers\tpb.py" />
     <Compile Include="resources\site-packages\xbmctorrent\scrapers\yify.py" />
     <Compile Include="resources\site-packages\xbmctorrent\scrapers\__init__.py" />
+    <Compile Include="resources\site-packages\xbmctorrent\testFreebox.py" />
     <Compile Include="resources\site-packages\xbmctorrent\threadPlayer.py" />
     <Compile Include="resources\site-packages\xbmctorrent\tmdb.py" />
     <Compile Include="resources\site-packages\xbmctorrent\torrent2http.py" />
@@ -197,6 +211,13 @@
     <Folder Include="resources\site-packages\xbmcswift2\ext" />
     <Folder Include="resources\site-packages\xbmcswift2\mockxbmc" />
     <Folder Include="resources\site-packages\xbmctorrent" />
+    <Folder Include="resources\site-packages\xbmctorrent\resources\" />
+    <Folder Include="resources\site-packages\xbmctorrent\resources\skins\" />
+    <Folder Include="resources\site-packages\xbmctorrent\resources\skins\Default\" />
+    <Folder Include="resources\site-packages\xbmctorrent\resources\skins\Default\720p\" />
+    <Folder Include="resources\site-packages\xbmctorrent\resources\skins\Default\backgrounds\" />
+    <Folder Include="resources\site-packages\xbmctorrent\resources\skins\Default\colors\" />
+    <Folder Include="resources\site-packages\xbmctorrent\resources\skins\Default\media\" />
     <Folder Include="resources\site-packages\xbmctorrent\scrapers" />
     <Folder Include="resources\site-packages\xbmctorrent\scrapers\mods" />
   </ItemGroup>
